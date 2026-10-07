@@ -3,6 +3,7 @@ import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/Home";
 import Jobs from "../pages/Jobs";
 import JobDetails from "../pages/JobDetails";
+import Companies from "../pages/Companies";
 
 /* =========================================================
    Application Routes
@@ -30,6 +31,9 @@ function AppRoutes() {
         {/* Job Details */}
         <Route path="/jobs/:id" element={<JobDetails />} />
 
+        {/* Companies */}
+        <Route path="/companies" element={<Companies />} />
+        
         {/* Companies */}
         <Route
           path="/companies"
