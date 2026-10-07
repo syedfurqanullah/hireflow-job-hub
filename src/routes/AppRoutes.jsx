@@ -5,6 +5,7 @@ import Jobs from "../pages/Jobs";
 import JobDetails from "../pages/JobDetails";
 import Companies from "../pages/Companies";
 import CompanyDetails from "../pages/CompanyDetails";
+import About from "../pages/About";
 
 /* =========================================================
    Application Routes
@@ -36,6 +37,8 @@ function AppRoutes() {
         <Route path="/companies" element={<Companies />} />
         {/* Company Details */}
       <Route path="/companies/:id" element={<CompanyDetails />} />
+      {/* About */}
+      <Route path="/about" element={<About />} />
         {/* Companies */}
         <Route
           path="/companies"
