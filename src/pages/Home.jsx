@@ -1,5 +1,6 @@
 import Hero from "../components/home/Hero"
 import Categories from "../components/home/Categories";
+import FeaturedJobs from "../components/home/FeaturedJobs";
 
 
 // =========================================================
@@ -24,7 +25,8 @@ const Home = () => {
 
        {/* Popular Job Categories */}
       <Categories />
-
+      {/* Featured Jobs */}
+      <FeaturedJobs />
 
     </main>
     
