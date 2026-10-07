@@ -1,31 +1,31 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
+import Footer from "../components/layout/Footer";
 
 /* =========================================================
    Main Layout
    Purpose:
-   - Common layout for public website pages
-   - Navbar top par rahega
-   - Outlet ke andar current page render hogi
+   - Public pages ka common layout
+   - Navbar top par
+   - Outlet ke andar current page
+   - Footer bottom par
 ========================================================= */
 
-function MainLayout() {
+const MainLayout = () => {
   return (
-    <div className="min-h-screen bg-slate-50">
-
+    <div className="flex min-h-screen flex-col">
       {/* Website Navbar */}
       <Navbar />
 
-      {/* =================================================
-          Page Content
-          React Router yahan current child route render karega.
-      ================================================= */}
-      <main>
+      {/* Current Route Page */}
+      <main className="flex-1">
         <Outlet />
       </main>
 
+      {/* Website Footer */}
+      <Footer />
     </div>
   );
-}
+};
 
 export default MainLayout;
