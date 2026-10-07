@@ -1,21 +1,26 @@
-import Hero from "../components/home/Hero";
+import Hero from "../components/home/Hero"
 
-/* =========================================================
-   Home Page
-   Purpose:
-   - HireFlow website ka main landing page
-   - Home page ke different sections ko organize karta hai
-========================================================= */
+// =========================================================
+// Home Page
+// Landing page composition.
+// Additional sections will be added below Hero.
+// =========================================================
 
-function Home() {
+const Home = () => {
   return (
-    <div>
-      {/* Main Hero Section */}
+    <main>
+      {/* Main hero and job-search section */}
       <Hero />
 
-      {/* Baqi Home sections baad mein yahan add honge */}
-    </div>
-  );
+      {/* Future sections:
+          - PlatformStats
+          - PopularCategories
+          - FeaturedJobs
+          - TopCompanies
+          - CareerCTA
+      */}
+    </main>
+  )
 }
 
-export default Home;
+export default Home
