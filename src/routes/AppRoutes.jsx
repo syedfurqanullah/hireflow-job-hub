@@ -4,6 +4,7 @@ import Home from "../pages/Home";
 import Jobs from "../pages/Jobs";
 import JobDetails from "../pages/JobDetails";
 import Companies from "../pages/Companies";
+import CompanyDetails from "../pages/CompanyDetails";
 
 /* =========================================================
    Application Routes
@@ -33,7 +34,8 @@ function AppRoutes() {
 
         {/* Companies */}
         <Route path="/companies" element={<Companies />} />
-        
+        {/* Company Details */}
+      <Route path="/companies/:id" element={<CompanyDetails />} />
         {/* Companies */}
         <Route
           path="/companies"
