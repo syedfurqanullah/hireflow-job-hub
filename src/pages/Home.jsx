@@ -2,6 +2,7 @@ import Hero from "../components/home/Hero"
 import Categories from "../components/home/Categories";
 import FeaturedJobs from "../components/home/FeaturedJobs";
 import TopCompanies from "../components/home/TopCompanies";
+import CareerCTA from "../components/home/CareerCTA";
 
 // =========================================================
 // Home Page
@@ -29,6 +30,8 @@ const Home = () => {
       <FeaturedJobs />
       {/* Top Companies */}
       <TopCompanies />
+      {/* Career CTA */}
+     <CareerCTA />
 
     </main>
     
