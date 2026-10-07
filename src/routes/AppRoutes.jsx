@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/Home";
+import Jobs from "../pages/Jobs";
 
 /* =========================================================
    Application Routes
@@ -16,41 +17,16 @@ function AppRoutes() {
     <Routes>
       {/* =====================================================
           Public Website Layout
-
-          Navbar MainLayout ke andar rahega.
-          Child routes <Outlet /> ke through render honge.
       ===================================================== */}
       <Route element={<MainLayout />}>
 
-        {/* ===================================================
-            Home Page
-
-            "/" open hone par Home.jsx render hoga.
-            Home.jsx ke andar Hero.jsx already connected hai.
-        =================================================== */}
+        {/* Home */}
         <Route path="/" element={<Home />} />
 
-        {/* ===================================================
-            Jobs Page
-        =================================================== */}
-        <Route
-          path="/jobs"
-          element={
-            <div className="mx-auto max-w-7xl px-4 py-20 text-center">
-              <h1 className="text-4xl font-bold text-slate-900">
-                Jobs
-              </h1>
+        {/* Jobs Listing */}
+        <Route path="/jobs" element={<Jobs />} />
 
-              <p className="mt-4 text-slate-600">
-                Jobs page coming next...
-              </p>
-            </div>
-          }
-        />
-
-        {/* ===================================================
-            Companies Page
-        =================================================== */}
+        {/* Companies */}
         <Route
           path="/companies"
           element={
@@ -66,9 +42,7 @@ function AppRoutes() {
           }
         />
 
-        {/* ===================================================
-            About Page
-        =================================================== */}
+        {/* About */}
         <Route
           path="/about"
           element={
@@ -84,9 +58,7 @@ function AppRoutes() {
           }
         />
 
-        {/* ===================================================
-            Contact Page
-        =================================================== */}
+        {/* Contact */}
         <Route
           path="/contact"
           element={
