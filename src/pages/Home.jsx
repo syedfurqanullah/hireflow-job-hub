@@ -1,4 +1,6 @@
 import Hero from "../components/home/Hero"
+import Categories from "../components/home/Categories";
+
 
 // =========================================================
 // Home Page
@@ -19,8 +21,16 @@ const Home = () => {
           - TopCompanies
           - CareerCTA
       */}
+
+       {/* Popular Job Categories */}
+      <Categories />
+
+
     </main>
+    
   )
 }
+
+
 
 export default Home
