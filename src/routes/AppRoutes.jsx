@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/Home";
 import Jobs from "../pages/Jobs";
+import JobDetails from "../pages/JobDetails";
 
 /* =========================================================
    Application Routes
@@ -25,6 +26,9 @@ function AppRoutes() {
 
         {/* Jobs Listing */}
         <Route path="/jobs" element={<Jobs />} />
+
+        {/* Job Details */}
+        <Route path="/jobs/:id" element={<JobDetails />} />
 
         {/* Companies */}
         <Route
