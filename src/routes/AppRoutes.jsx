@@ -8,6 +8,8 @@ import CompanyDetails from "../pages/CompanyDetails";
 import Dashboard from "../pages/Dashboard";
 import About from "../pages/About";
 import Contact from "../pages/Contact";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
 
 /* =========================================================
    Application Routes
@@ -49,6 +51,12 @@ function AppRoutes() {
 
       {/* Contact */}
       <Route path="/contact" element={<Contact />} />
+
+      {/* Login */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Register */}
+        <Route path="/register" element={<Register />} />
 
         {/* Companies */}
         <Route
