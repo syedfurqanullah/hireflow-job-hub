@@ -1,292 +1,264 @@
 import {
+  ArrowUpRight,
   Mail,
   MapPin,
   Phone,
-  ArrowUpRight,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
-/* =========================================================
-   Footer Component
-
-   Purpose:
-   - Website ka common footer
-   - HireFlow branding
-   - Navigation links
-   - Job seeker links
-   - Contact information
-   - Responsive layout
-========================================================= */
+// =========================================================
+// HireFlow - Footer
+// Purpose:
+// - Global website footer
+// - Light premium design
+// - Responsive across mobile, tablet and desktop
+// - Rendered globally through MainLayout
+// =========================================================
 
 const Footer = () => {
+  // =======================================================
+  // Quick Navigation
+  // =======================================================
+
+  const quickLinks = [
+    { label: "Home", path: "/" },
+    { label: "Jobs", path: "/jobs" },
+    { label: "Companies", path: "/companies" },
+    { label: "About Us", path: "/about" },
+    { label: "Contact", path: "/contact" },
+  ];
+
+  // =======================================================
+  // Job Seeker Links
+  // =======================================================
+
+  const jobSeekerLinks = [
+    { label: "Browse Jobs", path: "/jobs" },
+    { label: "Companies", path: "/companies" },
+    { label: "Create Account", path: "/register" },
+    { label: "Login", path: "/login" },
+  ];
+
+  // =======================================================
+  // Social Links
+  // =======================================================
+
+  const socialLinks = [
+    {
+      label: "LinkedIn",
+      href: "#",
+    },
+    {
+      label: "Facebook",
+      href: "#",
+    },
+    {
+      label: "Instagram",
+      href: "#",
+    },
+    {
+      label: "X",
+      href: "#",
+    },
+  ];
+
   return (
-    <footer className="bg-slate-950 text-slate-300">
+    <footer className="mt-10 border-t border-slate-200 bg-white text-slate-700 sm:mt-12">
+      {/* ===================================================
+          Main Footer Content
+          =================================================== */}
 
-      {/* =====================================================
-          Main Footer
-      ===================================================== */}
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1.2fr] lg:gap-12">
 
           {/* =================================================
-              Brand
-          ================================================= */}
-          <div>
-            <a
-              href="/"
-              className="inline-flex items-center gap-2"
-              aria-label="HireFlow Home"
+              Brand Section
+              ================================================= */}
+
+          <div className="max-w-sm">
+            {/* Logo */}
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2.5"
+              aria-label="HireFlow home"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-lg font-bold text-white">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-lg font-black text-white shadow-lg shadow-blue-100">
                 H
               </div>
 
-              <span className="text-xl font-bold text-white">
-                Hire<span className="text-blue-500">Flow</span>
-              </span>
-            </a>
+              <div>
+                <span className="block text-xl font-extrabold tracking-tight text-slate-900">
+                  Hire<span className="text-blue-600">Flow</span>
+                </span>
 
-            <p className="mt-5 max-w-sm text-sm leading-6 text-slate-400">
+                <span className="block text-[10px] font-medium uppercase tracking-[0.18em] text-slate-400">
+                  Job Hub
+                </span>
+              </div>
+            </Link>
+
+            {/* Description */}
+            <p className="mt-5 text-sm leading-7 text-slate-500">
               Find your dream job, connect with top companies, and build
-              your future with HireFlow Job Hub.
+              the career you deserve with HireFlow Job Hub.
             </p>
 
             {/* Social Links */}
-            <div className="mt-6 flex flex-wrap gap-3">
-
-              <a
-                href="#"
-                aria-label="Facebook"
-                className="flex h-10 items-center justify-center rounded-full border border-slate-800 px-4 text-sm transition hover:border-blue-500 hover:bg-blue-600 hover:text-white"
-              >
-                Facebook
-              </a>
-
-              <a
-                href="#"
-                aria-label="Instagram"
-                className="flex h-10 items-center justify-center rounded-full border border-slate-800 px-4 text-sm transition hover:border-blue-500 hover:bg-blue-600 hover:text-white"
-              >
-                Instagram
-              </a>
-
-              <a
-                href="#"
-                aria-label="LinkedIn"
-                className="flex h-10 items-center justify-center rounded-full border border-slate-800 px-4 text-sm transition hover:border-blue-500 hover:bg-blue-600 hover:text-white"
-              >
-                LinkedIn
-              </a>
-
+            <div className="mt-6 flex flex-wrap gap-2.5">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  aria-label={social.label}
+                  className="flex h-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-500 transition-all duration-200 hover:border-blue-200 hover:bg-blue-600 hover:text-white"
+                >
+                  {social.label}
+                </a>
+              ))}
             </div>
           </div>
 
           {/* =================================================
               Quick Links
-          ================================================= */}
+              ================================================= */}
+
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">
               Quick Links
             </h3>
 
             <ul className="mt-5 space-y-3">
-              <li>
-                <a
-                  href="/"
-                  className="text-sm transition hover:text-blue-400"
-                >
-                  Home
-                </a>
-              </li>
+              {quickLinks.map((link) => (
+                <li key={link.path}>
+                  <Link
+                    to={link.path}
+                    className="group inline-flex items-center gap-1 text-sm text-slate-500 transition-colors duration-200 hover:text-blue-600"
+                  >
+                    <span>{link.label}</span>
 
-              <li>
-                <a
-                  href="/jobs"
-                  className="text-sm transition hover:text-blue-400"
-                >
-                  Find Jobs
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="/companies"
-                  className="text-sm transition hover:text-blue-400"
-                >
-                  Companies
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="/about"
-                  className="text-sm transition hover:text-blue-400"
-                >
-                  About Us
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="/contact"
-                  className="text-sm transition hover:text-blue-400"
-                >
-                  Contact
-                </a>
-              </li>
+                    <ArrowUpRight
+                      size={13}
+                      className="opacity-0 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100"
+                    />
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* =================================================
               Job Seekers
-          ================================================= */}
+              ================================================= */}
+
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
-              For Job Seekers
+            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">
+              Job Seekers
             </h3>
 
             <ul className="mt-5 space-y-3">
+              {jobSeekerLinks.map((link) => (
+                <li key={link.path}>
+                  <Link
+                    to={link.path}
+                    className="group inline-flex items-center gap-1 text-sm text-slate-500 transition-colors duration-200 hover:text-blue-600"
+                  >
+                    <span>{link.label}</span>
 
-              <li>
-                <a
-                  href="/jobs"
-                  className="inline-flex items-center gap-1 text-sm transition hover:text-blue-400"
-                >
-                  Browse Jobs
-                  <ArrowUpRight size={14} />
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  className="text-sm transition hover:text-blue-400"
-                >
-                  Create Profile
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  className="text-sm transition hover:text-blue-400"
-                >
-                  Career Resources
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  className="text-sm transition hover:text-blue-400"
-                >
-                  Job Alerts
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  className="text-sm transition hover:text-blue-400"
-                >
-                  Resume Builder
-                </a>
-              </li>
-
+                    <ArrowUpRight
+                      size={13}
+                      className="opacity-0 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100"
+                    />
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* =================================================
               Contact
-          ================================================= */}
+              ================================================= */}
+
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
-              Contact Us
+            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">
+              Get In Touch
             </h3>
 
-            <ul className="mt-5 space-y-4">
+            <div className="mt-5 space-y-4">
 
               {/* Email */}
-              <li className="flex items-start gap-3">
-                <Mail
-                  size={18}
-                  className="mt-0.5 shrink-0 text-blue-500"
-                />
+              <a
+                href="mailto:hello@hireflow.com"
+                className="group flex items-start gap-3"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-colors duration-200 group-hover:bg-blue-600 group-hover:text-white">
+                  <Mail size={16} />
+                </span>
 
-                <a
-                  href="mailto:hello@hireflow.com"
-                  className="text-sm transition hover:text-blue-400"
-                >
-                  syedfurqanullahh@gmail.com
-                </a>
-              </li>
+                <span className="pt-1 text-sm text-slate-500 transition-colors duration-200 group-hover:text-blue-600">
+                  hello@hireflow.com
+                </span>
+              </a>
 
               {/* Phone */}
-              <li className="flex items-start gap-3">
-                <Phone
-                  size={18}
-                  className="mt-0.5 shrink-0 text-blue-500"
-                />
+              <a
+                href="tel:+923001234567"
+                className="group flex items-start gap-3"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-colors duration-200 group-hover:bg-blue-600 group-hover:text-white">
+                  <Phone size={16} />
+                </span>
 
-                <a
-                  href="tel:+923001234567"
-                  className="text-sm transition hover:text-blue-400"
-                >
-                  +92 3196976917
-                </a>
-              </li>
+                <span className="pt-1 text-sm text-slate-500 transition-colors duration-200 group-hover:text-blue-600">
+                  +92 300 1234567
+                </span>
+              </a>
 
               {/* Location */}
-              <li className="flex items-start gap-3">
-                <MapPin
-                  size={18}
-                  className="mt-0.5 shrink-0 text-blue-500"
-                />
+              <div className="flex items-start gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                  <MapPin size={16} />
+                </span>
 
-                <span className="text-sm leading-6">
+                <span className="pt-1 text-sm leading-6 text-slate-500">
                   Karachi, Pakistan
                 </span>
-              </li>
+              </div>
 
-            </ul>
+            </div>
           </div>
-
         </div>
       </div>
 
-      {/* =====================================================
-          Copyright
-      ===================================================== */}
-      <div className="border-t border-slate-800">
+      {/* ===================================================
+          Bottom Bar
+          =================================================== */}
 
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-6 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+      <div className="border-t border-slate-200 bg-slate-50">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
 
-          <p className="text-center text-sm text-slate-500 md:text-left">
-            © {new Date().getFullYear()} HireFlow Job Hub.
-            All rights reserved.
+          {/* Copyright */}
+          <p className="text-center text-xs text-slate-500 md:text-left">
+            © {new Date().getFullYear()} HireFlow Job Hub. All rights reserved.
           </p>
 
-          <div className="flex items-center justify-center gap-5">
-
-            <a
-              href="#"
-              className="text-sm text-slate-500 transition hover:text-blue-400"
+          {/* Legal Links */}
+          <div className="flex items-center justify-center gap-5 text-xs text-slate-500 md:justify-end">
+            <button
+              type="button"
+              className="transition-colors duration-200 hover:text-blue-600"
             >
               Privacy Policy
-            </a>
+            </button>
 
-            <a
-              href="#"
-              className="text-sm text-slate-500 transition hover:text-blue-400"
+            <button
+              type="button"
+              className="transition-colors duration-200 hover:text-blue-600"
             >
-              Terms & Conditions
-            </a>
-
+              Terms of Service
+            </button>
           </div>
-
         </div>
       </div>
-
     </footer>
   );
 };

@@ -1,88 +1,161 @@
-import { ArrowRight, BriefcaseBusiness, Building2 } from "lucide-react";
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  CheckCircle2,
+  Sparkles,
+  UserPlus,
+} from "lucide-react";
 import { Link } from "react-router-dom";
+import careerCtaImage from "../../assets/career-cta.png";
 
-/* =========================================================
-   Career CTA Section
-   Purpose:
-   - Homepage ke end par strong call-to-action provide karta hai
-   - Job seekers ko jobs explore karne ke liye encourage karta hai
-   - Companies explore karne ka secondary option deta hai
-   - Fully responsive: mobile, tablet, desktop aur large screens
-========================================================= */
+// =========================================================
+// HireFlow - Career CTA Section
+// Purpose:
+// - Homepage ka final conversion section
+// - Background image ke upar React content show karna
+// - Image sirf visual/background ke liye use hogi
+// - Text aur buttons React/Tailwind se responsive hain
+// - Section height intentionally compact rakhi gayi hai
+// =========================================================
 
 const CareerCTA = () => {
   return (
-    <section className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
-      <div className="mx-auto max-w-7xl">
-        {/* =====================================================
-            Main CTA Card
-        ===================================================== */}
-        <div className="relative overflow-hidden rounded-3xl bg-slate-950 px-6 py-14 shadow-xl sm:px-10 lg:px-16 lg:py-16">
-
-          {/* Decorative background shapes */}
-          <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-blue-600/20 blur-3xl" />
-
-          <div className="pointer-events-none absolute -bottom-32 -left-24 h-80 w-80 rounded-full bg-indigo-600/20 blur-3xl" />
-
-          <div className="pointer-events-none absolute right-1/3 top-1/2 h-40 w-40 -translate-y-1/2 rounded-full bg-blue-500/10 blur-3xl" />
-
-          {/* =====================================================
-              CTA Content
+    <section className="relative isolate min-h-[400px] overflow-hidden bg-slate-950 sm:min-h-[440px] lg:min-h-[480px]">
+      {/* =====================================================
+          Background Image
           ===================================================== */}
-          <div className="relative z-10 mx-auto max-w-3xl text-center">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-20 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: `url(${careerCtaImage})`,
+        }}
+      />
 
-            {/* CTA Icon */}
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-600 shadow-lg shadow-blue-600/30">
-              <BriefcaseBusiness className="h-8 w-8 text-white" />
+      {/* =====================================================
+          Dark Gradient Overlay
+          Text readability ke liye image ke upar overlay
+          ===================================================== */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 bg-gradient-to-r from-slate-950 via-slate-950/90 to-slate-950/30"
+      />
+
+      {/* Mobile readability overlay */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 bg-slate-950/20 sm:bg-transparent"
+      />
+
+      {/* Bottom fade */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 -z-10 h-28 bg-gradient-to-t from-slate-950/70 to-transparent"
+      />
+
+      {/* =====================================================
+          Main Content
+          ===================================================== */}
+      <div className="mx-auto flex min-h-[400px] max-w-7xl items-center px-4 py-10 sm:min-h-[440px] sm:px-6 sm:py-14 lg:min-h-[480px] lg:px-8 lg:py-16">
+        <div className="w-full max-w-3xl">
+
+          {/* =================================================
+              Small Badge
+              ================================================= */}
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white shadow-lg backdrop-blur-md sm:px-4 sm:py-2 sm:text-sm">
+            <Sparkles
+              size={14}
+              className="shrink-0 text-blue-300"
+            />
+
+            <span>Build Your Future With HireFlow</span>
+          </div>
+
+          {/* =================================================
+              Heading
+              ================================================= */}
+          <h2 className="mt-4 text-2xl font-bold leading-tight tracking-tight text-white sm:text-3xl md:text-4xl lg:text-5xl">
+            Ready to Take the Next Step in Your{" "}
+            <span className="text-blue-400">Career?</span>
+          </h2>
+
+          {/* =================================================
+              Description
+              ================================================= */}
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-200 sm:text-base">
+            Discover exciting opportunities, connect with top companies,
+            and find a role that takes your career to the next level.
+          </p>
+
+          {/* =================================================
+              CTA Buttons
+              ================================================= */}
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+
+            {/* Browse Jobs */}
+            <Link
+              to="/jobs"
+              className="group inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-950/30 transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-500 hover:shadow-xl sm:px-6"
+            >
+              <BriefcaseBusiness
+                size={17}
+                className="shrink-0"
+              />
+
+              <span>Browse Jobs</span>
+
+              <ArrowRight
+                size={16}
+                className="shrink-0 transition-transform duration-200 group-hover:translate-x-1"
+              />
+            </Link>
+
+            {/* Create Account */}
+            <Link
+              to="/register"
+              className="group inline-flex items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/10 px-5 py-3 text-sm font-bold text-white backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/20 sm:px-6"
+            >
+              <UserPlus
+                size={17}
+                className="shrink-0 transition-transform duration-200 group-hover:scale-105"
+              />
+
+              <span>Create Free Account</span>
+            </Link>
+          </div>
+
+          {/* =================================================
+              Trust Points
+              ================================================= */}
+          <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-xs font-medium text-slate-200 sm:text-sm">
+
+            <div className="flex items-center gap-2">
+              <CheckCircle2
+                size={15}
+                className="shrink-0 text-blue-400"
+              />
+
+              <span>Free to join</span>
             </div>
 
-            {/* Small Label */}
-            <p className="mt-6 text-sm font-semibold uppercase tracking-[0.2em] text-blue-400">
-              Your Next Opportunity
-            </p>
+            <div className="flex items-center gap-2">
+              <CheckCircle2
+                size={15}
+                className="shrink-0 text-blue-400"
+              />
 
-            {/* Main Heading */}
-            <h2 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
-              Ready to Find Your Dream Job?
-            </h2>
-
-            {/* Description */}
-            <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-slate-300 sm:text-base">
-              Take the next step in your career. Discover exciting
-              opportunities, connect with leading companies, and find a
-              position that matches your skills and ambitions.
-            </p>
-
-            {/* =====================================================
-                CTA Buttons
-            ===================================================== */}
-            <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-
-              {/* Primary CTA */}
-              <Link
-                to="/jobs"
-                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-500"
-              >
-                Find Jobs
-
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </Link>
-
-              {/* Secondary CTA */}
-              <Link
-                to="/companies"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-white/5 px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:border-slate-500 hover:bg-white/10"
-              >
-                <Building2 className="h-4 w-4" />
-                Explore Companies
-              </Link>
+              <span>Thousands of opportunities</span>
             </div>
 
-            {/* Supporting Text */}
-            <p className="mt-6 text-xs text-slate-500 sm:text-sm">
-              Discover opportunities from companies looking for talented
-              professionals.
-            </p>
+            <div className="flex items-center gap-2">
+              <CheckCircle2
+                size={15}
+                className="shrink-0 text-blue-400"
+              />
+
+              <span>Top companies</span>
+            </div>
+
           </div>
         </div>
       </div>
