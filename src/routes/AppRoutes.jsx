@@ -5,6 +5,7 @@ import Jobs from "../pages/Jobs";
 import JobDetails from "../pages/JobDetails";
 import Companies from "../pages/Companies";
 import CompanyDetails from "../pages/CompanyDetails";
+import Dashboard from "../pages/Dashboard";
 import About from "../pages/About";
 import Contact from "../pages/Contact";
 
@@ -36,12 +37,19 @@ function AppRoutes() {
 
         {/* Companies */}
         <Route path="/companies" element={<Companies />} />
+
         {/* Company Details */}
       <Route path="/companies/:id" element={<CompanyDetails />} />
+
+      {/* Dashboard*/}
+        <Route path="/dashboard" element={<Dashboard />} />
+
       {/* About */}
       <Route path="/about" element={<About />} />
+
       {/* Contact */}
       <Route path="/contact" element={<Contact />} />
+
         {/* Companies */}
         <Route
           path="/companies"
