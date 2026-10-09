@@ -214,8 +214,9 @@
 
 import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { BriefcaseBusiness } from "lucide-react";
+import { BriefcaseBusiness, Moon, Sun } from "lucide-react";
 import { endDemoSession, isAuthenticated } from "../../services/auth";
+import { useTheme } from "../../context/ThemeContext";
 
 /* =========================================================
    HireFlow Navbar
@@ -232,6 +233,9 @@ function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [authenticated, setAuthenticated] = useState(isAuthenticated);
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
+  const ThemeIcon = theme === "dark" ? Sun : Moon;
+  const themeAction = theme === "dark" ? "Switch to light theme" : "Switch to dark theme";
 
   useEffect(() => {
     const syncAuthState = () => {
@@ -318,7 +322,7 @@ function Navbar() {
               Desktop Navigation
           ================================================= */}
           <nav
-            className="hidden items-center gap-8 md:flex"
+            className="hidden items-center gap-8 md:ml-auto md:flex"
             aria-label="Main navigation"
           >
             {navLinks.map((link) => (
@@ -342,15 +346,29 @@ function Navbar() {
           {/* =================================================
               Desktop Authentication
           ================================================= */}
-          <div className="hidden items-center gap-3 md:flex">
+          <div className="hidden items-center gap-3 md:ml-8 md:flex">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={themeAction}
+              title={themeAction}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-600 transition hover:bg-slate-100 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <ThemeIcon size={18} aria-hidden="true" />
+            </button>
             {authenticated ? (
               <button type="button" onClick={handleLogout} className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700">
                 Logout
               </button>
             ) : (
-              <Link to="/register" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 hover:shadow-md">
-                Sign Up
-              </Link>
+              <>
+                <Link to="/login" className="rounded-lg px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-blue-600">
+                  Sign In
+                </Link>
+                <Link to="/register" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 hover:shadow-md">
+                  Sign Up
+                </Link>
+              </>
             )}
           </div>
 
@@ -447,10 +465,24 @@ function Navbar() {
                   Logout
                 </button>
               ) : (
-                <Link to="/register" onClick={closeMobileMenu} className="rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700 hover:shadow-md">
-                  Sign Up
-                </Link>
+                <>
+                  <Link to="/login" onClick={closeMobileMenu} className="rounded-lg px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-blue-600">
+                    Sign In
+                  </Link>
+                  <Link to="/register" onClick={closeMobileMenu} className="rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700 hover:shadow-md">
+                    Sign Up
+                  </Link>
+                </>
               )}
+              <button
+                type="button"
+                onClick={toggleTheme}
+                aria-label={themeAction}
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <ThemeIcon size={17} aria-hidden="true" />
+                {theme === "dark" ? "Light theme" : "Dark theme"}
+              </button>
             </div>
           </div>
         )}

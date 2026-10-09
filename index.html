@@ -8,6 +8,18 @@
     <meta property="og:title" content="HireFlow Job Hub" />
     <meta property="og:description" content="Explore current job openings and career opportunities with HireFlow Job Hub." />
     <meta name="theme-color" content="#2563eb" />
+    <script>
+      try {
+        const savedTheme = localStorage.getItem("hireflow-theme");
+        const isDark = savedTheme
+          ? savedTheme === "dark"
+          : window.matchMedia("(prefers-color-scheme: dark)").matches;
+        document.documentElement.classList.toggle("dark", isDark);
+        document.documentElement.style.colorScheme = isDark ? "dark" : "light";
+      } catch {
+        // The app applies the system preference after it starts.
+      }
+    </script>
     <meta
       name="description"
       content="Explore jobs and companies with HireFlow Job Hub, a job-search platform in development."
