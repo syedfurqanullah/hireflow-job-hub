@@ -26,7 +26,7 @@ const ThemeProvider = ({ children }) => {
     document.documentElement.style.colorScheme = theme;
 
     const themeColor = document.querySelector('meta[name="theme-color"]');
-    themeColor?.setAttribute("content", isDark ? "#0b1220" : "#2563eb");
+      themeColor?.setAttribute("content", isDark ? "#0b1220" : "#f4f7fb");
   }, [theme]);
 
   useEffect(() => {

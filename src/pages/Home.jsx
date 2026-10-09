@@ -16,22 +16,10 @@ const Home = () => {
       {/* Main hero and job-search section */}
       <Hero />
 
-      {/* Future sections:
-          - PlatformStats
-          - PopularCategories
-          - FeaturedJobs
-          - TopCompanies
-          - CareerCTA
-      */}
-
-      {/* Popular Job Categories */}
       <Categories />
-      {/* Featured Jobs */}
       <FeaturedJobs />
-      {/* Top Companies */}
       <TopCompanies />
-      {/* Career CTA */}
-      <CareerCTA />
+     <CareerCTA />
     </main>
   );
 };

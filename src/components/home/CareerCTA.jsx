@@ -2,7 +2,6 @@ import {
   ArrowRight,
   BriefcaseBusiness,
   CheckCircle2,
-  Sparkles,
   UserPlus,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -62,9 +61,7 @@ const CareerCTA = () => {
               Small Badge
               ================================================= */}
           <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white shadow-lg backdrop-blur-md sm:px-4 sm:py-2 sm:text-sm">
-            <Sparkles size={14} className="shrink-0 text-blue-300" />
-
-            <span>Build Your Future With HireFlow</span>
+            <span>Build your future with HireFlow</span>
           </div>
 
           {/* =================================================

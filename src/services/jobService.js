@@ -559,42 +559,11 @@ const getCompanyWebsite = (job) => {
 };
 
 const getCompanyLogo = (job) => {
-  const directLogo =
+  return (
     safeString(job?.company_logo) ||
     safeString(job?.logo_url) ||
-    safeString(job?.company?.logo);
-
-  if (directLogo) return directLogo;
-
-  const website = getCompanyWebsite(job);
-  const token = import.meta.env.VITE_LOGO_DEV_TOKEN;
-
-  if (token && website) {
-    try {
-      const hostname = new URL(website).hostname;
-      return `https://img.logo.dev/${hostname}?token=${encodeURIComponent(token)}&size=128`;
-    } catch {
-      // Fall through to name lookup or favicon fallback.
-    }
-  }
-
-  if (token && job?.company?.display_name) {
-    return `https://img.logo.dev/name/${encodeURIComponent(job.company.display_name)}?token=${encodeURIComponent(token)}&size=128`;
-  }
-
-  if (!website) {
-    return "";
-  }
-
-  try {
-    const hostname = new URL(website).hostname;
-
-    // Website favicon/icon.
-    // This represents the company's actual web identity.
-    return `https://www.google.com/s2/favicons?domain=${hostname}&sz=128`;
-  } catch {
-    return "";
-  }
+    safeString(job?.company?.logo)
+  );
 };
 
 // =========================================================

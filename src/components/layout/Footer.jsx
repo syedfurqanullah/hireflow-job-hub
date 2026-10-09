@@ -150,7 +150,7 @@ const Footer = () => {
                 </span>
 
                 <span className="pt-1 text-sm text-slate-500 transition-colors duration-200 group-hover:text-blue-600">
-                  LinkedIn Profile
+                  LinkedIn
                 </span>
               </a>
 
