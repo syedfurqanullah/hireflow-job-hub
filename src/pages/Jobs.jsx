@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Search,
   SlidersHorizontal,
   ChevronDown,
-  X,
   ArrowUpDown,
 } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
@@ -13,6 +12,7 @@ import JobFilters from "../components/jobs/JobFilters";
 import JobCard from "../components/jobs/JobCard";
 import Loader from "../components/common/Loader";
 import Pagination from "../components/common/Pagination";
+import Modal from "../components/common/Modal";
 
 /* =========================================================
    JOB CARD
@@ -27,7 +27,7 @@ import Pagination from "../components/common/Pagination";
 ========================================================= */
 
 const Jobs = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const requestedCategory = searchParams.get("category") || "All";
   const [jobs, setJobs] = useState([]);
   const [apiError, setApiError] = useState("");
@@ -51,22 +51,22 @@ const Jobs = () => {
   ======================================================= */
 
   const [category, setCategory] = useState(requestedCategory);
-  const [jobType, setJobType] = useState("All");
-  const [experienceLevel, setExperienceLevel] = useState("All");
-  const [salaryMin, setSalaryMin] = useState("");
-  const [salaryMax, setSalaryMax] = useState("");
-  const [salaryMinInput, setSalaryMinInput] = useState("");
-  const [salaryMaxInput, setSalaryMaxInput] = useState("");
+  const [jobType, setJobType] = useState(searchParams.get("jobType") || "All");
+  const [experienceLevel, setExperienceLevel] = useState(searchParams.get("experience") || "All");
+  const [salaryMin, setSalaryMin] = useState(searchParams.get("salaryMin") || "");
+  const [salaryMax, setSalaryMax] = useState(searchParams.get("salaryMax") || "");
+  const [salaryMinInput, setSalaryMinInput] = useState(searchParams.get("salaryMin") || "");
+  const [salaryMaxInput, setSalaryMaxInput] = useState(searchParams.get("salaryMax") || "");
   const [sortBy, setSortBy] = useState("Latest");
   const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 10;
 
   /* Mobile filter drawer */
   const [showFilters, setShowFilters] = useState(false);
+  const closeFilterModal = useCallback(() => setShowFilters(false), []);
 
   /* Loading state */
   const [loading, setLoading] = useState(true);
-
 
   useEffect(() => {
     let active = true;
@@ -130,6 +130,16 @@ const Jobs = () => {
     setSalaryMin(salaryMinInput.trim());
     setSalaryMax(salaryMaxInput.trim());
     setCurrentPage(1);
+
+    const params = new URLSearchParams();
+    if (searchInput.trim()) params.set("search", searchInput.trim());
+    if (locationInput.trim()) params.set("location", locationInput.trim());
+    if (category !== "All") params.set("category", category);
+    if (jobType !== "All") params.set("jobType", jobType);
+    if (experienceLevel !== "All") params.set("experience", experienceLevel);
+    if (salaryMinInput.trim()) params.set("salaryMin", salaryMinInput.trim());
+    if (salaryMaxInput.trim()) params.set("salaryMax", salaryMaxInput.trim());
+    setSearchParams(params);
   };
 
 
@@ -260,6 +270,7 @@ const Jobs = () => {
     setSalaryMinInput("");
     setSalaryMaxInput("");
     setSortBy("Latest");
+    setSearchParams(new URLSearchParams());
   };
 
 
@@ -584,48 +595,13 @@ const Jobs = () => {
           MOBILE FILTER DRAWER
       ===================================================== */}
 
-      {showFilters && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-
-          {/* Overlay */}
-          <button
-            type="button"
-            aria-label="Close filters"
-            onClick={() => setShowFilters(false)}
-            className="absolute inset-0 h-full w-full bg-slate-950/50"
-          />
-
-
-          {/* Drawer */}
-          <div className="absolute right-0 top-0 h-full w-[88%] max-w-sm overflow-y-auto bg-white p-6 shadow-2xl">
-
-            {/* Header */}
-            <div className="flex items-center justify-between">
-
-              <div>
-
-                <p className="text-xs font-semibold uppercase tracking-wider text-blue-600">
-                  Refine Results
-                </p>
-
-                <h2 className="mt-1 text-lg font-bold text-slate-900">
-                  Filters
-                </h2>
-
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setShowFilters(false)}
-                className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
-              >
-                <X size={20} />
-              </button>
-
-            </div>
-
-
-            <div className="mt-8">
+      <Modal
+        isOpen={showFilters}
+        onClose={closeFilterModal}
+        title="Refine Results"
+        size="sm"
+      >
+        <div className="lg:hidden">
               <JobFilters
                 idPrefix="mobile-filter"
                 category={category}
@@ -642,37 +618,16 @@ const Jobs = () => {
                 locationInput={locationInput}
                 setLocationInput={setLocationInput}
               />
-            </div>
-
-
-            {/* Mobile drawer actions */}
-            <div className="mt-8 flex gap-3">
-
-              <button
-                type="button"
-                onClick={resetFilters}
-                className="flex-1 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-              >
-                Reset
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  handleSearch();
-                  setShowFilters(false);
-                }}
-                className="flex-1 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
-              >
-                Apply
-              </button>
-
-            </div>
-
+          <div className="mt-6 flex gap-3 border-t border-slate-100 pt-5">
+            <button type="button" onClick={resetFilters} className="flex-1 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
+              Reset
+            </button>
+            <button type="button" onClick={() => { handleSearch(); setShowFilters(false); }} className="flex-1 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700">
+              Apply filters
+            </button>
           </div>
-
         </div>
-      )}
+      </Modal>
 
     </main>
   );

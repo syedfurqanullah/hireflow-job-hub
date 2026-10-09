@@ -8,7 +8,8 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { startDemoSession } from "../services/auth";
 
 // =========================================================
 // HireFlow - Login Page
@@ -21,6 +22,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -57,7 +59,7 @@ const Login = () => {
       return false;
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
       setError("Please enter a valid email address.");
       return false;
     }
@@ -92,23 +94,18 @@ const Login = () => {
     setTimeout(() => {
       const user = {
         name: formData.email.split("@")[0],
-        email: formData.email,
+        email: formData.email.trim().toLowerCase(),
         role: "job-seeker",
       };
 
-      localStorage.setItem("hireflow_user", JSON.stringify(user));
-      localStorage.setItem("hireflow_is_authenticated", "true");
-      window.dispatchEvent(new Event("hireflow-auth-change"));
-
-      if (rememberMe) {
-        localStorage.setItem("hireflow_remember_me", "true");
-      } else {
-        localStorage.removeItem("hireflow_remember_me");
+      try {
+        startDemoSession(user, rememberMe);
+        navigate(location.state?.from || "/dashboard", { replace: true });
+      } catch (sessionError) {
+        setError(sessionError.message);
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
-
-      navigate("/dashboard");
     }, 700);
   };
 
@@ -243,6 +240,10 @@ const Login = () => {
             </div>
 
             {/* Error */}
+            <p className="mt-5 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm leading-6 text-blue-800">
+              Frontend demo: this sign-in creates a local browser session; it does not verify an account with a server.
+            </p>
+
             {error && (
               <div
                 role="alert"
@@ -387,6 +388,7 @@ const Login = () => {
               Don't have an account?{" "}
               <Link
                 to="/register"
+                state={location.state}
                 className="font-bold text-blue-600 transition-colors hover:text-blue-700"
               >
                 Create Account

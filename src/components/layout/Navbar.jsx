@@ -215,6 +215,7 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { BriefcaseBusiness } from "lucide-react";
+import { endDemoSession, isAuthenticated } from "../../services/auth";
 
 /* =========================================================
    HireFlow Navbar
@@ -229,14 +230,12 @@ import { BriefcaseBusiness } from "lucide-react";
 function Navbar() {
   // Mobile menu ki open/close state
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    () => localStorage.getItem("hireflow_is_authenticated") === "true"
-  );
+  const [authenticated, setAuthenticated] = useState(isAuthenticated);
   const navigate = useNavigate();
 
   useEffect(() => {
     const syncAuthState = () => {
-      setIsAuthenticated(localStorage.getItem("hireflow_is_authenticated") === "true");
+      setAuthenticated(isAuthenticated());
     };
 
     window.addEventListener("storage", syncAuthState);
@@ -248,10 +247,8 @@ function Navbar() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("hireflow_user");
-    localStorage.removeItem("hireflow_is_authenticated");
-    localStorage.removeItem("hireflow_remember_me");
-    setIsAuthenticated(false);
+    endDemoSession();
+    setAuthenticated(false);
     closeMobileMenu();
     navigate("/");
   };
@@ -346,7 +343,7 @@ function Navbar() {
               Desktop Authentication
           ================================================= */}
           <div className="hidden items-center gap-3 md:flex">
-            {isAuthenticated ? (
+            {authenticated ? (
               <button type="button" onClick={handleLogout} className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700">
                 Logout
               </button>
@@ -445,7 +442,7 @@ function Navbar() {
                 Mobile Authentication Buttons
             ================================================= */}
             <div className="mt-4 flex flex-col gap-2 border-t border-slate-100 pt-4">
-              {isAuthenticated ? (
+              {authenticated ? (
                 <button type="button" onClick={handleLogout} className="rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700">
                   Logout
                 </button>

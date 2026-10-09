@@ -1,3 +1,6 @@
+import { useEffect, useId, useRef } from "react";
+import { X } from "lucide-react";
+
 // =====================================================
 // HireFlow Job Hub - Reusable Modal Component
 // Supports title, content, close button, and custom footer.
@@ -12,6 +15,8 @@ const Modal = ({
   size = "md",
 }) => {
   const closeButtonRef = useRef(null);
+  const dialogRef = useRef(null);
+  const titleId = useId();
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -22,7 +27,26 @@ const Modal = ({
     closeButtonRef.current?.focus();
 
     const handleKeyDown = (event) => {
-      if (event.key === "Escape") onClose?.();
+      if (event.key === "Escape") {
+        onClose?.();
+        return;
+      }
+
+      if (event.key === "Tab") {
+        const focusable = dialogRef.current?.querySelectorAll(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        );
+        if (!focusable?.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -57,8 +81,9 @@ const Modal = ({
       <section
         role="dialog"
         aria-modal="true"
-        aria-labelledby={title ? "modal-title" : undefined}
+        aria-labelledby={title ? titleId : undefined}
         aria-label={title ? undefined : "Dialog"}
+        ref={dialogRef}
         className={[
           "w-full overflow-hidden rounded-2xl bg-white shadow-2xl",
           modalSize,
@@ -66,7 +91,7 @@ const Modal = ({
       >
         {/* Modal header */}
         <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
-          {title && <h2 id="modal-title" className="text-lg font-semibold text-slate-900">{title}</h2>}
+          {title && <h2 id={titleId} className="text-lg font-semibold text-slate-900">{title}</h2>}
 
           <button
             ref={closeButtonRef}
@@ -96,6 +121,4 @@ const Modal = ({
 };
 
 export default Modal;
-import { useEffect, useRef } from "react";
-import { X } from "lucide-react";
 

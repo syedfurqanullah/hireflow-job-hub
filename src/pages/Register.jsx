@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { startDemoSession } from "../services/auth";
 
 /* =========================================================
    HireFlow Register Page
@@ -16,6 +17,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Registration form state
   const [formData, setFormData] = useState({
@@ -76,6 +78,11 @@ const Register = () => {
       return;
     }
 
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
     // Minimum password length
     if (password.length < 6) {
       setError("Password must be at least 6 characters.");
@@ -102,19 +109,19 @@ const Register = () => {
     setTimeout(() => {
       const user = {
         name: fullName.trim(),
-        email: email.trim(),
+        email: email.trim().toLowerCase(),
         role,
       };
 
       // Temporary local session
-      localStorage.setItem("hireflow_user", JSON.stringify(user));
-      localStorage.setItem("hireflow_is_authenticated", "true");
-      window.dispatchEvent(new Event("hireflow-auth-change"));
-
-      // Registration ke baad User Dashboard
-      navigate("/dashboard");
-
-      setIsLoading(false);
+      try {
+        startDemoSession(user);
+        navigate(location.state?.from || "/dashboard", { replace: true });
+      } catch (sessionError) {
+        setError(sessionError.message);
+      } finally {
+        setIsLoading(false);
+      }
     }, 700);
   };
 
@@ -155,6 +162,10 @@ const Register = () => {
               Form Card
           ================================================= */}
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+
+            <p className="mb-5 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm leading-6 text-blue-800">
+              Frontend demo: your profile is saved in this browser only. No server account is created.
+            </p>
 
             {/* Error Message */}
             {error && (
@@ -450,6 +461,7 @@ const Register = () => {
                 Already have an account?{" "}
                 <Link
                   to="/login"
+                state={location.state}
                   className="font-semibold text-blue-600 transition hover:text-blue-700"
                 >
                   Sign in

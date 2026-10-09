@@ -3,6 +3,7 @@ import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import { Building2, BriefcaseBusiness, House, UserRound } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import RouteMeta from "../components/common/RouteMeta";
 
 /* =========================================================
    Main Layout
@@ -16,6 +17,7 @@ import { NavLink } from "react-router-dom";
 const MainLayout = () => {
   return (
     <div className="flex min-h-screen flex-col">
+      <RouteMeta />
       {/* Website Navbar */}
       <Navbar />
 

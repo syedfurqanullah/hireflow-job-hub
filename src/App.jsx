@@ -1,5 +1,6 @@
 import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./routes/AppRoutes";
+import AppErrorBoundary from "./components/common/AppErrorBoundary";
 
 /* =========================================================
    HireFlow Root Application
@@ -11,7 +12,9 @@ import AppRoutes from "./routes/AppRoutes";
 function App() {
   return (
     <BrowserRouter>
-      <AppRoutes />
+      <AppErrorBoundary>
+        <AppRoutes />
+      </AppErrorBoundary>
     </BrowserRouter>
   );
 }

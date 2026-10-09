@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Search,
@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import heroImage from "../../assets/hireflow-hero.png";
+import { getJobs } from "../../services/jobService";
 
 /* =========================================================
    HireFlow Hero Section
@@ -40,11 +41,30 @@ function Hero() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [location, setLocation] = useState("");
+  const [liveStats, setLiveStats] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+    getJobs({ limit: 50 })
+      .then((jobs) => {
+        if (!active) return;
+        setLiveStats({
+          jobs: jobs.length,
+          companies: new Set(jobs.map((job) => job.companyName).filter(Boolean)).size,
+        });
+      })
+      .catch(() => {
+        if (active) setLiveStats({ jobs: null, companies: null });
+      });
+
+    return () => { active = false; };
+  }, []);
+
   const heroStats = [
-    { label: "Active Jobs", value: "50K+", Icon: BriefcaseBusiness, boxClass: "bg-blue-500/15", iconClass: "text-blue-300" },
-    { label: "Companies", value: "10K+", Icon: Building2, boxClass: "bg-cyan-500/15", iconClass: "text-cyan-300" },
-    { label: "Job Seekers", value: "5M+", Icon: Users, boxClass: "bg-violet-500/15", iconClass: "text-violet-300" },
-    { label: "User Rating", value: "4.8/5", Icon: Star, boxClass: "bg-amber-500/15", iconClass: "fill-amber-300 text-amber-300" },
+    { label: "Active Jobs", value: liveStats?.jobs?.toLocaleString() ?? "—", note: "Jobs in current API feed", Icon: BriefcaseBusiness, boxClass: "bg-blue-500/15", iconClass: "text-blue-300" },
+    { label: "Companies", value: liveStats?.companies?.toLocaleString() ?? "—", note: "Companies in current feed", Icon: Building2, boxClass: "bg-cyan-500/15", iconClass: "text-cyan-300" },
+    { label: "Job Seekers", value: "—", note: "No platform user count", Icon: Users, boxClass: "bg-violet-500/15", iconClass: "text-violet-300" },
+    { label: "User Rating", value: "—", note: "No ratings data available", Icon: Star, boxClass: "bg-amber-500/15", iconClass: "fill-amber-300 text-amber-300" },
   ];
 
   /* =========================================================
@@ -310,7 +330,7 @@ function Hero() {
         <div className="relative z-10 border-t border-white/10 py-7 sm:py-8 lg:py-9">
 
           <div className="grid grid-cols-2 gap-y-7 sm:grid-cols-4 sm:divide-x sm:divide-white/10">
-            {heroStats.map(({ label, value, Icon, boxClass, iconClass }) => (
+            {heroStats.map(({ label, value, note, Icon, boxClass, iconClass }) => (
               <div key={label} className="flex items-center justify-center gap-3 sm:px-6">
                 <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${boxClass}`}>
                   <Icon className={`h-5 w-5 ${iconClass}`} />
@@ -318,6 +338,7 @@ function Hero() {
                 <div>
                   <p className="text-2xl font-extrabold sm:text-3xl">{value}</p>
                   <p className="mt-1 text-xs text-slate-300 sm:text-sm">{label}</p>
+                  <p className="mt-0.5 max-w-40 text-[10px] leading-4 text-slate-400">{note}</p>
                 </div>
               </div>
             ))}

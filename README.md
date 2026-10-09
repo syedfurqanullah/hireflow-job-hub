@@ -1,72 +1,46 @@
 # HireFlow Job Hub
 
-HireFlow Job Hub is a job-search platform frontend built with React. It is being developed as a place for job seekers to explore jobs and companies, manage applications, and maintain a profile.
+HireFlow is a frontend-only job discovery demo built with React, Vite, React Router, and Tailwind CSS. It uses the Adzuna jobs API to browse listings and stores saved jobs and demo sessions in the current browser.
 
-> **Work in progress:** This project is not finished. The current app is an early frontend scaffold: the responsive navigation and shared layout are in place, while the main pages and user flows are still being built. Some routes currently show placeholder content. There is no backend or live job data yet.
+## Run locally
 
-## Current progress
+1. Install Node.js LTS and npm.
+2. Copy `.env.example` to `.env` and add your Adzuna credentials.
+3. Run `npm install` and `npm run dev`.
 
-- React single-page application with client-side routing.
-- Shared public-site layout and responsive navigation.
-- Initial reusable UI components and page components for jobs, companies, authentication, and a job-seeker dashboard.
-- Home, jobs, companies, about, and contact routes are registered; several currently display placeholder content.
+Available commands: `npm run dev`, `npm run build`, `npm run preview`, and `npm run lint`.
 
-### Planned work
+## Environment variables
 
-- Build out the job search, filters, job details, and company pages.
-- Connect the existing page and component scaffolding to the app routes.
-- Complete authentication, profile, and dashboard flows.
-- Add data/API integration and finish responsive and accessibility checks.
-
-Features are subject to change as development continues.
-
-## Tech stack
-
-- React
-- Vite
-- React Router
-- Tailwind CSS
-
-## Getting started
-
-### Requirements
-
-- Node.js (LTS recommended)
-- npm
-
-### Run locally
-
-```bash
-git clone <repository-url>
-cd "HireFlow Job Hub"
-npm install
-npm run dev
+```env
+VITE_ADZUNA_APP_ID=
+VITE_ADZUNA_APP_KEY=
+VITE_ADZUNA_COUNTRY=us
+VITE_LOGO_DEV_TOKEN=
 ```
 
-Vite prints the local development URL in the terminal after the server starts.
+The `.env` file is ignored by Git. Vite variables prefixed with `VITE_` are included in browser code, so API tokens are visible to visitors. Use provider-side restrictions and quotas; a production app that needs secret credentials requires a server-side proxy.
 
-## Available scripts
+## Frontend demo limitations
 
-| Command | Description |
-| --- | --- |
-| `npm run dev` | Start the Vite development server. |
-| `npm run build` | Create a production build in `dist/`. |
-| `npm run preview` | Preview the production build locally. |
-| `npm run lint` | Run ESLint. |
+- Sign up and sign in create a local browser demo session; they do not authenticate against a server.
+- Dashboard access checks that local demo session. This is UI behavior, not a security boundary.
+- Saved jobs stay in browser storage and are not synced between devices.
+- The application form validates input locally. It does not upload a resume, send an application, or track employer status.
+- Job descriptions and fields depend on the listings returned by Adzuna. Skills and requirements may be absent when the source listing does not provide them separately.
+- Hero job and company figures reflect the current API feed. The API does not provide HireFlow user totals or ratings, so those are shown as unavailable.
 
 ## Project structure
 
 ```text
 src/
-├── components/   # Shared UI and feature components
-├── layouts/      # Shared page layouts
-├── pages/        # Page-level components in development
-├── routes/       # Application route definitions
-├── assets/       # Images and other imported assets
-├── App.jsx       # Root app and router setup
-└── main.jsx      # Application entry point
+  components/  Shared and feature UI
+  layouts/     Shared page layouts
+  pages/       Route screens
+  routes/      Route definitions and frontend access checks
+  services/    Adzuna API, local demo auth, and saved jobs
 ```
 
-## Contributing
+## Verification
 
-This project is actively being developed. Issues and pull requests are welcome; please keep in mind that structure and features may change while work is in progress.
+Run `npm run lint` and `npm run build` before sharing changes. The project does not yet include automated browser or component tests; check the main flows at phone, tablet, desktop, and wide-screen widths before release.
