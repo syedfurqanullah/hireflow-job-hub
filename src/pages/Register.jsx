@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import BrandLogo from "../components/common/BrandLogo";
 import { startDemoSession } from "../services/auth";
 
 /* =========================================================
@@ -136,18 +137,7 @@ const Register = () => {
 
           {/* Brand / Heading */}
           <div className="mb-8 text-center">
-            <Link
-              to="/"
-              className="mb-6 inline-flex items-center gap-2"
-            >
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-sm font-bold text-white shadow-sm">
-                H
-              </span>
-
-              <span className="text-2xl font-bold tracking-tight text-slate-900">
-                Hire<span className="text-blue-600">Flow</span>
-              </span>
-            </Link>
+            <BrandLogo className="mb-6" />
 
             <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
               Create your account

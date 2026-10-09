@@ -21,6 +21,21 @@ body {
   transition: background-color 180ms ease, color 180ms ease;
 }
 
+.route-transition {
+  animation: route-enter 220ms ease-out both;
+}
+
+@keyframes route-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .dark {
   color-scheme: dark;
   background: #0b1220;
@@ -174,6 +189,10 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .route-transition {
+    animation: none;
   }
 }
 

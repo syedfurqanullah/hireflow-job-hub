@@ -214,9 +214,10 @@
 
 import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { BriefcaseBusiness, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
+import BrandLogo from "../common/BrandLogo";
 import { endDemoSession, isAuthenticated } from "../../services/auth";
-import { useTheme } from "../../context/ThemeContext";
+import { useTheme } from "../../context/useTheme";
 
 /* =========================================================
    HireFlow Navbar
@@ -303,20 +304,7 @@ function Navbar() {
           {/* =================================================
               HireFlow Logo
           ================================================= */}
-          <Link
-            to="/"
-            onClick={closeMobileMenu}
-            className="flex items-center gap-2"
-            aria-label="HireFlow home"
-          >
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm">
-              <BriefcaseBusiness size={18} />
-            </div>
-
-            <span className="text-xl font-bold tracking-tight text-slate-900">
-              Hire<span className="text-blue-600">Flow</span>
-            </span>
-          </Link>
+          <BrandLogo onClick={closeMobileMenu} />
 
           {/* =================================================
               Desktop Navigation

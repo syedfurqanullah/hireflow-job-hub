@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import BrandLogo from "../components/common/BrandLogo";
 import { startDemoSession } from "../services/auth";
 
 // =========================================================
@@ -130,25 +131,7 @@ const Login = () => {
 
           <div className="relative p-10 xl:p-14">
             {/* Brand */}
-            <Link
-              to="/"
-              className="inline-flex items-center gap-2.5"
-              aria-label="HireFlow home"
-            >
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-lg font-black text-white shadow-lg shadow-blue-950/30">
-                H
-              </div>
-
-              <div>
-                <span className="block text-xl font-extrabold tracking-tight text-white">
-                  Hire<span className="text-blue-400">Flow</span>
-                </span>
-
-                <span className="block text-[10px] font-medium uppercase tracking-[0.18em] text-slate-500">
-                  Job Hub
-                </span>
-              </div>
-            </Link>
+            <BrandLogo dark />
 
             <div className="mt-24 max-w-xl xl:mt-32">
               <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-500/10 px-4 py-2 text-xs font-semibold text-blue-300">
@@ -203,25 +186,7 @@ const Login = () => {
           <div className="w-full max-w-md">
             {/* Mobile brand */}
             <div className="mb-8 text-center lg:hidden">
-              <Link
-                to="/"
-                className="inline-flex items-center gap-2.5"
-                aria-label="HireFlow home"
-              >
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-lg font-black text-white shadow-lg shadow-blue-100">
-                  H
-                </div>
-
-                <div className="text-left">
-                  <span className="block text-xl font-extrabold tracking-tight text-slate-900">
-                    Hire<span className="text-blue-600">Flow</span>
-                  </span>
-
-                  <span className="block text-[10px] font-medium uppercase tracking-[0.18em] text-slate-400">
-                    Job Hub
-                  </span>
-                </div>
-              </Link>
+              <BrandLogo />
             </div>
 
             {/* Heading */}

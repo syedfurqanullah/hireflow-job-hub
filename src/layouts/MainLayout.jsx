@@ -1,4 +1,5 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import { Building2, BriefcaseBusiness, House, UserRound } from "lucide-react";
@@ -15,6 +16,12 @@ import RouteMeta from "../components/common/RouteMeta";
 ========================================================= */
 
 const MainLayout = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [location.pathname]);
+
   return (
     <div className="flex min-h-screen flex-col">
       <RouteMeta />
@@ -22,8 +29,10 @@ const MainLayout = () => {
       <Navbar />
 
       {/* Current Route Page */}
-        <main className="flex-1 pb-16 md:pb-0">
-        <Outlet />
+        <main className="flex-1 overflow-hidden pb-16 md:pb-0">
+        <div key={location.pathname} className="route-transition">
+          <Outlet />
+        </div>
       </main>
 
       {/* Website Footer */}

@@ -1,8 +1,7 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { ThemeContext } from "./theme-context";
 
 const STORAGE_KEY = "hireflow-theme";
-const ThemeContext = createContext(null);
-
 const getSystemTheme = () =>
   window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 
@@ -16,7 +15,7 @@ const getInitialTheme = () => {
   return getSystemTheme();
 };
 
-export const ThemeProvider = ({ children }) => {
+const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(getInitialTheme);
 
   useEffect(() => {
@@ -67,8 +66,4 @@ export const ThemeProvider = ({ children }) => {
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };
 
-export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (!context) throw new Error("useTheme must be used within ThemeProvider.");
-  return context;
-};
+export default ThemeProvider;

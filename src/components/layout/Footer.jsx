@@ -5,6 +5,7 @@ import {
   Phone,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import BrandLogo from "../common/BrandLogo";
 
 // =========================================================
 // HireFlow - Footer
@@ -35,8 +36,8 @@ const Footer = () => {
   const jobSeekerLinks = [
     { label: "Browse Jobs", path: "/jobs" },
     { label: "Companies", path: "/companies" },
-    { label: "Create Account", path: "/register" },
-    { label: "Login", path: "/login" },
+    { label: "Dashboard", path: "/dashboard" },
+    { label: "Saved Jobs", path: "/dashboard#saved-jobs" },
   ];
 
   // =======================================================
@@ -77,25 +78,7 @@ const Footer = () => {
 
           <div className="max-w-sm">
             {/* Logo */}
-            <Link
-              to="/"
-              className="inline-flex items-center gap-2.5"
-              aria-label="HireFlow home"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-lg font-black text-white shadow-lg shadow-blue-100">
-                H
-              </div>
-
-              <div>
-                <span className="block text-xl font-extrabold tracking-tight text-slate-900">
-                  Hire<span className="text-blue-600">Flow</span>
-                </span>
-
-                <span className="block text-[10px] font-medium uppercase tracking-[0.18em] text-slate-400">
-                  Job Hub
-                </span>
-              </div>
-            </Link>
+            <BrandLogo />
 
             {/* Description */}
             <p className="mt-5 text-sm leading-7 text-slate-500">
