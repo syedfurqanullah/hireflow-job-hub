@@ -1,111 +1,35 @@
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
-import Home from "../pages/Home";
-import Jobs from "../pages/Jobs";
-import JobDetails from "../pages/JobDetails";
+import About from "../pages/About";
 import Companies from "../pages/Companies";
 import CompanyDetails from "../pages/CompanyDetails";
-import Dashboard from "../pages/Dashboard";
-import About from "../pages/About";
 import Contact from "../pages/Contact";
+import Dashboard from "../pages/Dashboard";
+import Home from "../pages/Home";
+import JobDetails from "../pages/JobDetails";
+import Jobs from "../pages/Jobs";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
-
-/* =========================================================
-   Application Routes
-
-   Purpose:
-   - Website ke different URLs define karna
-   - Har URL ko correct page/component ke saath connect karna
-   - MainLayout ke andar public pages render karna
-========================================================= */
+import ApplyJob from "../pages/ApplyJob";
+import NotFound from "../pages/NotFound";
 
 function AppRoutes() {
   return (
     <Routes>
-      {/* =====================================================
-          Public Website Layout
-      ===================================================== */}
       <Route element={<MainLayout />}>
-
-        {/* Home */}
         <Route path="/" element={<Home />} />
-
-        {/* Jobs Listing */}
         <Route path="/jobs" element={<Jobs />} />
-
-        {/* Job Details */}
+        <Route path="/jobs/:id/apply" element={<ApplyJob />} />
         <Route path="/jobs/:id" element={<JobDetails />} />
-
-        {/* Companies */}
         <Route path="/companies" element={<Companies />} />
-
-        {/* Company Details */}
-      <Route path="/companies/:id" element={<CompanyDetails />} />
-
-      {/* Dashboard*/}
+        <Route path="/companies/:id" element={<CompanyDetails />} />
         <Route path="/dashboard" element={<Dashboard />} />
-
-      {/* About */}
-      <Route path="/about" element={<About />} />
-
-      {/* Contact */}
-      <Route path="/contact" element={<Contact />} />
-
-      {/* Login */}
+        <Route path="/profile" element={<Dashboard />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
-
-        {/* Register */}
         <Route path="/register" element={<Register />} />
-
-        {/* Companies */}
-        <Route
-          path="/companies"
-          element={
-            <div className="mx-auto max-w-7xl px-4 py-20 text-center">
-              <h1 className="text-4xl font-bold text-slate-900">
-                Companies
-              </h1>
-
-              <p className="mt-4 text-slate-600">
-                Companies page coming next...
-              </p>
-            </div>
-          }
-        />
-
-        {/* About */}
-        <Route
-          path="/about"
-          element={
-            <div className="mx-auto max-w-7xl px-4 py-20 text-center">
-              <h1 className="text-4xl font-bold text-slate-900">
-                About HireFlow
-              </h1>
-
-              <p className="mt-4 text-slate-600">
-                Learn more about HireFlow Job Hub.
-              </p>
-            </div>
-          }
-        />
-
-        {/* Contact */}
-        <Route
-          path="/contact"
-          element={
-            <div className="mx-auto max-w-7xl px-4 py-20 text-center">
-              <h1 className="text-4xl font-bold text-slate-900">
-                Contact
-              </h1>
-
-              <p className="mt-4 text-slate-600">
-                Get in touch with the HireFlow team.
-              </p>
-            </div>
-          }
-        />
-
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );

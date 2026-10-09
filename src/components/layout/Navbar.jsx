@@ -212,8 +212,9 @@
 
 // export default Navbar;
 
-import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { BriefcaseBusiness } from "lucide-react";
 
 /* =========================================================
    HireFlow Navbar
@@ -228,6 +229,32 @@ import { Link, NavLink } from "react-router-dom";
 function Navbar() {
   // Mobile menu ki open/close state
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    () => localStorage.getItem("hireflow_is_authenticated") === "true"
+  );
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const syncAuthState = () => {
+      setIsAuthenticated(localStorage.getItem("hireflow_is_authenticated") === "true");
+    };
+
+    window.addEventListener("storage", syncAuthState);
+    window.addEventListener("hireflow-auth-change", syncAuthState);
+    return () => {
+      window.removeEventListener("storage", syncAuthState);
+      window.removeEventListener("hireflow-auth-change", syncAuthState);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("hireflow_user");
+    localStorage.removeItem("hireflow_is_authenticated");
+    localStorage.removeItem("hireflow_remember_me");
+    setIsAuthenticated(false);
+    closeMobileMenu();
+    navigate("/");
+  };
 
   /*
     Public website ke main navigation links.
@@ -281,8 +308,8 @@ function Navbar() {
             className="flex items-center gap-2"
             aria-label="HireFlow home"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-sm font-bold text-white shadow-sm">
-              H
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm">
+              <BriefcaseBusiness size={18} />
             </div>
 
             <span className="text-xl font-bold tracking-tight text-slate-900">
@@ -319,19 +346,15 @@ function Navbar() {
               Desktop Authentication
           ================================================= */}
           <div className="hidden items-center gap-3 md:flex">
-            <Link
-              to="/login"
-              className="rounded-lg px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-blue-600"
-            >
-              Login
-            </Link>
-
-            <Link
-              to="/register"
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 hover:shadow-md"
-            >
-              Sign Up
-            </Link>
+            {isAuthenticated ? (
+              <button type="button" onClick={handleLogout} className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700">
+                Logout
+              </button>
+            ) : (
+              <Link to="/register" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 hover:shadow-md">
+                Sign Up
+              </Link>
+            )}
           </div>
 
           {/* =================================================
@@ -422,21 +445,15 @@ function Navbar() {
                 Mobile Authentication Buttons
             ================================================= */}
             <div className="mt-4 flex flex-col gap-2 border-t border-slate-100 pt-4">
-              <Link
-                to="/login"
-                onClick={closeMobileMenu}
-                className="rounded-lg px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-blue-600"
-              >
-                Login
-              </Link>
-
-              <Link
-                to="/register"
-                onClick={closeMobileMenu}
-                className="rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700 hover:shadow-md"
-              >
-                Sign Up
-              </Link>
+              {isAuthenticated ? (
+                <button type="button" onClick={handleLogout} className="rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700">
+                  Logout
+                </button>
+              ) : (
+                <Link to="/register" onClick={closeMobileMenu} className="rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700 hover:shadow-md">
+                  Sign Up
+                </Link>
+              )}
             </div>
           </div>
         )}

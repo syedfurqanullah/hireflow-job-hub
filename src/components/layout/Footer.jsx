@@ -63,7 +63,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="mt-10 border-t border-slate-200 bg-white text-slate-700 sm:mt-12">
+    <footer className="mt-10 border-t border-slate-200 bg-white pb-16 text-slate-700 sm:mt-12 md:pb-0">
       {/* ===================================================
           Main Footer Content
           =================================================== */}

@@ -1,722 +1,372 @@
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   BriefcaseBusiness,
   CalendarDays,
-  CheckCircle2,
   Clock3,
   DollarSign,
+  ExternalLink,
   MapPin,
+  AlertCircle,
+  RefreshCw,
+  Bookmark,
 } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import {
+  Link,
+  useParams,
+} from "react-router-dom";
 
-/*
- * Temporary frontend job data.
- *
- * IMPORTANT:
- * Ye data sirf frontend development ke liye hai.
- * Baad mein isi structure ko real API response se replace
- * kiya jayega.
- *
- * IDs exactly Jobs.jsx ke mock job IDs ke saath match
- * karne chahiye taake listing se details page properly open ho.
- */
-const jobsData = [
-  {
-    id: "hf-frontend-001",
-    title: "Senior Frontend Developer",
-    company: "TechNova Solutions",
-    location: "Karachi, Pakistan",
-    type: "Full-time",
-    category: "Software Development",
-    salary: "$2,000 - $3,000",
-    experience: "3+ Years",
-    posted: "2 days ago",
+import {
+  getJobById, getJobs,
+} from "../services/jobService";
+import CompanyLogo from "../components/common/CompanyLogo";
+import { isJobSaved, toggleSavedJob } from "../services/savedJobs";
 
-    description:
-      "TechNova Solutions is looking for a Senior Frontend Developer to join its growing engineering team. You will build modern web applications, create reusable UI systems, and work closely with designers, backend engineers, and product teams.",
-
-    responsibilities: [
-      "Build and maintain modern React applications.",
-      "Create reusable and scalable UI components.",
-      "Collaborate with designers and backend developers.",
-      "Improve application performance and user experience.",
-      "Write clean, maintainable, and well-tested code.",
-    ],
-
-    requirements: [
-      "3+ years of frontend development experience.",
-      "Strong knowledge of React.js.",
-      "Strong JavaScript ES6+ knowledge.",
-      "Experience with Tailwind CSS.",
-      "Good understanding of REST APIs.",
-      "Experience with Git and GitHub.",
-    ],
-
-    benefits: [
-      "Competitive salary",
-      "Flexible working environment",
-      "Professional growth opportunities",
-      "Health benefits",
-      "Paid time off",
-    ],
-  },
-
-  {
-    id: "hf-backend-002",
-    title: "Backend Engineer",
-    company: "CloudStack Technologies",
-    location: "Islamabad, Pakistan",
-    type: "Full-time",
-    category: "Software Development",
-    salary: "$2,200 - $3,400",
-    experience: "3+ Years",
-    posted: "1 day ago",
-
-    description:
-      "CloudStack Technologies is hiring a Backend Engineer to design reliable APIs and scalable backend services. You will work with frontend engineers and product teams to build secure and high-performance applications.",
-
-    responsibilities: [
-      "Design and develop scalable backend services.",
-      "Build and maintain REST APIs.",
-      "Work with databases and data models.",
-      "Improve application security and performance.",
-      "Collaborate with frontend and DevOps teams.",
-    ],
-
-    requirements: [
-      "3+ years of backend development experience.",
-      "Strong knowledge of Node.js or similar backend technology.",
-      "Experience building REST APIs.",
-      "Good understanding of databases.",
-      "Knowledge of authentication and authorization.",
-      "Experience with Git and GitHub.",
-    ],
-
-    benefits: [
-      "Competitive compensation",
-      "Flexible working hours",
-      "Learning and development budget",
-      "Health benefits",
-      "Paid annual leave",
-    ],
-  },
-
-  {
-    id: "hf-fullstack-003",
-    title: "Full Stack Developer",
-    company: "DigitalPeak Labs",
-    location: "Lahore, Pakistan",
-    type: "Full-time",
-    category: "Software Development",
-    salary: "$2,000 - $3,200",
-    experience: "2+ Years",
-    posted: "3 days ago",
-
-    description:
-      "DigitalPeak Labs is looking for a Full Stack Developer who can contribute across both frontend and backend development. You will help build modern products from initial concept to production.",
-
-    responsibilities: [
-      "Develop responsive frontend applications.",
-      "Build and maintain backend APIs.",
-      "Integrate frontend applications with APIs.",
-      "Work with databases and application logic.",
-      "Collaborate with designers and product managers.",
-    ],
-
-    requirements: [
-      "2+ years of full stack development experience.",
-      "Experience with React.js.",
-      "Knowledge of Node.js and REST APIs.",
-      "Understanding of SQL or NoSQL databases.",
-      "Strong JavaScript ES6+ knowledge.",
-      "Experience with Git.",
-    ],
-
-    benefits: [
-      "Competitive salary",
-      "Remote-friendly environment",
-      "Professional development opportunities",
-      "Flexible schedule",
-    ],
-  },
-
-  {
-    id: "hf-uiux-004",
-    title: "UI/UX Designer",
-    company: "PixelCraft Studio",
-    location: "Karachi, Pakistan",
-    type: "Full-time",
-    category: "Design",
-    salary: "$1,500 - $2,400",
-    experience: "2+ Years",
-    posted: "4 days ago",
-
-    description:
-      "PixelCraft Studio is looking for a creative UI/UX Designer to design intuitive and visually polished digital experiences for web and mobile products.",
-
-    responsibilities: [
-      "Create user-friendly web and mobile interfaces.",
-      "Develop wireframes and high-fidelity designs.",
-      "Collaborate with developers and product teams.",
-      "Create and maintain design systems.",
-      "Conduct user research and usability improvements.",
-    ],
-
-    requirements: [
-      "2+ years of UI/UX design experience.",
-      "Strong knowledge of Figma.",
-      "Understanding of responsive design.",
-      "Strong visual design skills.",
-      "Good understanding of UX principles.",
-    ],
-
-    benefits: [
-      "Creative work environment",
-      "Flexible working hours",
-      "Professional growth opportunities",
-      "Paid time off",
-    ],
-  },
-
-  {
-    id: "hf-devops-005",
-    title: "DevOps Engineer",
-    company: "CloudBridge Systems",
-    location: "Remote",
-    type: "Full-time",
-    category: "DevOps & Cloud",
-    salary: "$2,500 - $4,000",
-    experience: "3+ Years",
-    posted: "5 days ago",
-
-    description:
-      "CloudBridge Systems is seeking a DevOps Engineer to improve deployment workflows, cloud infrastructure, monitoring, and application reliability.",
-
-    responsibilities: [
-      "Manage cloud infrastructure and deployment pipelines.",
-      "Automate development and deployment workflows.",
-      "Monitor application performance and availability.",
-      "Improve system security and reliability.",
-      "Collaborate with development teams.",
-    ],
-
-    requirements: [
-      "3+ years of DevOps experience.",
-      "Experience with AWS, Azure, or Google Cloud.",
-      "Knowledge of Docker and CI/CD.",
-      "Understanding of Linux systems.",
-      "Experience with monitoring and logging tools.",
-    ],
-
-    benefits: [
-      "Remote work",
-      "Competitive salary",
-      "Cloud certification support",
-      "Flexible working hours",
-    ],
-  },
-
-  {
-    id: "hf-python-006",
-    title: "Python Developer",
-    company: "DataCore Technologies",
-    location: "Islamabad, Pakistan",
-    type: "Full-time",
-    category: "Software Development",
-    salary: "$1,800 - $3,000",
-    experience: "2+ Years",
-    posted: "6 days ago",
-
-    description:
-      "DataCore Technologies is hiring a Python Developer to build backend services, automation tools, and data-driven applications.",
-
-    responsibilities: [
-      "Develop Python-based backend services.",
-      "Build and maintain REST APIs.",
-      "Create automation scripts and internal tools.",
-      "Work with databases and external APIs.",
-      "Write clean and maintainable code.",
-    ],
-
-    requirements: [
-      "2+ years of Python development experience.",
-      "Experience with Django or FastAPI.",
-      "Strong understanding of REST APIs.",
-      "Database experience.",
-      "Good knowledge of Git.",
-    ],
-
-    benefits: [
-      "Competitive salary",
-      "Learning opportunities",
-      "Flexible working environment",
-      "Health benefits",
-    ],
-  },
-
-  {
-    id: "hf-qa-007",
-    title: "QA Automation Engineer",
-    company: "QualityWorks",
-    location: "Lahore, Pakistan",
-    type: "Full-time",
-    category: "Quality Assurance",
-    salary: "$1,600 - $2,600",
-    experience: "2+ Years",
-    posted: "1 week ago",
-
-    description:
-      "QualityWorks is looking for a QA Automation Engineer to improve product quality through automated testing and reliable quality assurance processes.",
-
-    responsibilities: [
-      "Create and maintain automated test suites.",
-      "Identify and document software defects.",
-      "Work closely with developers to resolve issues.",
-      "Perform regression and integration testing.",
-      "Improve testing processes and coverage.",
-    ],
-
-    requirements: [
-      "2+ years of QA experience.",
-      "Experience with automated testing.",
-      "Knowledge of API testing.",
-      "Understanding of software testing methodologies.",
-      "Experience with Git.",
-    ],
-
-    benefits: [
-      "Professional development",
-      "Flexible schedule",
-      "Health benefits",
-      "Paid time off",
-    ],
-  },
-
-  {
-    id: "hf-mobile-008",
-    title: "Mobile App Developer",
-    company: "AppForge Technologies",
-    location: "Karachi, Pakistan",
-    type: "Full-time",
-    category: "Mobile Development",
-    salary: "$1,800 - $3,000",
-    experience: "2+ Years",
-    posted: "1 week ago",
-
-    description:
-      "AppForge Technologies is searching for a Mobile App Developer to build high-quality mobile experiences for modern digital products.",
-
-    responsibilities: [
-      "Develop and maintain mobile applications.",
-      "Build reusable mobile UI components.",
-      "Integrate applications with REST APIs.",
-      "Optimize application performance.",
-      "Collaborate with designers and backend developers.",
-    ],
-
-    requirements: [
-      "2+ years of mobile development experience.",
-      "Experience with React Native or Flutter.",
-      "Strong JavaScript or Dart knowledge.",
-      "REST API integration experience.",
-      "Understanding of mobile UI principles.",
-    ],
-
-    benefits: [
-      "Competitive salary",
-      "Flexible working hours",
-      "Professional growth",
-      "Paid leave",
-    ],
-  },
-
-  {
-    id: "hf-data-009",
-    title: "Data Analyst",
-    company: "InsightHub",
-    location: "Lahore, Pakistan",
-    type: "Full-time",
-    category: "Data & AI",
-    salary: "$1,500 - $2,500",
-    experience: "2+ Years",
-    posted: "8 days ago",
-
-    description:
-      "InsightHub is looking for a Data Analyst who can transform business data into useful insights and help teams make better decisions.",
-
-    responsibilities: [
-      "Analyze business and product data.",
-      "Create dashboards and reports.",
-      "Identify trends and actionable insights.",
-      "Work with product and business teams.",
-      "Maintain data quality and reporting processes.",
-    ],
-
-    requirements: [
-      "2+ years of data analysis experience.",
-      "Strong SQL knowledge.",
-      "Experience with Excel or spreadsheet tools.",
-      "Knowledge of Power BI or similar tools.",
-      "Strong analytical and communication skills.",
-    ],
-
-    benefits: [
-      "Learning opportunities",
-      "Flexible working environment",
-      "Professional growth",
-      "Health coverage",
-    ],
-  },
-
-  {
-    id: "hf-ai-010",
-    title: "Machine Learning Engineer",
-    company: "NeuralWorks AI",
-    location: "Remote",
-    type: "Full-time",
-    category: "Data & AI",
-    salary: "$2,500 - $4,500",
-    experience: "3+ Years",
-    posted: "10 days ago",
-
-    description:
-      "NeuralWorks AI is looking for a Machine Learning Engineer to develop, deploy, and improve machine learning solutions for real-world products.",
-
-    responsibilities: [
-      "Develop and evaluate machine learning models.",
-      "Prepare and process datasets.",
-      "Build model deployment pipelines.",
-      "Monitor model performance.",
-      "Collaborate with software and data engineering teams.",
-    ],
-
-    requirements: [
-      "3+ years of machine learning experience.",
-      "Strong Python knowledge.",
-      "Experience with machine learning frameworks.",
-      "Understanding of data preprocessing.",
-      "Knowledge of model deployment concepts.",
-    ],
-
-    benefits: [
-      "Remote work",
-      "Competitive salary",
-      "Learning budget",
-      "Flexible schedule",
-      "Professional development",
-    ],
-  },
-];
+// =========================================================
+// HireFlow - Job Details
+// =========================================================
 
 const JobDetails = () => {
   const { id } = useParams();
 
-  /*
-   * Route se received ID ko mock jobs ke against match kar rahe hain.
-   *
-   * Later API integration ke baad yahan:
-   * GET /jobs/:id
-   * ya equivalent API service call use ki ja sakti hai.
-   */
-  const job = jobsData.find((item) => item.id === id);
+  const [job, setJob] =
+    useState(null);
 
-  /*
-   * Agar invalid job ID aaye to clean 404-style state show hogi.
-   */
-  if (!job) {
+  const [loading, setLoading] =
+    useState(true);
+
+  const [error, setError] =
+    useState("");
+  const [similarJobs, setSimilarJobs] = useState([]);
+  const [saved, setSaved] = useState(() => isJobSaved(id));
+
+  useEffect(() => {
+    let active = true;
+
+    getJobs().then((items) => {
+      if (active) setSimilarJobs(items.filter((item) => item.id !== id).slice(0, 3));
+    }).catch(() => {});
+
+    getJobById(id)
+      .then((data) => {
+        if (!active) return;
+        if (!data) {
+          setError("This job could not be found.");
+          return;
+        }
+        setError("");
+        setJob(data);
+        setSaved(isJobSaved(data.id));
+      })
+      .catch((requestError) => {
+        if (active) {
+          setError(requestError?.message || "Unable to load this job.");
+        }
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [id]);
+
+  const loadJob = () => {
+    setLoading(true);
+    setError("");
+    getJobById(id)
+      .then((data) => {
+        if (!data) {
+          setError("This job could not be found.");
+          return;
+        }
+        setJob(data);
+      })
+      .catch((requestError) => {
+        setError(requestError?.message || "Unable to load this job.");
+      })
+      .finally(() => setLoading(false));
+  };
+
+  // -------------------------------------------------------
+  // Loading state
+  // -------------------------------------------------------
+
+  if (loading) {
     return (
-      <main className="min-h-screen bg-slate-50 px-4 py-20">
-        <div className="mx-auto max-w-3xl rounded-3xl bg-white p-8 text-center shadow-sm sm:p-10">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-slate-500">
-            <BriefcaseBusiness size={28} />
-          </div>
+      <main className="min-h-screen bg-slate-50 p-8">
+        <div className="mx-auto max-w-7xl animate-pulse">
+          <div className="h-6 w-32 rounded bg-slate-200" />
 
-          <h1 className="mt-6 text-3xl font-bold text-slate-900">
-            Job Not Found
-          </h1>
+          <div className="mt-10 h-12 w-2/3 rounded bg-slate-200" />
 
-          <p className="mx-auto mt-3 max-w-xl leading-7 text-slate-600">
-            The job you are looking for does not exist or may have been
-            removed.
-          </p>
+          <div className="mt-4 h-5 w-1/3 rounded bg-slate-200" />
 
-          <Link
-            to="/jobs"
-            className="mt-7 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 font-semibold text-white transition hover:bg-slate-800"
-          >
-            <ArrowLeft size={18} />
-            Back to Jobs
-          </Link>
+          <div className="mt-10 h-72 rounded-3xl bg-white" />
         </div>
       </main>
     );
   }
 
+  // -------------------------------------------------------
+  // Error state
+  // -------------------------------------------------------
+
+  if (error || !job) {
+    return (
+      <main className="min-h-screen bg-slate-50 px-4 py-20">
+        <div className="mx-auto max-w-xl rounded-3xl bg-white p-10 text-center shadow-sm">
+          <AlertCircle
+            size={38}
+            className="mx-auto text-red-500"
+          />
+
+          <h1 className="mt-5 text-2xl font-bold">
+            Job unavailable
+          </h1>
+
+          <p className="mt-3 text-sm text-slate-500">
+            {error}
+          </p>
+
+          <div className="mt-6 flex justify-center gap-3">
+            <button
+              onClick={loadJob}
+              className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white"
+            >
+              <RefreshCw size={16} />
+              Retry
+            </button>
+
+            <Link
+              to="/jobs"
+              className="inline-flex items-center gap-2 rounded-xl border px-5 py-3 text-sm font-semibold"
+            >
+              <ArrowLeft size={17} />
+              Jobs
+            </Link>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  const skills =
+    job.skills || [];
+
+  const certifications =
+    job.certifications || [];
+  const requirements = job.requirements || [];
+
+  const applyUrl =
+    job.applyUrl || job.url;
+
+  const handleToggleSaved = () => {
+    try {
+      const next = toggleSavedJob(job);
+      setSaved(next.some((item) => item.id === job.id));
+    } catch (storageError) {
+      setError(storageError.message);
+    }
+  };
+
   return (
-    <main className="bg-slate-50">
-      {/* =========================================================
-          JOB HERO / HEADER
-          ========================================================= */}
-      <section className="border-b border-slate-200 bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
-          {/* Back navigation */}
+    <main className="min-h-screen bg-slate-50">
+      {/* =================================================
+          Hero
+      ================================================= */}
+
+      <section className="border-b bg-white">
+        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
           <Link
             to="/jobs"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition hover:text-blue-600"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-600"
           >
-            <ArrowLeft size={18} />
+            <ArrowLeft size={17} />
             Back to Jobs
           </Link>
 
-          <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
-            {/* Job identity */}
+          <div className="mt-8 flex flex-col gap-7 lg:flex-row lg:items-center lg:justify-between">
             <div className="min-w-0">
-              {/* Company avatar */}
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-xl font-bold text-blue-600 shadow-sm">
-                {job.company.charAt(0)}
-              </div>
-
-              {/* Company name */}
+              <CompanyLogo name={job.company} src={job.companyLogo} className="h-16 w-16 rounded-2xl text-xl" />
               <p className="mt-5 font-semibold text-blue-600">
                 {job.company}
               </p>
 
-              {/* Job title */}
-              <h1 className="mt-2 max-w-4xl text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+              <h1 className="mt-2 max-w-4xl text-3xl font-bold text-slate-900 sm:text-4xl">
                 {job.title}
               </h1>
 
-              {/* Category */}
-              <p className="mt-3 text-sm font-medium text-slate-500">
-                {job.category}
-              </p>
-
-              {/* Job meta information */}
-              <div className="mt-5 flex flex-wrap gap-x-5 gap-y-3 text-sm text-slate-600">
-                <span className="inline-flex items-center gap-2">
-                  <MapPin size={17} className="text-blue-600" />
+              <div className="mt-5 flex flex-wrap gap-4 text-sm text-slate-600">
+                <span className="flex items-center gap-2">
+                  <MapPin size={17} />
                   {job.location}
                 </span>
 
-                <span className="inline-flex items-center gap-2">
+                <span className="flex items-center gap-2">
                   <BriefcaseBusiness
                     size={17}
-                    className="text-blue-600"
                   />
                   {job.type}
                 </span>
 
-                <span className="inline-flex items-center gap-2">
-                  <DollarSign size={17} className="text-blue-600" />
+                <span className="flex items-center gap-2">
+                  <DollarSign size={17} />
                   {job.salary}
                 </span>
 
-                <span className="inline-flex items-center gap-2">
-                  <Clock3 size={17} className="text-blue-600" />
+                <span className="flex items-center gap-2">
+                  <Clock3 size={17} />
                   {job.experience}
                 </span>
               </div>
             </div>
 
-            {/* Primary application CTA */}
-            <button
-              type="button"
-              className="w-full shrink-0 rounded-xl bg-blue-600 px-7 py-3.5 font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:w-auto"
-            >
-              Apply Now
-            </button>
+            <div className="flex flex-wrap gap-3">
+              <button type="button" onClick={handleToggleSaved} aria-pressed={saved} className={`inline-flex items-center justify-center gap-2 rounded-xl border px-5 py-3.5 font-semibold ${saved ? "border-blue-200 bg-blue-50 text-blue-700" : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"}`}><Bookmark size={17} className={saved ? "fill-current" : ""} />{saved ? "Saved" : "Save Job"}</button>
+              <Link to={`/jobs/${job.id}/apply`} className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-7 py-3.5 font-semibold text-white shadow-lg hover:bg-blue-700">Apply Now</Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* =========================================================
-          MAIN CONTENT
-          ========================================================= */}
-      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
-          {/* =====================================================
-              LEFT CONTENT
-              ===================================================== */}
-          <div className="min-w-0 space-y-6 sm:space-y-8">
-            {/* About the job */}
-            <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm sm:p-8">
-              <h2 className="text-2xl font-bold text-slate-900">
-                About the Job
-              </h2>
+      <nav aria-label="Job details sections" className="sticky top-16 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl gap-6 overflow-x-auto px-4 sm:px-6 lg:px-8">
+          {[ ["overview", "Description"] ].map(([target, label]) => (
+            <a key={target} href={`#${target}`} className="whitespace-nowrap border-b-2 border-transparent py-4 text-sm font-semibold text-slate-500 hover:border-blue-600 hover:text-blue-600">{label}</a>
+          ))}
+        </div>
+      </nav>
 
-              <p className="mt-4 leading-7 text-slate-600">
+      {/* =================================================
+          Details
+      ================================================= */}
+
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="grid gap-8 lg:grid-cols-[1fr_350px]">
+          <div className="space-y-6">
+            {/* Description */}
+            <section id="overview" className="scroll-mt-36 rounded-3xl bg-white p-6 shadow-sm sm:p-8">
+              <h2 className="text-2xl font-bold">Description</h2>
+
+              <p className="mt-5 whitespace-pre-line leading-8 text-slate-600">
                 {job.description}
               </p>
+              {applyUrl && (
+                <a href={applyUrl} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700">
+                  View the complete job listing at its source <ExternalLink size={15} />
+                </a>
+              )}
+              <p className="mt-3 text-xs text-slate-500">The job source provides a short description here. Use the source link for the employer’s complete listing.</p>
+              <div className="mt-7 grid gap-6 border-t border-slate-100 pt-6 sm:grid-cols-2">
+                <div>
+                  <h3 className="font-bold text-slate-900">Company</h3>
+                  <div className="mt-3 flex items-center gap-3"><CompanyLogo name={job.company} src={job.companyLogo} className="h-11 w-11 text-sm" /><div><p className="font-semibold text-slate-800">{job.company}</p><p className="text-sm text-slate-500">{job.location}</p></div></div>
+                  {job.companyWebsite && <a href={job.companyWebsite} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-blue-600">Company website <ExternalLink size={14} /></a>}
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-900">Requirements mentioned in listing</h3>
+                  {requirements.length ? <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-600">{requirements.map((item) => <li key={item}>{item}</li>)}</ul> : <p className="mt-3 text-sm text-slate-500">Not separately listed by the job source.</p>}
+                </div>
+                <div className="sm:col-span-2">
+                  <h3 className="font-bold text-slate-900">Skills mentioned in listing</h3>
+                  {skills.length ? <div className="mt-3 flex flex-wrap gap-2">{skills.map((skill) => <span key={skill} className="rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700">{skill}</span>)}</div> : <p className="mt-3 text-sm text-slate-500">Not separately listed by the job source.</p>}
+                  {certifications.length > 0 && <><h3 className="mt-5 font-bold text-slate-900">Certifications</h3><div className="mt-2 flex flex-wrap gap-2">{certifications.map((item) => <span key={item} className="rounded-full bg-slate-100 px-3 py-1.5 text-sm text-slate-700">{item}</span>)}</div></>}
+                </div>
+              </div>
             </section>
 
-            {/* Responsibilities */}
-            <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm sm:p-8">
-              <h2 className="text-2xl font-bold text-slate-900">
-                Responsibilities
-              </h2>
-
-              <ul className="mt-5 space-y-4">
-                {job.responsibilities.map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-start gap-3 text-slate-600"
-                  >
-                    <CheckCircle2
-                      size={20}
-                      className="mt-0.5 shrink-0 text-blue-600"
-                    />
-
-                    <span className="leading-7">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-
-            {/* Requirements */}
-            <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm sm:p-8">
-              <h2 className="text-2xl font-bold text-slate-900">
-                Requirements
-              </h2>
-
-              <ul className="mt-5 space-y-4">
-                {job.requirements.map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-start gap-3 text-slate-600"
-                  >
-                    <CheckCircle2
-                      size={20}
-                      className="mt-0.5 shrink-0 text-blue-600"
-                    />
-
-                    <span className="leading-7">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-
-            {/* Benefits */}
-            <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm sm:p-8">
-              <h2 className="text-2xl font-bold text-slate-900">
-                Benefits
-              </h2>
-
-              <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-                {job.benefits.map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-start gap-3 text-slate-600"
-                  >
-                    <CheckCircle2
-                      size={18}
-                      className="mt-1 shrink-0 text-blue-600"
-                    />
-
-                    <span className="leading-6">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
           </div>
 
-          {/* =====================================================
-              RIGHT SIDEBAR
-              ===================================================== */}
-          <aside className="h-fit lg:sticky lg:top-24">
-            <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm sm:p-7">
-              <h2 className="text-xl font-bold text-slate-900">
+          {/* Sidebar */}
+          <aside className="h-fit space-y-5 lg:sticky lg:top-36">
+            <div className="rounded-3xl bg-white p-6 shadow-sm">
+              <h2 className="text-xl font-bold">
                 Job Overview
               </h2>
 
               <div className="mt-6 space-y-6">
-                {/* Job type */}
                 <div className="flex gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                    <BriefcaseBusiness size={19} />
-                  </div>
+                  <BriefcaseBusiness className="text-blue-600" />
 
-                  <div className="min-w-0">
-                    <p className="text-sm text-slate-500">Job Type</p>
-                    <p className="mt-1 font-semibold text-slate-900">
+                  <div>
+                    <p className="text-sm text-slate-500">
+                      Job Type
+                    </p>
+
+                    <p className="font-semibold">
                       {job.type}
                     </p>
                   </div>
                 </div>
 
-                {/* Location */}
                 <div className="flex gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                    <MapPin size={19} />
-                  </div>
+                  <MapPin className="text-blue-600" />
 
-                  <div className="min-w-0">
-                    <p className="text-sm text-slate-500">Location</p>
-                    <p className="mt-1 font-semibold text-slate-900">
+                  <div>
+                    <p className="text-sm text-slate-500">
+                      Location
+                    </p>
+
+                    <p className="font-semibold">
                       {job.location}
                     </p>
                   </div>
                 </div>
 
-                {/* Salary */}
                 <div className="flex gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                    <DollarSign size={19} />
-                  </div>
+                  <DollarSign className="text-blue-600" />
 
-                  <div className="min-w-0">
-                    <p className="text-sm text-slate-500">Salary</p>
-                    <p className="mt-1 font-semibold text-slate-900">
+                  <div>
+                    <p className="text-sm text-slate-500">
+                      Salary
+                    </p>
+
+                    <p className="font-semibold">
                       {job.salary}
                     </p>
                   </div>
                 </div>
 
-                {/* Experience */}
                 <div className="flex gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                    <Clock3 size={19} />
-                  </div>
+                  <Clock3 className="text-blue-600" />
 
-                  <div className="min-w-0">
-                    <p className="text-sm text-slate-500">Experience</p>
-                    <p className="mt-1 font-semibold text-slate-900">
+                  <div>
+                    <p className="text-sm text-slate-500">
+                      Experience
+                    </p>
+
+                    <p className="font-semibold">
                       {job.experience}
                     </p>
                   </div>
                 </div>
 
-                {/* Posted date */}
                 <div className="flex gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                    <CalendarDays size={19} />
-                  </div>
+                  <CalendarDays className="text-blue-600" />
 
-                  <div className="min-w-0">
-                    <p className="text-sm text-slate-500">Posted</p>
-                    <p className="mt-1 font-semibold text-slate-900">
+                  <div>
+                    <p className="text-sm text-slate-500">
+                      Posted
+                    </p>
+
+                    <p className="font-semibold">
                       {job.posted}
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Sidebar application CTA */}
-              <button
-                type="button"
-                className="mt-8 w-full rounded-xl bg-blue-600 px-5 py-3.5 font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              >
-                Apply for this Job
-              </button>
-
-              {/* Back link for mobile-friendly navigation */}
-              <Link
-                to="/jobs"
-                className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
-              >
-                <ArrowLeft size={17} />
-                Browse More Jobs
-              </Link>
+              <Link to={`/jobs/${job.id}/apply`} className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3.5 font-semibold text-white hover:bg-blue-700">Apply for this Job</Link>
             </div>
+
+            {similarJobs.length > 0 && <section className="rounded-3xl bg-white p-6 shadow-sm">
+              <h2 className="text-lg font-bold text-slate-900">Similar jobs</h2>
+              <div className="mt-4 space-y-4">
+                {similarJobs.map((item) => <Link key={item.id} to={`/jobs/${item.id}`} className="flex items-center gap-3 rounded-xl p-2 hover:bg-slate-50"><CompanyLogo name={item.company} src={item.companyLogo} className="h-10 w-10 text-sm" /><span className="min-w-0"><span className="block line-clamp-1 text-sm font-semibold text-slate-800">{item.title}</span><span className="block truncate text-xs text-slate-500">{item.company} · {item.location}</span></span></Link>)}
+              </div>
+            </section>}
           </aside>
         </div>
       </section>

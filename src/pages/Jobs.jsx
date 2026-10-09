@@ -1,13 +1,11 @@
 import { useMemo, useState } from "react";
 import {
   Search,
-  MapPin,
   SlidersHorizontal,
-  BriefcaseBusiness,
-  Clock3,
   ChevronDown,
   X,
 } from "lucide-react";
+<<<<<<< HEAD
 
 /* =========================================================
    Temporary Job Data
@@ -64,6 +62,15 @@ const jobsData = [
     category: "Marketing",
   },
 ];
+=======
+import { useSearchParams } from "react-router-dom";
+import { getJobs, JOB_CATEGORIES } from "../services/jobService";
+import JobSearch from "../components/jobs/JobSearch";
+import JobFilters from "../components/jobs/JobFilters";
+import JobCard from "../components/jobs/JobCard";
+import Loader from "../components/common/Loader";
+import Pagination from "../components/common/Pagination";
+>>>>>>> 3a81420 (feat: Update My HireFlow Job Hub)
 
 /* =========================================================
    Job Card
@@ -72,6 +79,7 @@ const jobsData = [
    - Individual job ko reusable card mein show karta hai.
 ========================================================= */
 
+<<<<<<< HEAD
 const JobCard = ({ job }) => {
   return (
     <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg sm:p-6">
@@ -148,11 +156,14 @@ const JobCard = ({ job }) => {
   );
 };
 
+=======
+>>>>>>> 3a81420 (feat: Update My HireFlow Job Hub)
 /* =========================================================
    Jobs Page
 ========================================================= */
 
 const Jobs = () => {
+<<<<<<< HEAD
   const [search, setSearch] = useState("");
   const [location, setLocation] = useState("");
   const [category, setCategory] = useState("All");
@@ -178,6 +189,158 @@ const Jobs = () => {
 
   const filteredJobs = useMemo(() => {
     return jobsData.filter((job) => {
+=======
+  const [searchParams] = useSearchParams();
+  const requestedCategory = searchParams.get("category") || "All";
+  const [jobs, setJobs] = useState([]);
+  const [apiError, setApiError] = useState("");
+
+  /* =======================================================
+     SEARCH INPUT STATES
+
+     Search button ke baad actual filters apply honge.
+     Isse API connect karne par bhi unnecessary requests
+     nahi jayengi.
+  ======================================================= */
+
+  const [searchInput, setSearchInput] = useState(searchParams.get("search") || "");
+  const [locationInput, setLocationInput] = useState(searchParams.get("location") || "");
+
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+  const [location, setLocation] = useState(searchParams.get("location") || "");
+
+  /* =======================================================
+     FILTER STATES
+  ======================================================= */
+
+  const [category, setCategory] = useState(requestedCategory);
+  const [jobType, setJobType] = useState("All");
+  const [experienceLevel, setExperienceLevel] = useState("All");
+  const [salaryMin, setSalaryMin] = useState("");
+  const [salaryMax, setSalaryMax] = useState("");
+  const [salaryMinInput, setSalaryMinInput] = useState("");
+  const [salaryMaxInput, setSalaryMaxInput] = useState("");
+  const [sortBy, setSortBy] = useState("Latest");
+  const [currentPage, setCurrentPage] = useState(1);
+  const jobsPerPage = 10;
+
+  /* Mobile filter drawer */
+  const [showFilters, setShowFilters] = useState(false);
+
+  /* Loading state */
+  const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+    let active = true;
+    getJobs({
+      category: category === "All" ? "" : category,
+      search,
+      location,
+      jobType,
+      experienceLevel,
+      salaryMin,
+      salaryMax,
+    })
+      .then((items) => {
+        if (active) {
+          setJobs(items);
+          setApiError("");
+        }
+      })
+      .catch((error) => {
+        if (active) setApiError(error.message);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => { active = false; };
+  }, [category, search, location, jobType, experienceLevel, salaryMin, salaryMax]);
+
+  const changeCategory = (nextCategory) => {
+    setApiError("");
+    setLoading(true);
+    setCurrentPage(1);
+    setCategory(nextCategory);
+  };
+
+  const changeJobType = (nextJobType) => {
+    setLoading(true);
+    setCurrentPage(1);
+    setJobType(nextJobType);
+  };
+
+  const changeExperienceLevel = (nextExperienceLevel) => {
+    setLoading(true);
+    setCurrentPage(1);
+    setExperienceLevel(nextExperienceLevel);
+  };
+
+
+  /* =======================================================
+     SEARCH HANDLER
+  ======================================================= */
+
+  const handleSearch = () => {
+    if (salaryMinInput && salaryMaxInput && Number(salaryMinInput) > Number(salaryMaxInput)) {
+      setApiError("Minimum salary must be less than or equal to maximum salary.");
+      return;
+    }
+    setApiError("");
+    setLoading(true);
+    setSearch(searchInput.trim());
+    setLocation(locationInput.trim());
+    setSalaryMin(salaryMinInput.trim());
+    setSalaryMax(salaryMaxInput.trim());
+    setCurrentPage(1);
+  };
+
+
+  /* =======================================================
+     ENTER KEY SEARCH
+  ======================================================= */
+
+  const handleSearchKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+
+  /* =======================================================
+     FILTER OPTIONS
+  ======================================================= */
+
+  const categoryOptions = useMemo(() => {
+    const categories = jobs
+      .map((job) => job.category)
+      .filter(Boolean);
+
+    return ["All", ...new Set([...JOB_CATEGORIES, category === "All" ? "" : category, ...categories].filter(Boolean))];
+  }, [jobs, category]);
+
+  /* =======================================================
+     FILTER + SEARCH + SORT
+  ======================================================= */
+
+  const filteredJobs = useMemo(() => {
+
+    const normalizedSearch = search.toLowerCase();
+    const normalizedLocation = location.toLowerCase();
+
+    const result = jobs.filter((job) => {
+
+      /* Search across title/company/category */
+      const searchableText = [
+        job.title,
+        job.company,
+        job.category,
+        job.description,
+      ]
+        .join(" ")
+        .toLowerCase();
+
+>>>>>>> 3a81420 (feat: Update My HireFlow Job Hub)
       const searchMatch =
         job.title.toLowerCase().includes(search.toLowerCase()) ||
         job.company.toLowerCase().includes(search.toLowerCase());
@@ -187,33 +350,106 @@ const Jobs = () => {
         job.location.toLowerCase().includes(location.toLowerCase());
 
       const categoryMatch =
+<<<<<<< HEAD
         category === "All" || job.category === category;
 
       const typeMatch =
         jobType === "All" || job.type === jobType;
+=======
+        category === "All" ||
+        job.category.toLowerCase() ===
+          category.toLowerCase() ||
+        job.categories.some((item) => item.toLowerCase() === category.toLowerCase()) ||
+        (["it", "it technology", "technology"].includes(category.toLowerCase()) &&
+          ["it technology", "technology"].includes(job.category.toLowerCase()));
+>>>>>>> 3a81420 (feat: Update My HireFlow Job Hub)
 
       return (
         searchMatch &&
         locationMatch &&
-        categoryMatch &&
-        typeMatch
+        categoryMatch
       );
     });
   }, [search, location, category, jobType]);
 
+<<<<<<< HEAD
   /* =========================================================
      Reset Filters
   ========================================================= */
+=======
+
+    /* =====================================================
+       SORTING
+    ===================================================== */
+
+    if (sortBy === "Company") {
+      return [...result].sort((a, b) =>
+        a.company.localeCompare(b.company)
+      );
+    }
+
+    if (sortBy === "Title") {
+      return [...result].sort((a, b) =>
+        a.title.localeCompare(b.title)
+      );
+    }
+
+    /*
+     * Default Latest:
+     * API listings are sorted by their published date.
+     */
+    return result;
+
+  }, [
+    search,
+    jobs,
+    location,
+    category,
+    sortBy,
+  ]);
+
+
+  /* =======================================================
+     RESET FILTERS
+  ======================================================= */
+>>>>>>> 3a81420 (feat: Update My HireFlow Job Hub)
+
+  const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
+  const visibleJobs = filteredJobs.slice((currentPage - 1) * jobsPerPage, currentPage * jobsPerPage);
 
   const resetFilters = () => {
+<<<<<<< HEAD
     setSearch("");
     setLocation("");
     setCategory("All");
     setJobType("All");
+=======
+    setLoading(true);
+    setCurrentPage(1);
+    setSearchInput("");
+    setLocationInput("");
+
+    setSearch("");
+    setLocation("");
+
+    changeCategory("All");
+    setJobType("All");
+    setExperienceLevel("All");
+    setSalaryMin("");
+    setSalaryMax("");
+    setSalaryMinInput("");
+    setSalaryMaxInput("");
+    setSortBy("Latest");
+>>>>>>> 3a81420 (feat: Update My HireFlow Job Hub)
   };
 
   return (
     <main className="min-h-screen bg-slate-50">
+      {apiError && (
+        <p role="status" className="mx-auto max-w-7xl px-4 pt-4 text-sm text-amber-700">
+          Live job feed unavailable. {apiError}
+        </p>
+      )}
 
       {/* =====================================================
           Page Header
@@ -241,6 +477,7 @@ const Jobs = () => {
           {/* Search Area */}
           <div className="mt-8 grid gap-3 rounded-2xl bg-white p-3 shadow-xl md:grid-cols-[1fr_1fr_auto]">
 
+<<<<<<< HEAD
             {/* Keyword Search */}
             <div className="flex items-center gap-3 rounded-xl border border-slate-200 px-4">
               <Search size={19} className="text-slate-400" />
@@ -275,6 +512,14 @@ const Jobs = () => {
             </button>
 
           </div>
+=======
+          {/* =================================================
+              SEARCH PANEL
+          ================================================= */}
+
+          <JobSearch searchInput={searchInput} setSearchInput={setSearchInput} locationInput={locationInput} setLocationInput={setLocationInput} onSearch={handleSearch} onKeyDown={handleSearchKeyDown} loading={loading} />
+
+>>>>>>> 3a81420 (feat: Update My HireFlow Job Hub)
         </div>
       </section>
 
@@ -316,6 +561,7 @@ const Jobs = () => {
               </button>
             </div>
 
+<<<<<<< HEAD
             {/* Category */}
             <div className="mt-7">
               <label className="text-sm font-semibold text-slate-800">
@@ -352,6 +598,92 @@ const Jobs = () => {
               </select>
             </div>
 
+=======
+
+            <div className="mt-7">
+              <JobFilters
+                idPrefix="desktop-filter"
+                category={category}
+                categoryOptions={categoryOptions}
+                setCategory={changeCategory}
+                jobType={jobType}
+                setJobType={changeJobType}
+                experienceLevel={experienceLevel}
+                setExperienceLevel={changeExperienceLevel}
+                salaryMinInput={salaryMinInput}
+                setSalaryMinInput={setSalaryMinInput}
+                salaryMaxInput={salaryMaxInput}
+                setSalaryMaxInput={setSalaryMaxInput}
+                locationInput={locationInput}
+                setLocationInput={setLocationInput}
+              />
+              <button
+                type="button"
+                onClick={handleSearch}
+                className="mt-5 w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
+              >
+                Apply Filters
+              </button>
+            </div>
+
+
+            {/* Active filters */}
+            {(category !== "All" ||
+              jobType !== "All" ||
+              experienceLevel !== "All" ||
+              salaryMin || salaryMax ||
+              search ||
+              location) && (
+              <div className="mt-7 rounded-xl bg-slate-50 p-4">
+
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Active filters
+                </p>
+
+                <div className="mt-3 flex flex-wrap gap-2">
+
+                  {search && (
+                    <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+                      {search}
+                    </span>
+                  )}
+
+                  {location && (
+                    <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+                      {location}
+                    </span>
+                  )}
+
+                  {category !== "All" && (
+                    <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+                      {category}
+                    </span>
+                  )}
+
+                  {jobType !== "All" && (
+                    <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+                      {jobType}
+                    </span>
+                  )}
+
+                  {experienceLevel !== "All" && (
+                    <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+                      {experienceLevel}
+                    </span>
+                  )}
+
+                  {(salaryMin || salaryMax) && (
+                    <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+                      ${salaryMin || "0"} – ${salaryMax || "Any"}
+                    </span>
+                  )}
+
+                </div>
+
+              </div>
+            )}
+
+>>>>>>> 3a81420 (feat: Update My HireFlow Job Hub)
           </aside>
 
           {/* =================================================
@@ -385,16 +717,60 @@ const Jobs = () => {
             {/* Job Cards */}
             <div className="space-y-4">
 
+<<<<<<< HEAD
               {filteredJobs.length > 0 ? (
                 filteredJobs.map((job) => (
+=======
+              {/* Loading skeleton */}
+              {loading && <Loader text="Loading live jobs..." className="min-h-40 rounded-2xl bg-white" />}
+
+
+              {/* Job cards */}
+              {!loading &&
+                filteredJobs.length > 0 &&
+                visibleJobs.map((job) => (
+>>>>>>> 3a81420 (feat: Update My HireFlow Job Hub)
                   <JobCard
                     key={job.id}
                     job={job}
                   />
+<<<<<<< HEAD
                 ))
               ) : (
                 /* Empty State */
                 <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
+=======
+                ))}
+
+
+              {/* Empty state */}
+              {!loading &&
+                filteredJobs.length === 0 && (
+                  <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
+
+                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
+                      <Search
+                        size={24}
+                        className="text-slate-400"
+                      />
+                    </div>
+
+                    <h3 className="mt-5 text-lg font-bold text-slate-900">
+                      {apiError ? "Could not load jobs" : "No jobs found"}
+                    </h3>
+
+                    <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+                      {apiError || "We could not find any opportunities matching your current search and filters. Try different keywords or clear the filters."}
+                    </p>
+
+                    <button
+                      type="button"
+                      onClick={resetFilters}
+                      className="mt-5 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
+                    >
+                      Clear Filters
+                    </button>
+>>>>>>> 3a81420 (feat: Update My HireFlow Job Hub)
 
                   <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
                     <Search size={24} className="text-slate-400" />
@@ -421,6 +797,8 @@ const Jobs = () => {
               )}
 
             </div>
+
+            {!loading && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} className="mt-7" />}
 
           </div>
         </div>
@@ -457,6 +835,7 @@ const Jobs = () => {
               </button>
             </div>
 
+<<<<<<< HEAD
             {/* Category */}
             <div className="mt-8">
               <label className="text-sm font-semibold text-slate-800">
@@ -503,6 +882,52 @@ const Jobs = () => {
             >
               Apply Filters
             </button>
+=======
+
+            <div className="mt-8">
+              <JobFilters
+                idPrefix="mobile-filter"
+                category={category}
+                categoryOptions={categoryOptions}
+                setCategory={changeCategory}
+                jobType={jobType}
+                setJobType={changeJobType}
+                experienceLevel={experienceLevel}
+                setExperienceLevel={changeExperienceLevel}
+                salaryMinInput={salaryMinInput}
+                setSalaryMinInput={setSalaryMinInput}
+                salaryMaxInput={salaryMaxInput}
+                setSalaryMaxInput={setSalaryMaxInput}
+                locationInput={locationInput}
+                setLocationInput={setLocationInput}
+              />
+            </div>
+
+
+            {/* Mobile drawer actions */}
+            <div className="mt-8 flex gap-3">
+
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="flex-1 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+              >
+                Reset
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  handleSearch();
+                  setShowFilters(false);
+                }}
+                className="flex-1 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
+              >
+                Apply
+              </button>
+
+            </div>
+>>>>>>> 3a81420 (feat: Update My HireFlow Job Hub)
 
           </div>
         </div>

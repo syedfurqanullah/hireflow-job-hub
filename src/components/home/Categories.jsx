@@ -4,41 +4,41 @@ import {
   Megaphone,
   TrendingUp,
   Landmark,
-  ShieldCheck,
   ArrowRight,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getCategoryCounts } from "../../services/jobService";
 
 /* =========================================================
    HireFlow - Popular Job Categories
    Purpose:
    - Homepage par popular job categories show karna
-   - Reference design ke mutabiq 6 compact cards
-   - Desktop par 6 cards ek row mein
+   - Real API counts ke saath job category cards
+   - Desktop par 5 cards ek row mein
    - Mobile / tablet par responsive grid
-   - Abhi job counts demo/mock data hain
-   - Future mein API se dynamic data aa sakta hai
+   - Live counts Adzuna search API se aate hain
 ========================================================= */
 
 /* =========================================================
    Category Data
 ========================================================= */
 
-const categories = [
+const categoryCards = [
   {
     id: 1,
-    name: "Technology",
-    jobs: "12,480",
-    query: "Technology",
+    name: "IT Technology",
+    jobs: null,
+    query: "IT Technology",
     icon: Code2,
     iconBg: "bg-blue-100",
     iconColor: "text-blue-600",
   },
   {
     id: 2,
-    name: "Design",
-    jobs: "4,230",
-    query: "Design",
+    name: "Designing",
+    jobs: null,
+    query: "Designing",
     icon: Palette,
     iconBg: "bg-purple-100",
     iconColor: "text-purple-600",
@@ -46,7 +46,7 @@ const categories = [
   {
     id: 3,
     name: "Marketing",
-    jobs: "3,760",
+    jobs: null,
     query: "Marketing",
     icon: Megaphone,
     iconBg: "bg-emerald-100",
@@ -55,7 +55,7 @@ const categories = [
   {
     id: 4,
     name: "Sales",
-    jobs: "2,560",
+    jobs: null,
     query: "Sales",
     icon: TrendingUp,
     iconBg: "bg-red-100",
@@ -64,20 +64,11 @@ const categories = [
   {
     id: 5,
     name: "Finance",
-    jobs: "2,340",
+    jobs: null,
     query: "Finance",
     icon: Landmark,
     iconBg: "bg-cyan-100",
     iconColor: "text-cyan-600",
-  },
-  {
-    id: 6,
-    name: "Cyber Security",
-    jobs: "1,850",
-    query: "Cyber Security",
-    icon: ShieldCheck,
-    iconBg: "bg-indigo-100",
-    iconColor: "text-indigo-600",
   },
 ];
 
@@ -111,7 +102,7 @@ const CategoryCard = ({ category }) => {
 
       {/* Job Count */}
       <p className="mt-1 text-sm font-medium text-slate-500">
-        {category.jobs} jobs
+        {category.jobs === null ? "Loading jobs…" : category.jobs === undefined ? "Unavailable" : `${category.jobs.toLocaleString()} jobs`}
       </p>
     </Link>
   );
@@ -122,6 +113,29 @@ const CategoryCard = ({ category }) => {
 ========================================================= */
 
 const Categories = () => {
+  const [categories, setCategories] = useState(categoryCards);
+  const [loadError, setLoadError] = useState("");
+  const [retryCount, setRetryCount] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+    getCategoryCounts()
+      .then((results) => {
+        if (!active) return;
+        setCategories((current) => current.map((item) => {
+          const result = results.find((entry) => entry.name === item.query || entry.name === item.name);
+          return result ? { ...item, jobs: result.count } : { ...item, jobs: undefined };
+        }));
+      })
+      .catch((error) => {
+        if (active) {
+          setLoadError(error?.message || "Could not load live category counts.");
+          setCategories((current) => current.map((item) => ({ ...item, jobs: undefined })));
+        }
+      });
+    return () => { active = false; };
+  }, [retryCount]);
+
   return (
     <section className="bg-slate-50 py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -159,13 +173,12 @@ const Categories = () => {
 
             Mobile  : 2 columns
             Tablet  : 3 columns
-            Desktop : 6 columns
+            Desktop : 5 columns
 
-            Is tarah reference jaisa desktop par
-            6 cards ek hi row mein nazar aayenge.
+            Requested popular categories fit in one desktop row.
         ================================================== */}
 
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6 lg:gap-5">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 lg:gap-5">
           {categories.map((category) => (
             <CategoryCard
               key={category.id}
@@ -173,6 +186,22 @@ const Categories = () => {
             />
           ))}
         </div>
+        {loadError && (
+          <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-rose-600" role="alert">
+            <span>{loadError}</span>
+            <button
+              type="button"
+              onClick={() => {
+                setLoadError("");
+                setCategories(categoryCards);
+                setRetryCount((count) => count + 1);
+              }}
+              className="font-semibold underline underline-offset-2"
+            >
+              Retry
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+}
+
+.dashboard-sidebar {
+  display: block;
+  visibility: visible;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .dashboard-layout {
+    grid-template-columns: 220px minmax(0, 1fr);
+    align-items: start;
+    gap: 2rem;
+  }
+
+  .dashboard-sidebar {
+    position: sticky;
+    top: 6rem;
+    z-index: 5;
+  }
+}

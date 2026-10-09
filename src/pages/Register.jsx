@@ -109,6 +109,7 @@ const Register = () => {
       // Temporary local session
       localStorage.setItem("hireflow_user", JSON.stringify(user));
       localStorage.setItem("hireflow_is_authenticated", "true");
+      window.dispatchEvent(new Event("hireflow-auth-change"));
 
       // Registration ke baad User Dashboard
       navigate("/dashboard");
