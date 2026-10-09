@@ -58,15 +58,11 @@ const CareerCTA = () => {
           ===================================================== */}
       <div className="mx-auto flex min-h-[400px] max-w-7xl items-center px-4 py-10 sm:min-h-[440px] sm:px-6 sm:py-14 lg:min-h-[480px] lg:px-8 lg:py-16">
         <div className="w-full max-w-3xl">
-
           {/* =================================================
               Small Badge
               ================================================= */}
           <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white shadow-lg backdrop-blur-md sm:px-4 sm:py-2 sm:text-sm">
-            <Sparkles
-              size={14}
-              className="shrink-0 text-blue-300"
-            />
+            <Sparkles size={14} className="shrink-0 text-blue-300" />
 
             <span>Build Your Future With HireFlow</span>
           </div>
@@ -83,24 +79,20 @@ const CareerCTA = () => {
               Description
               ================================================= */}
           <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-200 sm:text-base">
-            Discover exciting opportunities, connect with top companies,
-            and find a role that takes your career to the next level.
+            Discover exciting opportunities, connect with top companies, and
+            find a role that takes your career to the next level.
           </p>
 
           {/* =================================================
               CTA Buttons
               ================================================= */}
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-
             {/* Browse Jobs */}
             <Link
               to="/jobs"
               className="group inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-950/30 transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-500 hover:shadow-xl sm:px-6"
             >
-              <BriefcaseBusiness
-                size={17}
-                className="shrink-0"
-              />
+              <BriefcaseBusiness size={17} className="shrink-0" />
 
               <span>Browse Jobs</span>
 
@@ -128,34 +120,23 @@ const CareerCTA = () => {
               Trust Points
               ================================================= */}
           <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-xs font-medium text-slate-200 sm:text-sm">
-
             <div className="flex items-center gap-2">
-              <CheckCircle2
-                size={15}
-                className="shrink-0 text-blue-400"
-              />
+              <CheckCircle2 size={15} className="shrink-0 text-blue-400" />
 
               <span>Free to join</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <CheckCircle2
-                size={15}
-                className="shrink-0 text-blue-400"
-              />
+              <CheckCircle2 size={15} className="shrink-0 text-blue-400" />
 
               <span>Thousands of opportunities</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <CheckCircle2
-                size={15}
-                className="shrink-0 text-blue-400"
-              />
+              <CheckCircle2 size={15} className="shrink-0 text-blue-400" />
 
               <span>Top companies</span>
             </div>
-
           </div>
         </div>
       </div>

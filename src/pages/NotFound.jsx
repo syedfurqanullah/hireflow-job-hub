@@ -9,7 +9,6 @@ const NotFound = () => {
   return (
     <main className="flex min-h-[70vh] items-center justify-center bg-slate-50 px-4 py-16 sm:px-6">
       <section className="w-full max-w-xl text-center">
-
         {/* Error code */}
         <div className="mx-auto flex h-28 w-28 items-center justify-center rounded-3xl bg-blue-50 sm:h-36 sm:w-36">
           <span className="text-5xl font-extrabold tracking-tight text-blue-600 sm:text-6xl">
@@ -27,8 +26,8 @@ const NotFound = () => {
         </h1>
 
         <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-slate-500 sm:text-base">
-          The page you are looking for may have been moved,
-          removed, or the URL might be incorrect.
+          The page you are looking for may have been moved, removed, or the URL
+          might be incorrect.
         </p>
 
         {/* Navigation actions */}

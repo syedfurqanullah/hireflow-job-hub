@@ -1,13 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-  AlertCircle,
-  Building2,
-  RefreshCw,
-} from "lucide-react";
+import { AlertCircle, Building2, RefreshCw } from "lucide-react";
 
-import {
-  getCompanies,
-} from "../services/jobService";
+import { getCompanies } from "../services/jobService";
 import CompanySearch from "../components/companies/CompanySearch";
 import CompanyCard from "../components/companies/CompanyCard";
 
@@ -18,17 +12,13 @@ import CompanyCard from "../components/companies/CompanyCard";
 // =========================================================
 
 const Companies = () => {
-  const [companies, setCompanies] =
-    useState([]);
+  const [companies, setCompanies] = useState([]);
 
-  const [search, setSearch] =
-    useState("");
+  const [search, setSearch] = useState("");
 
-  const [loading, setLoading] =
-    useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const [error, setError] =
-    useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -62,30 +52,20 @@ const Companies = () => {
       .finally(() => setLoading(false));
   };
 
-  const filteredCompanies =
-    useMemo(() => {
-      const query =
-        search
-          .trim()
-          .toLowerCase();
+  const filteredCompanies = useMemo(() => {
+    const query = search.trim().toLowerCase();
 
-      if (!query) {
-        return companies;
-      }
+    if (!query) {
+      return companies;
+    }
 
-      return companies.filter(
-        (company) =>
-          company.name
-            .toLowerCase()
-            .includes(query) ||
-          company.industry
-            .toLowerCase()
-            .includes(query) ||
-          company.location
-            .toLowerCase()
-            .includes(query),
-      );
-    }, [companies, search]);
+    return companies.filter(
+      (company) =>
+        company.name.toLowerCase().includes(query) ||
+        company.industry.toLowerCase().includes(query) ||
+        company.location.toLowerCase().includes(query),
+    );
+  }, [companies, search]);
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -101,8 +81,7 @@ const Companies = () => {
           </h1>
 
           <p className="mt-5 max-w-2xl text-lg text-slate-300">
-            Discover companies hiring for real IT
-            opportunities.
+            Discover companies hiring for real IT opportunities.
           </p>
         </div>
       </section>
@@ -129,37 +108,28 @@ const Companies = () => {
         {/* Loading */}
         {loading && (
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {[1, 2, 3, 4, 5, 6].map(
-              (item) => (
-                <div
-                  key={item}
-                  className="animate-pulse rounded-3xl bg-white p-6"
-                >
-                  <div className="h-14 w-14 rounded-2xl bg-slate-200" />
-                  <div className="mt-6 h-5 w-2/3 rounded bg-slate-200" />
-                  <div className="mt-4 h-4 w-full rounded bg-slate-100" />
-                  <div className="mt-2 h-4 w-3/4 rounded bg-slate-100" />
-                </div>
-              ),
-            )}
+            {[1, 2, 3, 4, 5, 6].map((item) => (
+              <div
+                key={item}
+                className="animate-pulse rounded-3xl bg-white p-6"
+              >
+                <div className="h-14 w-14 rounded-2xl bg-slate-200" />
+                <div className="mt-6 h-5 w-2/3 rounded bg-slate-200" />
+                <div className="mt-4 h-4 w-full rounded bg-slate-100" />
+                <div className="mt-2 h-4 w-3/4 rounded bg-slate-100" />
+              </div>
+            ))}
           </div>
         )}
 
         {/* Error */}
         {!loading && error && (
           <div className="rounded-3xl bg-white p-12 text-center">
-            <AlertCircle
-              className="mx-auto text-red-500"
-              size={36}
-            />
+            <AlertCircle className="mx-auto text-red-500" size={36} />
 
-            <h3 className="mt-4 font-bold">
-              Unable to load companies
-            </h3>
+            <h3 className="mt-4 font-bold">Unable to load companies</h3>
 
-            <p className="mt-2 text-sm text-slate-500">
-              {error}
-            </p>
+            <p className="mt-2 text-sm text-slate-500">{error}</p>
 
             <button
               onClick={loadCompanies}
@@ -172,34 +142,23 @@ const Companies = () => {
         )}
 
         {/* Company cards */}
-        {!loading &&
-          !error &&
-          filteredCompanies.length >
-            0 && (
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {filteredCompanies.map((company) => <CompanyCard key={company.id} company={company} />)}
-            </div>
-          )}
+        {!loading && !error && filteredCompanies.length > 0 && (
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {filteredCompanies.map((company) => (
+              <CompanyCard key={company.id} company={company} />
+            ))}
+          </div>
+        )}
 
-        {!loading &&
-          !error &&
-          filteredCompanies.length ===
-            0 && (
-            <div className="rounded-3xl bg-white p-12 text-center">
-              <Building2
-                className="mx-auto text-slate-400"
-                size={40}
-              />
+        {!loading && !error && filteredCompanies.length === 0 && (
+          <div className="rounded-3xl bg-white p-12 text-center">
+            <Building2 className="mx-auto text-slate-400" size={40} />
 
-              <h3 className="mt-4 font-bold">
-                No companies found
-              </h3>
+            <h3 className="mt-4 font-bold">No companies found</h3>
 
-              <p className="mt-2 text-sm text-slate-500">
-                Try another search.
-              </p>
-            </div>
-          )}
+            <p className="mt-2 text-sm text-slate-500">Try another search.</p>
+          </div>
+        )}
       </section>
     </main>
   );

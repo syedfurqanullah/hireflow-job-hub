@@ -13,6 +13,7 @@ import JobCard from "../components/jobs/JobCard";
 import Loader from "../components/common/Loader";
 import Pagination from "../components/common/Pagination";
 import Modal from "../components/common/Modal";
+import { useToast } from "../context/ToastContext";
 
 /* =========================================================
    JOB CARD
@@ -31,6 +32,7 @@ const Jobs = () => {
   const requestedCategory = searchParams.get("category") || "All";
   const [jobs, setJobs] = useState([]);
   const [apiError, setApiError] = useState("");
+  const { showToast } = useToast();
 
   /* =======================================================
      SEARCH INPUT STATES
@@ -40,8 +42,12 @@ const Jobs = () => {
      nahi jayengi.
   ======================================================= */
 
-  const [searchInput, setSearchInput] = useState(searchParams.get("search") || "");
-  const [locationInput, setLocationInput] = useState(searchParams.get("location") || "");
+  const [searchInput, setSearchInput] = useState(
+    searchParams.get("search") || "",
+  );
+  const [locationInput, setLocationInput] = useState(
+    searchParams.get("location") || "",
+  );
 
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [location, setLocation] = useState(searchParams.get("location") || "");
@@ -52,11 +58,21 @@ const Jobs = () => {
 
   const [category, setCategory] = useState(requestedCategory);
   const [jobType, setJobType] = useState(searchParams.get("jobType") || "All");
-  const [experienceLevel, setExperienceLevel] = useState(searchParams.get("experience") || "All");
-  const [salaryMin, setSalaryMin] = useState(searchParams.get("salaryMin") || "");
-  const [salaryMax, setSalaryMax] = useState(searchParams.get("salaryMax") || "");
-  const [salaryMinInput, setSalaryMinInput] = useState(searchParams.get("salaryMin") || "");
-  const [salaryMaxInput, setSalaryMaxInput] = useState(searchParams.get("salaryMax") || "");
+  const [experienceLevel, setExperienceLevel] = useState(
+    searchParams.get("experience") || "All",
+  );
+  const [salaryMin, setSalaryMin] = useState(
+    searchParams.get("salaryMin") || "",
+  );
+  const [salaryMax, setSalaryMax] = useState(
+    searchParams.get("salaryMax") || "",
+  );
+  const [salaryMinInput, setSalaryMinInput] = useState(
+    searchParams.get("salaryMin") || "",
+  );
+  const [salaryMaxInput, setSalaryMaxInput] = useState(
+    searchParams.get("salaryMax") || "",
+  );
   const [sortBy, setSortBy] = useState("Latest");
   const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 10;
@@ -86,13 +102,35 @@ const Jobs = () => {
         }
       })
       .catch((error) => {
-        if (active) setApiError(error.message);
+        if (active) {
+          setApiError(error.message);
+          const isNetworkError =
+            /timed out|could not load|network|connection/i.test(
+              error?.message || "",
+            );
+          showToast({
+            type: "error",
+            message: isNetworkError
+              ? "Connection lost. Please check your internet and try again."
+              : "Something went wrong on our end. Please try again.",
+          });
+        }
       })
       .finally(() => {
         if (active) setLoading(false);
       });
-    return () => { active = false; };
-  }, [category, search, location, jobType, experienceLevel, salaryMin, salaryMax]);
+    return () => {
+      active = false;
+    };
+  }, [
+    category,
+    search,
+    location,
+    jobType,
+    experienceLevel,
+    salaryMin,
+    salaryMax,
+  ]);
 
   const changeCategory = (nextCategory) => {
     setApiError("");
@@ -113,14 +151,19 @@ const Jobs = () => {
     setExperienceLevel(nextExperienceLevel);
   };
 
-
   /* =======================================================
      SEARCH HANDLER
   ======================================================= */
 
   const handleSearch = () => {
-    if (salaryMinInput && salaryMaxInput && Number(salaryMinInput) > Number(salaryMaxInput)) {
-      setApiError("Minimum salary must be less than or equal to maximum salary.");
+    if (
+      salaryMinInput &&
+      salaryMaxInput &&
+      Number(salaryMinInput) > Number(salaryMaxInput)
+    ) {
+      setApiError(
+        "Minimum salary must be less than or equal to maximum salary.",
+      );
       return;
     }
     setApiError("");
@@ -142,7 +185,6 @@ const Jobs = () => {
     setSearchParams(params);
   };
 
-
   /* =======================================================
      ENTER KEY SEARCH
   ======================================================= */
@@ -153,17 +195,23 @@ const Jobs = () => {
     }
   };
 
-
   /* =======================================================
      FILTER OPTIONS
   ======================================================= */
 
   const categoryOptions = useMemo(() => {
-    const categories = jobs
-      .map((job) => job.category)
-      .filter(Boolean);
+    const categories = jobs.map((job) => job.category).filter(Boolean);
 
-    return ["All", ...new Set([...JOB_CATEGORIES, category === "All" ? "" : category, ...categories].filter(Boolean))];
+    return [
+      "All",
+      ...new Set(
+        [
+          ...JOB_CATEGORIES,
+          category === "All" ? "" : category,
+          ...categories,
+        ].filter(Boolean),
+      ),
+    ];
   }, [jobs, category]);
 
   /* =======================================================
@@ -171,12 +219,10 @@ const Jobs = () => {
   ======================================================= */
 
   const filteredJobs = useMemo(() => {
-
     const normalizedSearch = search.toLowerCase();
     const normalizedLocation = location.toLowerCase();
 
     const result = jobs.filter((job) => {
-
       /* Search across title/company/category */
       const searchableText = [
         job.title,
@@ -188,47 +234,38 @@ const Jobs = () => {
         .toLowerCase();
 
       const searchMatch =
-        !normalizedSearch ||
-        searchableText.includes(normalizedSearch);
+        !normalizedSearch || searchableText.includes(normalizedSearch);
 
       /* Location filter */
       const locationMatch =
         !normalizedLocation ||
-        job.location
-          .toLowerCase()
-          .includes(normalizedLocation);
+        job.location.toLowerCase().includes(normalizedLocation);
 
       /* Category filter */
       const categoryMatch =
         category === "All" ||
-        job.category.toLowerCase() ===
-          category.toLowerCase() ||
-        job.categories.some((item) => item.toLowerCase() === category.toLowerCase()) ||
-        (["it", "it technology", "technology"].includes(category.toLowerCase()) &&
+        job.category.toLowerCase() === category.toLowerCase() ||
+        job.categories.some(
+          (item) => item.toLowerCase() === category.toLowerCase(),
+        ) ||
+        (["it", "it technology", "technology"].includes(
+          category.toLowerCase(),
+        ) &&
           ["it technology", "technology"].includes(job.category.toLowerCase()));
 
-      return (
-        searchMatch &&
-        locationMatch &&
-        categoryMatch
-      );
+      return searchMatch && locationMatch && categoryMatch;
     });
-
 
     /* =====================================================
        SORTING
     ===================================================== */
 
     if (sortBy === "Company") {
-      return [...result].sort((a, b) =>
-        a.company.localeCompare(b.company)
-      );
+      return [...result].sort((a, b) => a.company.localeCompare(b.company));
     }
 
     if (sortBy === "Title") {
-      return [...result].sort((a, b) =>
-        a.title.localeCompare(b.title)
-      );
+      return [...result].sort((a, b) => a.title.localeCompare(b.title));
     }
 
     /*
@@ -236,22 +273,17 @@ const Jobs = () => {
      * API listings are sorted by their published date.
      */
     return result;
-
-  }, [
-    search,
-    jobs,
-    location,
-    category,
-    sortBy,
-  ]);
-
+  }, [search, jobs, location, category, sortBy]);
 
   /* =======================================================
      RESET FILTERS
   ======================================================= */
 
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
-  const visibleJobs = filteredJobs.slice((currentPage - 1) * jobsPerPage, currentPage * jobsPerPage);
+  const visibleJobs = filteredJobs.slice(
+    (currentPage - 1) * jobsPerPage,
+    currentPage * jobsPerPage,
+  );
 
   const resetFilters = () => {
     setLoading(true);
@@ -271,8 +303,8 @@ const Jobs = () => {
     setSalaryMaxInput("");
     setSortBy("Latest");
     setSearchParams(new URLSearchParams());
+    showToast({ type: "info", message: "Filters have been cleared." });
   };
-
 
   /* =======================================================
      PAGE UI
@@ -281,7 +313,10 @@ const Jobs = () => {
   return (
     <main className="min-h-screen bg-slate-50">
       {apiError && (
-        <p role="status" className="mx-auto max-w-7xl px-4 pt-4 text-sm text-amber-700">
+        <p
+          role="status"
+          className="mx-auto max-w-7xl px-4 pt-4 text-sm text-amber-700"
+        >
           Live job feed unavailable. {apiError}
         </p>
       )}
@@ -291,50 +326,46 @@ const Jobs = () => {
       ===================================================== */}
 
       <section className="bg-slate-950 px-4 py-14 sm:px-6 lg:px-8">
-
         <div className="mx-auto max-w-7xl">
-
           <div className="max-w-2xl">
-
             <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-blue-400">
               Find Your Next Opportunity
             </p>
 
             <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
               Find Jobs That Match
-              <span className="text-blue-500">
-                {" "}Your Future
-              </span>
+              <span className="text-blue-500"> Your Future</span>
             </h1>
 
             <p className="mt-4 text-sm leading-6 text-slate-400 sm:text-base">
-              Explore the latest technology, software and
-              digital opportunities from growing companies.
+              Explore the latest technology, software and digital opportunities
+              from growing companies.
             </p>
-
           </div>
-
 
           {/* =================================================
               SEARCH PANEL
           ================================================= */}
 
-          <JobSearch searchInput={searchInput} setSearchInput={setSearchInput} locationInput={locationInput} setLocationInput={setLocationInput} onSearch={handleSearch} onKeyDown={handleSearchKeyDown} loading={loading} />
-
+          <JobSearch
+            searchInput={searchInput}
+            setSearchInput={setSearchInput}
+            locationInput={locationInput}
+            setLocationInput={setLocationInput}
+            onSearch={handleSearch}
+            onKeyDown={handleSearchKeyDown}
+            loading={loading}
+          />
         </div>
-
       </section>
-
 
       {/* =====================================================
           MAIN CONTENT
       ===================================================== */}
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-
         {/* Mobile toolbar */}
         <div className="mb-5 flex items-center justify-between lg:hidden">
-
           <button
             type="button"
             onClick={() => setShowFilters(true)}
@@ -345,29 +376,19 @@ const Jobs = () => {
           </button>
 
           <span className="text-sm font-medium text-slate-500">
-            {loading
-              ? "Loading..."
-              : `${filteredJobs.length} jobs`}
+            {loading ? "Loading..." : `${filteredJobs.length} jobs`}
           </span>
-
         </div>
-
 
         {/* Main grid */}
         <div className="grid gap-8 lg:grid-cols-[260px_minmax(0,1fr)]">
-
-
           {/* =================================================
               DESKTOP FILTER SIDEBAR
           ================================================= */}
 
           <aside className="hidden h-fit rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:block">
-
             <div className="flex items-center justify-between">
-
-              <h2 className="font-bold text-slate-900">
-                Filters
-              </h2>
+              <h2 className="font-bold text-slate-900">Filters</h2>
 
               <button
                 type="button"
@@ -376,9 +397,7 @@ const Jobs = () => {
               >
                 Reset
               </button>
-
             </div>
-
 
             <div className="mt-7">
               <JobFilters
@@ -406,22 +425,20 @@ const Jobs = () => {
               </button>
             </div>
 
-
             {/* Active filters */}
             {(category !== "All" ||
               jobType !== "All" ||
               experienceLevel !== "All" ||
-              salaryMin || salaryMax ||
+              salaryMin ||
+              salaryMax ||
               search ||
               location) && (
               <div className="mt-7 rounded-xl bg-slate-50 p-4">
-
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                   Active filters
                 </p>
 
                 <div className="mt-3 flex flex-wrap gap-2">
-
                   {search && (
                     <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
                       {search}
@@ -457,26 +474,19 @@ const Jobs = () => {
                       ${salaryMin || "0"} – ${salaryMax || "Any"}
                     </span>
                   )}
-
                 </div>
-
               </div>
             )}
-
           </aside>
-
 
           {/* =================================================
               JOB RESULTS
           ================================================= */}
 
           <div className="min-w-0">
-
             {/* Results header */}
             <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
               <div>
-
                 <h2 className="text-xl font-bold text-slate-900">
                   Latest Jobs
                 </h2>
@@ -486,13 +496,10 @@ const Jobs = () => {
                     ? "Loading latest opportunities..."
                     : `${filteredJobs.length} opportunities found`}
                 </p>
-
               </div>
-
 
               {/* Sort */}
               <div className="relative w-fit">
-
                 <ArrowUpDown
                   size={15}
                   className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
@@ -500,96 +507,79 @@ const Jobs = () => {
 
                 <select
                   value={sortBy}
-                  onChange={(event) =>
-                    setSortBy(event.target.value)
-                  }
+                  onChange={(event) => setSortBy(event.target.value)}
                   className="appearance-none rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-9 text-sm font-medium text-slate-700 outline-none transition focus:border-blue-500"
                 >
-                  <option value="Latest">
-                    Latest
-                  </option>
+                  <option value="Latest">Latest</option>
 
-                  <option value="Company">
-                    Company
-                  </option>
+                  <option value="Company">Company</option>
 
-                  <option value="Title">
-                    Job Title
-                  </option>
+                  <option value="Title">Job Title</option>
                 </select>
 
                 <ChevronDown
                   size={15}
                   className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
                 />
-
               </div>
-
             </div>
-
 
             {/* =================================================
                 RESULTS
             ================================================= */}
 
             <div className="space-y-4">
-
               {/* Loading skeleton */}
-              {loading && <Loader text="Loading live jobs..." className="min-h-40 rounded-2xl bg-white" />}
-
+              {loading && (
+                <Loader
+                  text="Loading live jobs..."
+                  className="min-h-40 rounded-2xl bg-white"
+                />
+              )}
 
               {/* Job cards */}
               {!loading &&
                 filteredJobs.length > 0 &&
-                visibleJobs.map((job) => (
-                  <JobCard
-                    key={job.id}
-                    job={job}
-                  />
-                ))}
-
+                visibleJobs.map((job) => <JobCard key={job.id} job={job} />)}
 
               {/* Empty state */}
-              {!loading &&
-                filteredJobs.length === 0 && (
-                  <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
-
-                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
-                      <Search
-                        size={24}
-                        className="text-slate-400"
-                      />
-                    </div>
-
-                    <h3 className="mt-5 text-lg font-bold text-slate-900">
-                      {apiError ? "Could not load jobs" : "No jobs found"}
-                    </h3>
-
-                    <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
-                      {apiError || "We could not find any opportunities matching your current search and filters. Try different keywords or clear the filters."}
-                    </p>
-
-                    <button
-                      type="button"
-                      onClick={resetFilters}
-                      className="mt-5 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
-                    >
-                      Clear Filters
-                    </button>
-
+              {!loading && filteredJobs.length === 0 && (
+                <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
+                    <Search size={24} className="text-slate-400" />
                   </div>
-                )}
 
+                  <h3 className="mt-5 text-lg font-bold text-slate-900">
+                    {apiError ? "Could not load jobs" : "No jobs found"}
+                  </h3>
+
+                  <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+                    {apiError ||
+                      "We could not find any opportunities matching your current search and filters. Try different keywords or clear the filters."}
+                  </p>
+
+                  <button
+                    type="button"
+                    onClick={resetFilters}
+                    className="mt-5 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
+                  >
+                    Clear Filters
+                  </button>
+                </div>
+              )}
             </div>
 
-            {!loading && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} className="mt-7" />}
-
+            {!loading && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                className="mt-7"
+              />
+            )}
           </div>
-
         </div>
-
       </section>
-
 
       {/* =====================================================
           MOBILE FILTER DRAWER
@@ -602,33 +592,43 @@ const Jobs = () => {
         size="sm"
       >
         <div className="lg:hidden">
-              <JobFilters
-                idPrefix="mobile-filter"
-                category={category}
-                categoryOptions={categoryOptions}
-                setCategory={changeCategory}
-                jobType={jobType}
-                setJobType={changeJobType}
-                experienceLevel={experienceLevel}
-                setExperienceLevel={changeExperienceLevel}
-                salaryMinInput={salaryMinInput}
-                setSalaryMinInput={setSalaryMinInput}
-                salaryMaxInput={salaryMaxInput}
-                setSalaryMaxInput={setSalaryMaxInput}
-                locationInput={locationInput}
-                setLocationInput={setLocationInput}
-              />
+          <JobFilters
+            idPrefix="mobile-filter"
+            category={category}
+            categoryOptions={categoryOptions}
+            setCategory={changeCategory}
+            jobType={jobType}
+            setJobType={changeJobType}
+            experienceLevel={experienceLevel}
+            setExperienceLevel={changeExperienceLevel}
+            salaryMinInput={salaryMinInput}
+            setSalaryMinInput={setSalaryMinInput}
+            salaryMaxInput={salaryMaxInput}
+            setSalaryMaxInput={setSalaryMaxInput}
+            locationInput={locationInput}
+            setLocationInput={setLocationInput}
+          />
           <div className="mt-6 flex gap-3 border-t border-slate-100 pt-5">
-            <button type="button" onClick={resetFilters} className="flex-1 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
+            <button
+              type="button"
+              onClick={resetFilters}
+              className="flex-1 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+            >
               Reset
             </button>
-            <button type="button" onClick={() => { handleSearch(); setShowFilters(false); }} className="flex-1 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700">
+            <button
+              type="button"
+              onClick={() => {
+                handleSearch();
+                setShowFilters(false);
+              }}
+              className="flex-1 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
+            >
               Apply filters
             </button>
           </div>
         </div>
       </Modal>
-
     </main>
   );
 };

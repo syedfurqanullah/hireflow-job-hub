@@ -29,7 +29,11 @@ const apiGetOnce = async (endpoint, params = {}) => {
     const script = document.createElement("script");
     const timeout = window.setTimeout(() => {
       cleanup();
-      reject(new Error("Adzuna request timed out. Check your internet connection and try again."));
+      reject(
+        new Error(
+          "Adzuna request timed out. Check your internet connection and try again.",
+        ),
+      );
     }, 20000);
 
     const cleanup = () => {
@@ -53,7 +57,11 @@ const apiGetOnce = async (endpoint, params = {}) => {
 
     script.onerror = () => {
       cleanup();
-      reject(new Error("Could not load Adzuna. Check your connection, API credentials, and browser network access."));
+      reject(
+        new Error(
+          "Could not load Adzuna. Check your connection, API credentials, and browser network access.",
+        ),
+      );
     };
     script.src = url.toString();
     document.head.appendChild(script);
@@ -64,7 +72,9 @@ export const apiGet = async (endpoint, params = {}) => {
   try {
     return await apiGetOnce(endpoint, params);
   } catch (error) {
-    const isTemporaryNetworkError = /timed out|could not load adzuna/i.test(error?.message || "");
+    const isTemporaryNetworkError = /timed out|could not load adzuna/i.test(
+      error?.message || "",
+    );
     if (!isTemporaryNetworkError) throw error;
 
     await new Promise((resolve) => window.setTimeout(resolve, 800));

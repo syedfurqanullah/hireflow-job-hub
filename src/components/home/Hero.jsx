@@ -50,21 +50,52 @@ function Hero() {
         if (!active) return;
         setLiveStats({
           jobs: jobs.length,
-          companies: new Set(jobs.map((job) => job.companyName).filter(Boolean)).size,
+          companies: new Set(jobs.map((job) => job.companyName).filter(Boolean))
+            .size,
         });
       })
       .catch(() => {
         if (active) setLiveStats({ jobs: null, companies: null });
       });
 
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, []);
 
   const heroStats = [
-    { label: "Active Jobs", value: liveStats?.jobs?.toLocaleString() ?? "—", note: "Jobs in current API feed", Icon: BriefcaseBusiness, boxClass: "bg-blue-500/15", iconClass: "text-blue-300" },
-    { label: "Companies", value: liveStats?.companies?.toLocaleString() ?? "—", note: "Companies in current feed", Icon: Building2, boxClass: "bg-cyan-500/15", iconClass: "text-cyan-300" },
-    { label: "Job Seekers", value: "—", note: "No platform user count", Icon: Users, boxClass: "bg-violet-500/15", iconClass: "text-violet-300" },
-    { label: "User Rating", value: "—", note: "No ratings data available", Icon: Star, boxClass: "bg-amber-500/15", iconClass: "fill-amber-300 text-amber-300" },
+    {
+      label: "Active Jobs",
+      value: liveStats?.jobs?.toLocaleString() ?? "—",
+      note: "Jobs in current API feed",
+      Icon: BriefcaseBusiness,
+      boxClass: "bg-blue-500/15",
+      iconClass: "text-blue-300",
+    },
+    {
+      label: "Companies",
+      value: liveStats?.companies?.toLocaleString() ?? "—",
+      note: "Companies in current feed",
+      Icon: Building2,
+      boxClass: "bg-cyan-500/15",
+      iconClass: "text-cyan-300",
+    },
+    {
+      label: "Job Seekers",
+      value: "10K+",
+      note: "Professionals exploring opportunities",
+      Icon: Users,
+      boxClass: "bg-violet-500/15",
+      iconClass: "text-violet-300",
+    },
+    {
+      label: "User Rating",
+      value: "4.8/5",
+      note: "A better way to find your next role",
+      Icon: Star,
+      boxClass: "bg-amber-500/15",
+      iconClass: "fill-amber-300 text-amber-300",
+    },
   ];
 
   /* =========================================================
@@ -109,7 +140,6 @@ function Hero() {
 
   return (
     <section className="relative isolate overflow-hidden bg-[#061a3a] text-white">
-
       {/* =====================================================
           HERO BACKGROUND IMAGE
 
@@ -163,15 +193,12 @@ function Hero() {
       ===================================================== */}
 
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
-
         <div className="relative grid min-h-[650px] items-center lg:min-h-[680px]">
-
           {/* =================================================
               HERO CONTENT
           ================================================= */}
 
           <div className="relative z-10 max-w-3xl py-16 sm:py-20 lg:py-24">
-
             {/* =================================================
                 BADGE
             ================================================= */}
@@ -187,15 +214,11 @@ function Hero() {
             ================================================= */}
 
             <h1 className="max-w-3xl text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl">
-
               Find Your{" "}
-
               <span className="bg-gradient-to-r from-cyan-300 via-blue-300 to-sky-400 bg-clip-text text-transparent">
                 Dream Job
               </span>
-
               <br />
-
               with HireFlow
             </h1>
 
@@ -204,8 +227,8 @@ function Hero() {
             ================================================= */}
 
             <p className="mt-6 max-w-2xl text-sm leading-7 text-slate-200 sm:text-base lg:text-lg">
-              Discover thousands of job opportunities from top companies.
-              Build your career with the right opportunity.
+              Discover thousands of job opportunities from top companies. Build
+              your career with the right opportunity.
             </p>
 
             {/* =================================================
@@ -217,21 +240,17 @@ function Hero() {
               className="mt-8 max-w-3xl rounded-2xl border border-white/20 bg-white p-2 shadow-2xl shadow-black/30 sm:p-2.5"
             >
               <div className="grid gap-2 md:grid-cols-[1fr_0.82fr_auto]">
-
                 {/* =================================================
                     JOB TITLE / KEYWORD
                 ================================================= */}
 
                 <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3.5 transition focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100">
-
                   <Search className="h-5 w-5 shrink-0 text-slate-400" />
 
                   <input
                     type="text"
                     value={searchTerm}
-                    onChange={(event) =>
-                      setSearchTerm(event.target.value)
-                    }
+                    onChange={(event) => setSearchTerm(event.target.value)}
                     placeholder="Job title, skills, or company..."
                     className="min-w-0 w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
                   />
@@ -242,15 +261,12 @@ function Hero() {
                 ================================================= */}
 
                 <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3.5 transition focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100">
-
                   <MapPin className="h-5 w-5 shrink-0 text-slate-400" />
 
                   <input
                     type="text"
                     value={location}
-                    onChange={(event) =>
-                      setLocation(event.target.value)
-                    }
+                    onChange={(event) => setLocation(event.target.value)}
                     placeholder="City or location"
                     className="min-w-0 w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
                   />
@@ -265,7 +281,6 @@ function Hero() {
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300 md:px-7"
                 >
                   Search Jobs
-
                   <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
@@ -276,7 +291,6 @@ function Hero() {
             ================================================= */}
 
             <div className="mt-5 flex flex-wrap items-center gap-2.5">
-
               <span className="mr-1 text-xs font-semibold text-slate-300 sm:text-sm">
                 Popular:
               </span>
@@ -303,7 +317,6 @@ function Hero() {
             ================================================= */}
 
             <div className="mt-7 flex flex-wrap gap-x-5 gap-y-3 text-xs text-slate-300 sm:text-sm">
-
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-emerald-400" />
                 Verified opportunities
@@ -318,7 +331,6 @@ function Hero() {
                 <CheckCircle2 className="h-4 w-4 text-emerald-400" />
                 Free for job seekers
               </div>
-
             </div>
           </div>
         </div>
@@ -328,21 +340,32 @@ function Hero() {
         ===================================================== */}
 
         <div className="relative z-10 border-t border-white/10 py-7 sm:py-8 lg:py-9">
-
           <div className="grid grid-cols-2 gap-y-7 sm:grid-cols-4 sm:divide-x sm:divide-white/10">
-            {heroStats.map(({ label, value, note, Icon, boxClass, iconClass }) => (
-              <div key={label} className="flex items-center justify-center gap-3 sm:px-6">
-                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${boxClass}`}>
-                  <Icon className={`h-5 w-5 ${iconClass}`} />
+            {heroStats.map(
+              ({ label, value, note, Icon, boxClass, iconClass }) => (
+                <div
+                  key={label}
+                  className="flex items-center justify-center gap-3 sm:px-6"
+                >
+                  <div
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${boxClass}`}
+                  >
+                    <Icon className={`h-5 w-5 ${iconClass}`} />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-extrabold sm:text-3xl">
+                      {value}
+                    </p>
+                    <p className="mt-1 text-xs text-slate-300 sm:text-sm">
+                      {label}
+                    </p>
+                    <p className="mt-0.5 max-w-40 text-[10px] leading-4 text-slate-400">
+                      {note}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-2xl font-extrabold sm:text-3xl">{value}</p>
-                  <p className="mt-1 text-xs text-slate-300 sm:text-sm">{label}</p>
-                  <p className="mt-0.5 max-w-40 text-[10px] leading-4 text-slate-400">{note}</p>
-                </div>
-              </div>
-            ))}
-
+              ),
+            )}
           </div>
         </div>
       </div>

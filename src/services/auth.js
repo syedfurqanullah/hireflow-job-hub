@@ -13,7 +13,9 @@ export const getCurrentUser = () => {
 
 export const isAuthenticated = () => {
   try {
-    return localStorage.getItem(AUTH_KEY) === "true" && Boolean(getCurrentUser());
+    return (
+      localStorage.getItem(AUTH_KEY) === "true" && Boolean(getCurrentUser())
+    );
   } catch {
     return false;
   }
@@ -27,7 +29,9 @@ export const startDemoSession = (user, rememberMe = false) => {
     else localStorage.removeItem(REMEMBER_KEY);
     window.dispatchEvent(new Event(AUTH_CHANGE_EVENT));
   } catch {
-    throw new Error("Browser storage is unavailable. Enable local storage and try again.");
+    throw new Error(
+      "Browser storage is unavailable. Enable local storage and try again.",
+    );
   }
 };
 

@@ -6,14 +6,7 @@ import { X } from "lucide-react";
 // Supports title, content, close button, and custom footer.
 // =====================================================
 
-const Modal = ({
-  isOpen,
-  onClose,
-  title,
-  children,
-  footer,
-  size = "md",
-}) => {
+const Modal = ({ isOpen, onClose, title, children, footer, size = "md" }) => {
   const closeButtonRef = useRef(null);
   const dialogRef = useRef(null);
   const titleId = useId();
@@ -91,7 +84,11 @@ const Modal = ({
       >
         {/* Modal header */}
         <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
-          {title && <h2 id={titleId} className="text-lg font-semibold text-slate-900">{title}</h2>}
+          {title && (
+            <h2 id={titleId} className="text-lg font-semibold text-slate-900">
+              {title}
+            </h2>
+          )}
 
           <button
             ref={closeButtonRef}
@@ -105,9 +102,7 @@ const Modal = ({
         </div>
 
         {/* Modal content */}
-        <div className="max-h-[70vh] overflow-y-auto p-5">
-          {children}
-        </div>
+        <div className="max-h-[70vh] overflow-y-auto p-5">{children}</div>
 
         {/* Optional footer actions */}
         {footer && (
@@ -121,4 +116,3 @@ const Modal = ({
 };
 
 export default Modal;
-

@@ -35,7 +35,16 @@ const JobSearch = ({
         aria-label="Search by location"
       />
     </label>
-    <Button type="button" onClick={onSearch} loading={loading} loadingText="Searching..." className="min-h-12 px-6 active:scale-[0.98]"><Search size={17} />Search Jobs</Button>
+    <Button
+      type="button"
+      onClick={onSearch}
+      loading={loading}
+      loadingText="Searching..."
+      className="min-h-12 px-6 active:scale-[0.98]"
+    >
+      <Search size={17} />
+      Search Jobs
+    </Button>
   </div>
 );
 

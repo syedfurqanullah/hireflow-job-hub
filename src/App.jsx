@@ -2,6 +2,7 @@ import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./routes/AppRoutes";
 import AppErrorBoundary from "./components/common/AppErrorBoundary";
 import ThemeProvider from "./context/ThemeContext";
+import { ToastProvider } from "./context/ToastContext";
 
 /* =========================================================
    HireFlow Root Application
@@ -14,9 +15,11 @@ function App() {
   return (
     <BrowserRouter>
       <ThemeProvider>
-        <AppErrorBoundary>
-          <AppRoutes />
-        </AppErrorBoundary>
+        <ToastProvider>
+          <AppErrorBoundary>
+            <AppRoutes />
+          </AppErrorBoundary>
+        </ToastProvider>
       </ThemeProvider>
     </BrowserRouter>
   );

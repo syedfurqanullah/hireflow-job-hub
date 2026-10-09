@@ -3,7 +3,9 @@ import { ThemeContext } from "./theme-context";
 
 const STORAGE_KEY = "hireflow-theme";
 const getSystemTheme = () =>
-  window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  window.matchMedia?.("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
 
 const getInitialTheme = () => {
   try {
@@ -30,7 +32,11 @@ const ThemeProvider = ({ children }) => {
   useEffect(() => {
     const handleStorage = (event) => {
       if (event.key !== STORAGE_KEY) return;
-      setTheme(event.newValue === "dark" || event.newValue === "light" ? event.newValue : getSystemTheme());
+      setTheme(
+        event.newValue === "dark" || event.newValue === "light"
+          ? event.newValue
+          : getSystemTheme(),
+      );
     };
     window.addEventListener("storage", handleStorage);
     return () => window.removeEventListener("storage", handleStorage);
@@ -45,25 +51,32 @@ const ThemeProvider = ({ children }) => {
 
     const preference = window.matchMedia?.("(prefers-color-scheme: dark)");
     if (!preference) return undefined;
-    const handlePreferenceChange = (event) => setTheme(event.matches ? "dark" : "light");
+    const handlePreferenceChange = (event) =>
+      setTheme(event.matches ? "dark" : "light");
     preference.addEventListener?.("change", handlePreferenceChange);
-    return () => preference.removeEventListener?.("change", handlePreferenceChange);
+    return () =>
+      preference.removeEventListener?.("change", handlePreferenceChange);
   }, []);
 
-  const value = useMemo(() => ({
-    theme,
-    toggleTheme: () => {
-      const next = theme === "dark" ? "light" : "dark";
-      try {
-        localStorage.setItem(STORAGE_KEY, next);
-      } catch {
-        // The theme still changes for the current page session.
-      }
-      setTheme(next);
-    },
-  }), [theme]);
+  const value = useMemo(
+    () => ({
+      theme,
+      toggleTheme: () => {
+        const next = theme === "dark" ? "light" : "dark";
+        try {
+          localStorage.setItem(STORAGE_KEY, next);
+        } catch {
+          // The theme still changes for the current page session.
+        }
+        setTheme(next);
+      },
+    }),
+    [theme],
+  );
 
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+  );
 };
 
 export default ThemeProvider;

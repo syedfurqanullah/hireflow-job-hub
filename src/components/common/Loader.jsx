@@ -41,11 +41,7 @@ const Loader = ({
       />
 
       {/* Optional loading message */}
-      {text && (
-        <p className="text-sm font-medium text-slate-500">
-          {text}
-        </p>
-      )}
+      {text && <p className="text-sm font-medium text-slate-500">{text}</p>}
 
       {!text && <span className="sr-only">Loading...</span>}
     </div>

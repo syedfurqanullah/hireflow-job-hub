@@ -13,7 +13,9 @@ const CompanyLogo = ({ name, src, className = "" }) => {
           alt={`${name || "Company"} logo`}
           className="absolute inset-0 h-full w-full bg-white object-contain p-1"
           loading="lazy"
-          onError={(event) => { event.currentTarget.style.display = "none"; }}
+          onError={(event) => {
+            event.currentTarget.style.display = "none";
+          }}
         />
       )}
     </div>

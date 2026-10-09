@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { getJobById } from "../services/jobService";
 import { getCurrentUser } from "../services/auth";
 import CompanyLogo from "../components/common/CompanyLogo";
+import { useToast } from "../context/ToastContext";
 
 // HireFlow - Job Application Page
 // Includes responsive form, resume validation and frontend feedback.
@@ -16,25 +17,40 @@ const ApplyJob = () => {
   const [form, setForm] = useState(() => {
     const user = getCurrentUser();
     return {
-    fullName: user?.name || "",
-    email: user?.email || "",
-    phone: "",
-    portfolio: "",
-    coverLetter: "",
+      fullName: user?.name || "",
+      email: user?.email || "",
+      phone: "",
+      portfolio: "",
+      coverLetter: "",
     };
   });
 
   const [resume, setResume] = useState(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const { showToast } = useToast();
 
   useEffect(() => {
     let active = true;
     getJobById(id)
-      .then((item) => { if (active) setJob(item); })
-      .catch(() => { if (active) setJob(null); })
-      .finally(() => { if (active) setJobLoading(false); });
-    return () => { active = false; };
+      .then((item) => {
+        if (active) setJob(item);
+      })
+      .catch(() => {
+        if (active) {
+          setJob(null);
+          showToast({
+            type: "error",
+            message: "We couldn’t load this job. Please try again.",
+          });
+        }
+      })
+      .finally(() => {
+        if (active) setJobLoading(false);
+      });
+    return () => {
+      active = false;
+    };
   }, [id]);
 
   // Update the input values.
@@ -90,6 +106,10 @@ const ApplyJob = () => {
       !resume
     ) {
       setError("Please complete all required fields and upload your resume.");
+      showToast({
+        type: "warning",
+        message: "Please complete all required fields.",
+      });
       return;
     }
 
@@ -97,32 +117,48 @@ const ApplyJob = () => {
 
     if (!emailPattern.test(form.email.trim())) {
       setError("Please enter a valid email address.");
+      showToast({
+        type: "warning",
+        message: "Please check the highlighted fields and try again.",
+      });
       return;
     }
 
     if (!/^\+?[\d\s().-]{7,20}$/.test(form.phone.trim())) {
       setError("Please enter a valid phone number.");
+      showToast({
+        type: "warning",
+        message: "Please check the highlighted fields and try again.",
+      });
       return;
     }
 
     if (form.portfolio.trim()) {
       try {
         const portfolioUrl = new URL(form.portfolio.trim());
-        if (!['http:', 'https:'].includes(portfolioUrl.protocol)) throw new Error();
+        if (!["http:", "https:"].includes(portfolioUrl.protocol))
+          throw new Error();
       } catch {
         setError("Please enter a valid portfolio or LinkedIn URL.");
+        showToast({
+          type: "warning",
+          message: "Please check the highlighted fields and try again.",
+        });
         return;
       }
     }
 
     setError("");
     setSuccess(true);
+    showToast({
+      type: "success",
+      message: "Application details validated successfully.",
+    });
   };
 
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-10 sm:px-6 lg:py-14">
       <div className="mx-auto max-w-4xl">
-
         {/* Return to the selected job */}
         <Link
           to={id ? `/jobs/${id}` : "/jobs"}
@@ -143,7 +179,8 @@ const ApplyJob = () => {
           </h1>
 
           <p className="mt-3 text-sm leading-6 text-slate-500 sm:text-base">
-            Share your details and upload your resume to prepare your application.
+            Share your details and upload your resume to prepare your
+            application.
           </p>
         </header>
 
@@ -151,17 +188,28 @@ const ApplyJob = () => {
         <section className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-bold text-slate-900">Selected Job</h2>
           {jobLoading ? (
-            <p className="mt-2 text-sm text-slate-500" role="status">Loading job details…</p>
+            <p className="mt-2 text-sm text-slate-500" role="status">
+              Loading job details…
+            </p>
           ) : job ? (
             <div className="mt-4 flex items-center gap-3">
-              <CompanyLogo name={job.company} src={job.companyLogo} className="h-12 w-12" />
+              <CompanyLogo
+                name={job.company}
+                src={job.companyLogo}
+                className="h-12 w-12"
+              />
               <div className="min-w-0">
                 <p className="font-semibold text-slate-900">{job.title}</p>
-                <p className="mt-1 text-sm text-slate-500">{job.company} · {job.location}</p>
+                <p className="mt-1 text-sm text-slate-500">
+                  {job.company} · {job.location}
+                </p>
               </div>
             </div>
           ) : (
-            <p className="mt-2 text-sm text-slate-500">Job reference: {id || "Not specified"}. Listing details could not be loaded.</p>
+            <p className="mt-2 text-sm text-slate-500">
+              Job reference: {id || "Not specified"}. Listing details could not
+              be loaded.
+            </p>
           )}
         </section>
 
@@ -178,9 +226,9 @@ const ApplyJob = () => {
               </h2>
 
               <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-slate-500">
-                This is a frontend confirmation only. Your application
-                has not been sent to an employer because backend submission
-                is not connected yet.
+                This is a frontend confirmation only. Your application has not
+                been sent to an employer because backend submission is not
+                connected yet.
               </p>
 
               <button
@@ -202,7 +250,6 @@ const ApplyJob = () => {
               </p>
 
               <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
-
                 {/* Full name */}
                 <div>
                   <label

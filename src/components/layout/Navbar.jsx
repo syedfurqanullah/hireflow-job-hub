@@ -218,6 +218,7 @@ import { Moon, Sun } from "lucide-react";
 import BrandLogo from "../common/BrandLogo";
 import { endDemoSession, isAuthenticated } from "../../services/auth";
 import { useTheme } from "../../context/useTheme";
+import { useToast } from "../../context/ToastContext";
 
 /* =========================================================
    HireFlow Navbar
@@ -235,8 +236,10 @@ function Navbar() {
   const [authenticated, setAuthenticated] = useState(isAuthenticated);
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
+  const { showToast } = useToast();
   const ThemeIcon = theme === "dark" ? Sun : Moon;
-  const themeAction = theme === "dark" ? "Switch to light theme" : "Switch to dark theme";
+  const themeAction =
+    theme === "dark" ? "Switch to light theme" : "Switch to dark theme";
 
   useEffect(() => {
     const syncAuthState = () => {
@@ -254,6 +257,10 @@ function Navbar() {
   const handleLogout = () => {
     endDemoSession();
     setAuthenticated(false);
+    showToast({
+      type: "info",
+      message: "You’ve been logged out successfully. See you again soon!",
+    });
     closeMobileMenu();
     navigate("/");
   };
@@ -295,12 +302,10 @@ function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
         {/* =================================================
             Main Navbar
         ================================================= */}
         <div className="flex h-16 items-center justify-between">
-
           {/* =================================================
               HireFlow Logo
           ================================================= */}
@@ -345,15 +350,25 @@ function Navbar() {
               <ThemeIcon size={18} aria-hidden="true" />
             </button>
             {authenticated ? (
-              <button type="button" onClick={handleLogout} className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700">
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
+              >
                 Logout
               </button>
             ) : (
               <>
-                <Link to="/login" className="rounded-lg px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-blue-600">
+                <Link
+                  to="/login"
+                  className="rounded-lg px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-blue-600"
+                >
                   Sign In
                 </Link>
-                <Link to="/register" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 hover:shadow-md">
+                <Link
+                  to="/register"
+                  className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 hover:shadow-md"
+                >
                   Sign Up
                 </Link>
               </>
@@ -368,9 +383,7 @@ function Navbar() {
             onClick={() => setIsMenuOpen((previous) => !previous)}
             className="rounded-lg p-2 text-slate-700 transition hover:bg-slate-100 md:hidden"
             aria-label={
-              isMenuOpen
-                ? "Close navigation menu"
-                : "Open navigation menu"
+              isMenuOpen ? "Close navigation menu" : "Open navigation menu"
             }
             aria-expanded={isMenuOpen}
             aria-controls="mobile-navigation"
@@ -421,10 +434,7 @@ function Navbar() {
             className="border-t border-slate-100 py-4 md:hidden"
           >
             {/* Mobile Links */}
-            <nav
-              className="flex flex-col gap-1"
-              aria-label="Mobile navigation"
-            >
+            <nav className="flex flex-col gap-1" aria-label="Mobile navigation">
               {navLinks.map((link) => (
                 <NavLink
                   key={link.path}
@@ -449,15 +459,27 @@ function Navbar() {
             ================================================= */}
             <div className="mt-4 flex flex-col gap-2 border-t border-slate-100 pt-4">
               {authenticated ? (
-                <button type="button" onClick={handleLogout} className="rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700">
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700"
+                >
                   Logout
                 </button>
               ) : (
                 <>
-                  <Link to="/login" onClick={closeMobileMenu} className="rounded-lg px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-blue-600">
+                  <Link
+                    to="/login"
+                    onClick={closeMobileMenu}
+                    className="rounded-lg px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-blue-600"
+                  >
                     Sign In
                   </Link>
-                  <Link to="/register" onClick={closeMobileMenu} className="rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700 hover:shadow-md">
+                  <Link
+                    to="/register"
+                    onClick={closeMobileMenu}
+                    className="rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700 hover:shadow-md"
+                  >
                     Sign Up
                   </Link>
                 </>

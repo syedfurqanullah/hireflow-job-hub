@@ -9,12 +9,15 @@ export const getSavedJobs = () => {
   }
 };
 
-export const isJobSaved = (jobId) => getSavedJobs().some((job) => job.id === jobId);
+export const isJobSaved = (jobId) =>
+  getSavedJobs().some((job) => job.id === jobId);
 
 export const toggleSavedJob = (job) => {
   const current = getSavedJobs();
   const exists = current.some((item) => item.id === job.id);
-  const next = exists ? current.filter((item) => item.id !== job.id) : [{ ...job, raw: undefined }, ...current];
+  const next = exists
+    ? current.filter((item) => item.id !== job.id)
+    : [{ ...job, raw: undefined }, ...current];
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   } catch {

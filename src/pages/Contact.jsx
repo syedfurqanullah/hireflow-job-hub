@@ -4,7 +4,6 @@ import {
   Mail,
   MapPin,
   MessageSquare,
-  Phone,
   Send,
 } from "lucide-react";
 
@@ -100,27 +99,29 @@ const Contact = () => {
                 <div>
                   <p className="text-sm text-slate-400">Email</p>
                   <a
-                    href="mailto:hello@hireflow.com"
+                    href="mailto:syedfurqanullahh@gmail.com"
                     className="mt-1 block font-medium text-white transition hover:text-blue-400"
                   >
-                    hello@hireflow.com
+                    syedfurqanullahh@gmail.com
                   </a>
                 </div>
               </div>
 
-              {/* Phone */}
+              {/* LinkedIn */}
               <div className="flex gap-4">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10">
-                  <Phone size={20} className="text-blue-400" />
+                  <span className="text-base font-bold text-blue-400" aria-hidden="true">in</span>
                 </div>
 
                 <div>
-                  <p className="text-sm text-slate-400">Phone</p>
+                  <p className="text-sm text-slate-400">LinkedIn</p>
                   <a
-                    href="tel:+923001234567"
+                    href="https://www.linkedin.com/in/syed-furqan-ullah/"
+                    target="_blank"
+                    rel="noreferrer"
                     className="mt-1 block font-medium text-white transition hover:text-blue-400"
                   >
-                    +92 300 1234567
+                    Syed Furqan Ullah
                   </a>
                 </div>
               </div>
@@ -149,13 +150,10 @@ const Contact = () => {
                 />
 
                 <div>
-                  <h3 className="font-semibold text-white">
-                    Quick Response
-                  </h3>
+                  <h3 className="font-semibold text-white">Quick Response</h3>
 
                   <p className="mt-1 text-sm leading-6 text-slate-400">
-                    Our team aims to respond to messages as quickly as
-                    possible.
+                    Our team aims to respond to messages as quickly as possible.
                   </p>
                 </div>
               </div>

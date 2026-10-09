@@ -1,9 +1,4 @@
-import {
-  ArrowUpRight,
-  Mail,
-  MapPin,
-  Phone,
-} from "lucide-react";
+import { ArrowUpRight, Mail, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import BrandLogo from "../common/BrandLogo";
 
@@ -40,29 +35,6 @@ const Footer = () => {
     { label: "Saved Jobs", path: "/dashboard#saved-jobs" },
   ];
 
-  // =======================================================
-  // Social Links
-  // =======================================================
-
-  const socialLinks = [
-    {
-      label: "LinkedIn",
-      href: "#",
-    },
-    {
-      label: "Facebook",
-      href: "#",
-    },
-    {
-      label: "Instagram",
-      href: "#",
-    },
-    {
-      label: "X",
-      href: "#",
-    },
-  ];
-
   return (
     <footer className="mt-10 border-t border-slate-200 bg-white pb-16 text-slate-700 sm:mt-12 md:pb-0">
       {/* ===================================================
@@ -71,7 +43,6 @@ const Footer = () => {
 
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1.2fr] lg:gap-12">
-
           {/* =================================================
               Brand Section
               ================================================= */}
@@ -82,23 +53,9 @@ const Footer = () => {
 
             {/* Description */}
             <p className="mt-5 text-sm leading-7 text-slate-500">
-              Find your dream job, connect with top companies, and build
-              the career you deserve with HireFlow Job Hub.
+              Find your dream job, connect with top companies, and build the
+              career you deserve with HireFlow Job Hub.
             </p>
-
-            {/* Social Links */}
-            <div className="mt-6 flex flex-wrap gap-2.5">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  aria-label={social.label}
-                  className="flex h-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-500 transition-all duration-200 hover:border-blue-200 hover:bg-blue-600 hover:text-white"
-                >
-                  {social.label}
-                </a>
-              ))}
-            </div>
           </div>
 
           {/* =================================================
@@ -167,10 +124,9 @@ const Footer = () => {
             </h3>
 
             <div className="mt-5 space-y-4">
-
               {/* Email */}
               <a
-                href="mailto:hello@hireflow.com"
+                href="mailto:syedfurqanullahh@gmail.com"
                 className="group flex items-start gap-3"
               >
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-colors duration-200 group-hover:bg-blue-600 group-hover:text-white">
@@ -178,21 +134,23 @@ const Footer = () => {
                 </span>
 
                 <span className="pt-1 text-sm text-slate-500 transition-colors duration-200 group-hover:text-blue-600">
-                  hello@hireflow.com
+                  syedfurqanullahh@gmail.com
                 </span>
               </a>
 
-              {/* Phone */}
+              {/* LinkedIn */}
               <a
-                href="tel:+923001234567"
+                href="https://www.linkedin.com/in/syed-furqan-ullah/"
+                target="_blank"
+                rel="noreferrer"
                 className="group flex items-start gap-3"
               >
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-colors duration-200 group-hover:bg-blue-600 group-hover:text-white">
-                  <Phone size={16} />
+                  <span className="text-sm font-bold" aria-hidden="true">in</span>
                 </span>
 
                 <span className="pt-1 text-sm text-slate-500 transition-colors duration-200 group-hover:text-blue-600">
-                  +92 300 1234567
+                  LinkedIn Profile
                 </span>
               </a>
 
@@ -206,7 +164,6 @@ const Footer = () => {
                   Karachi, Pakistan
                 </span>
               </div>
-
             </div>
           </div>
         </div>
@@ -218,7 +175,6 @@ const Footer = () => {
 
       <div className="border-t border-slate-200 bg-slate-50">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
-
           {/* Copyright */}
           <p className="text-center text-xs text-slate-500 md:text-left">
             © {new Date().getFullYear()} HireFlow Job Hub. All rights reserved.
@@ -226,19 +182,18 @@ const Footer = () => {
 
           {/* Legal Links */}
           <div className="flex items-center justify-center gap-5 text-xs text-slate-500 md:justify-end">
-            <button
-              type="button"
+            <Link
+              to="/privacy-policy"
               className="transition-colors duration-200 hover:text-blue-600"
             >
               Privacy Policy
-            </button>
-
-            <button
-              type="button"
+            </Link>
+            <Link
+              to="/terms-and-conditions"
               className="transition-colors duration-200 hover:text-blue-600"
             >
-              Terms of Service
-            </button>
+              Terms and Conditions
+            </Link>
           </div>
         </div>
       </div>

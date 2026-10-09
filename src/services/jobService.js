@@ -12,8 +12,9 @@ import { apiGet } from "./api";
 // - Company logo/source URL resolve karna
 // =========================================================
 
-const DEFAULT_COUNTRY =
-  (import.meta.env.VITE_ADZUNA_COUNTRY || "us").toLowerCase();
+const DEFAULT_COUNTRY = (
+  import.meta.env.VITE_ADZUNA_COUNTRY || "us"
+).toLowerCase();
 
 const DEFAULT_LIMIT = 50;
 
@@ -22,15 +23,92 @@ const CACHE_DURATION = 5 * 60 * 1000;
 const CATEGORY_CACHE_DURATION = 10 * 60 * 1000;
 
 const CATEGORY_SPECS = [
-  { name: "IT Technology", apiLabel: "IT Jobs", fallbackTag: "it-jobs", aliases: ["IT", "Technology"] },
-  { name: "Designing", apiLabel: "Creative & Design Jobs", fallbackTag: "creative-design-jobs" },
-  { name: "Marketing", apiLabel: "PR, Advertising & Marketing Jobs", fallbackTag: "pr-advertising-marketing-jobs" },
+  {
+    name: "IT Technology",
+    apiLabel: "IT Jobs",
+    fallbackTag: "it-jobs",
+    aliases: ["IT", "Technology"],
+  },
+  {
+    name: "Designing",
+    apiLabel: "Creative & Design Jobs",
+    fallbackTag: "creative-design-jobs",
+  },
+  {
+    name: "Marketing",
+    apiLabel: "PR, Advertising & Marketing Jobs",
+    fallbackTag: "pr-advertising-marketing-jobs",
+  },
   { name: "Sales", apiLabel: "Sales Jobs", fallbackTag: "sales-jobs" },
-  { name: "Finance", apiLabel: "Accounting & Finance Jobs", fallbackTag: "accounting-finance-jobs" },
-  { name: "Cyber Security", apiLabel: "IT Jobs", fallbackTag: "it-jobs", what: "cyber security", titleTerms: ["cyber", "information security", "infosec", "security engineer", "security analyst", "security architect"] },
-  { name: "Software Engineer", apiLabel: "IT Jobs", fallbackTag: "it-jobs", what: "software engineer", titleTerms: ["software engineer", "software developer", "programmer", "application engineer", "backend engineer", "back-end engineer", "backend developer", "back-end developer", "devops"] },
-  { name: "Web Development", apiLabel: "IT Jobs", fallbackTag: "it-jobs", what: "web developer", titleTerms: ["web developer", "web engineer", "web application", "website developer", "front end", "front-end", "frontend", "full stack", "full-stack", "react developer", "javascript developer"] },
-  { name: "Mobile Development", apiLabel: "IT Jobs", fallbackTag: "it-jobs", what: "mobile developer", titleTerms: ["mobile developer", "mobile engineer", "android", "ios", "app developer", "application developer"] },
+  {
+    name: "Finance",
+    apiLabel: "Accounting & Finance Jobs",
+    fallbackTag: "accounting-finance-jobs",
+  },
+  {
+    name: "Cyber Security",
+    apiLabel: "IT Jobs",
+    fallbackTag: "it-jobs",
+    what: "cyber security",
+    titleTerms: [
+      "cyber",
+      "information security",
+      "infosec",
+      "security engineer",
+      "security analyst",
+      "security architect",
+    ],
+  },
+  {
+    name: "Software Engineer",
+    apiLabel: "IT Jobs",
+    fallbackTag: "it-jobs",
+    what: "software engineer",
+    titleTerms: [
+      "software engineer",
+      "software developer",
+      "programmer",
+      "application engineer",
+      "backend engineer",
+      "back-end engineer",
+      "backend developer",
+      "back-end developer",
+      "devops",
+    ],
+  },
+  {
+    name: "Web Development",
+    apiLabel: "IT Jobs",
+    fallbackTag: "it-jobs",
+    what: "web developer",
+    titleTerms: [
+      "web developer",
+      "web engineer",
+      "web application",
+      "website developer",
+      "front end",
+      "front-end",
+      "frontend",
+      "full stack",
+      "full-stack",
+      "react developer",
+      "javascript developer",
+    ],
+  },
+  {
+    name: "Mobile Development",
+    apiLabel: "IT Jobs",
+    fallbackTag: "it-jobs",
+    what: "mobile developer",
+    titleTerms: [
+      "mobile developer",
+      "mobile engineer",
+      "android",
+      "ios",
+      "app developer",
+      "application developer",
+    ],
+  },
 ];
 
 export const JOB_CATEGORIES = CATEGORY_SPECS.map(({ name }) => name);
@@ -67,7 +145,10 @@ const cacheJobsForDetails = (jobs) => {
     const cached = JSON.parse(sessionStorage.getItem(DETAIL_CACHE_KEY) || "[]");
     const byId = new Map(cached.map((job) => [job.id, job]));
     jobs.forEach((job) => byId.set(job.id, { ...job, raw: undefined }));
-    sessionStorage.setItem(DETAIL_CACHE_KEY, JSON.stringify(Array.from(byId.values()).slice(-250)));
+    sessionStorage.setItem(
+      DETAIL_CACHE_KEY,
+      JSON.stringify(Array.from(byId.values()).slice(-250)),
+    );
   } catch {
     // Browser storage can be disabled or full; in-memory job data still works.
   }
@@ -75,8 +156,11 @@ const cacheJobsForDetails = (jobs) => {
 
 const getPersistedJob = (id) => {
   try {
-    return JSON.parse(sessionStorage.getItem(DETAIL_CACHE_KEY) || "[]")
-      .find((job) => job.id === id) || null;
+    return (
+      JSON.parse(sessionStorage.getItem(DETAIL_CACHE_KEY) || "[]").find(
+        (job) => job.id === id,
+      ) || null
+    );
   } catch {
     return null;
   }
@@ -85,9 +169,13 @@ const getPersistedJob = (id) => {
 const normalizeList = (value) => {
   if (Array.isArray(value)) {
     return value
-      .map((item) => typeof item === "object" && item !== null
-        ? safeString(item.name || item.label || item.value || item.text || item.skill)
-        : safeString(item))
+      .map((item) =>
+        typeof item === "object" && item !== null
+          ? safeString(
+              item.name || item.label || item.value || item.text || item.skill,
+            )
+          : safeString(item),
+      )
       .filter(Boolean);
   }
 
@@ -101,40 +189,167 @@ const normalizeList = (value) => {
     .filter(Boolean);
 };
 
-const cleanDescription = (value) => safeString(value)
-  .replace(/<br\s*\/?\s*>/gi, "\n")
-  .replace(/<\/(?:p|div|li|h[1-6])\s*>/gi, "\n")
-  .replace(/<[^>]*>/g, " ")
-  .replace(/&nbsp;/gi, " ")
-  .replace(/&amp;/gi, "&")
-  .replace(/&quot;/gi, '"')
-  .replace(/&#39;|&apos;/gi, "'")
-  .replace(/&lt;/gi, "<")
-  .replace(/&gt;/gi, ">")
-  .replace(/[ \t]+/g, " ")
-  .replace(/ *\n */g, "\n")
-  .trim();
+const cleanDescription = (value) =>
+  safeString(value)
+    .replace(/<br\s*\/?\s*>/gi, "\n")
+    .replace(/<\/(?:p|div|li|h[1-6])\s*>/gi, "\n")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/[ \t]+/g, " ")
+    .replace(/ *\n */g, "\n")
+    .trim();
 
-const COMMON_SKILLS = ["JavaScript", "TypeScript", "React", "Angular", "Vue", "Node.js", "Python", "Java", "C#", "C++", ".NET", "PHP", "Ruby", "Go", "SQL", "PostgreSQL", "MySQL", "MongoDB", "AWS", "Azure", "Google Cloud", "Docker", "Kubernetes", "Git", "HTML", "CSS", "Figma", "Adobe Photoshop", "Adobe Illustrator", "Excel", "Power BI", "Tableau", "Salesforce", "SEO", "Google Analytics", "Linux", "REST API", "GraphQL", "Machine Learning", "Artificial Intelligence", "Data Analysis", "Data Visualization", "Cybersecurity", "Information Security", "Project Management", "Agile", "Scrum", "UI/UX", "Copywriting", "Financial Analysis", "Bookkeeping", "QuickBooks", "Customer Service", "Lead Generation", "Negotiation", "Public Relations", "Content Marketing", "Social Media Marketing", "Market Research", "Business Development"];
+const COMMON_SKILLS = [
+  "JavaScript",
+  "TypeScript",
+  "React",
+  "Angular",
+  "Vue",
+  "Node.js",
+  "Python",
+  "Java",
+  "C#",
+  "C++",
+  ".NET",
+  "PHP",
+  "Ruby",
+  "Go",
+  "SQL",
+  "PostgreSQL",
+  "MySQL",
+  "MongoDB",
+  "AWS",
+  "Azure",
+  "Google Cloud",
+  "Docker",
+  "Kubernetes",
+  "Git",
+  "HTML",
+  "CSS",
+  "Figma",
+  "Adobe Photoshop",
+  "Adobe Illustrator",
+  "Excel",
+  "Power BI",
+  "Tableau",
+  "Salesforce",
+  "SEO",
+  "Google Analytics",
+  "Linux",
+  "REST API",
+  "GraphQL",
+  "Machine Learning",
+  "Artificial Intelligence",
+  "Data Analysis",
+  "Data Visualization",
+  "Cybersecurity",
+  "Information Security",
+  "Project Management",
+  "Agile",
+  "Scrum",
+  "UI/UX",
+  "Copywriting",
+  "Financial Analysis",
+  "Bookkeeping",
+  "QuickBooks",
+  "Customer Service",
+  "Lead Generation",
+  "Negotiation",
+  "Public Relations",
+  "Content Marketing",
+  "Social Media Marketing",
+  "Market Research",
+  "Business Development",
+];
 
 const extractSkills = (description, apiSkills = []) => {
   const supplied = normalizeList(apiSkills);
   const text = description.toLowerCase();
   const mentioned = COMMON_SKILLS.filter((skill) => {
     const escaped = skill.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return new RegExp(`(^|[^a-z0-9+#])${escaped.toLowerCase()}([^a-z0-9+#]|$)`, "i").test(text);
+    return new RegExp(
+      `(^|[^a-z0-9+#])${escaped.toLowerCase()}([^a-z0-9+#]|$)`,
+      "i",
+    ).test(text);
   });
   return [...new Set([...supplied, ...mentioned])].slice(0, 12);
 };
 
 const extractRequirements = (description, suppliedRequirements = []) => {
   const supplied = normalizeList(suppliedRequirements);
-  const fragments = description.split(/\n+|(?<=[.!?])\s+/).map((fragment) => fragment.replace(/^\s*(?:[-*•]|\d+[.)])\s*/, "").trim()).filter(Boolean);
-  const requirementPhrases = fragments.map((fragment) => {
-    const match = fragment.match(/\b(?:requirements?|qualifications?|what you(?:'ll| will) need|must have|must be|you (?:will )?need|experience (?:with|in|of|as)|knowledge of|proficient in|proficiency in|ability to|skilled in|minimum of|at least|bachelor(?:'s)?|master(?:'s)?|degree in|certification in|preferred qualification)[^.!?;]*/i);
-    return match?.[0]?.trim();
-  }).filter(Boolean);
+  const fragments = description
+    .split(/\n+|(?<=[.!?])\s+/)
+    .map((fragment) => fragment.replace(/^\s*(?:[-*•]|\d+[.)])\s*/, "").trim())
+    .filter(Boolean);
+  const requirementPhrases = fragments
+    .map((fragment) => {
+      const match = fragment.match(
+        /\b(?:requirements?|qualifications?|what you(?:'ll| will) need|must have|must be|you (?:will )?need|experience (?:with|in|of|as)|knowledge of|proficient in|proficiency in|ability to|skilled in|minimum of|at least|bachelor(?:'s)?|master(?:'s)?|degree in|certification in|preferred qualification)[^.!?;]*/i,
+      );
+      return match?.[0]?.trim();
+    })
+    .filter(Boolean);
   return [...new Set([...supplied, ...requirementPhrases])].slice(0, 8);
+};
+
+const extractResponsibilities = (
+  description,
+  suppliedResponsibilities = [],
+  title = "this role",
+) => {
+  const supplied = normalizeList(suppliedResponsibilities);
+  const fragments = description
+    .split(/\n+|(?<=[.!?])\s+/)
+    .map((fragment) => fragment.replace(/^\s*(?:[-*•]|\d+[.)])\s*/, "").trim())
+    .filter(Boolean);
+  const actionFragments = fragments.filter((fragment) =>
+    /^(?:you will|you'll|responsibilit|duties|manage|lead|build|develop|design|create|deliver|support|collaborate|work|analy[sz]|maintain|implement|coordinate|drive|own|review|monitor|assist|help|perform|provide|identify|ensure|communicate)/i.test(
+      fragment,
+    ),
+  );
+  return [...new Set([...supplied, ...actionFragments])].slice(0, 8).length
+    ? [...new Set([...supplied, ...actionFragments])].slice(0, 8)
+    : [
+        `Deliver high-quality work as a ${title}.`,
+        "Collaborate with cross-functional teams to achieve business goals.",
+        "Communicate progress, priorities, and outcomes with stakeholders.",
+      ];
+};
+
+const formatUsd = (value) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(value);
+
+const normalizeSalary = (job) => {
+  const minimum = getSalaryValue(job?.salary_min);
+  const maximum = getSalaryValue(job?.salary_max);
+  const raw = safeString(job?.job_base_pay_range || job?.salary);
+  const rawNumbers =
+    raw
+      .match(/[0-9]+(?:,[0-9]{3})*(?:\.\d+)?/g)
+      ?.map((value) => Number(value.replace(/,/g, ""))) || [];
+  const min = minimum ?? rawNumbers[0];
+  const max = maximum ?? rawNumbers[1];
+
+  if (min !== undefined || max !== undefined) {
+    const range =
+      min !== undefined && max !== undefined && min !== max
+        ? `${formatUsd(min)} - ${formatUsd(max)}`
+        : formatUsd(min ?? max);
+    return `${range} USD`;
+  }
+
+  return raw
+    ? `${raw.replace(/\b(USD|US dollars?|dollars?)\b/gi, "").trim()} USD`
+    : "Salary not specified (USD)";
 };
 
 // =========================================================
@@ -201,7 +416,8 @@ const resolveCategory = (requestedCategory, apiCategories) => {
 
   if (spec) {
     const match = apiCategories.find(
-      (item) => safeString(item?.label).toLowerCase() === spec.apiLabel.toLowerCase(),
+      (item) =>
+        safeString(item?.label).toLowerCase() === spec.apiLabel.toLowerCase(),
     );
     return {
       name: spec.name,
@@ -215,12 +431,21 @@ const resolveCategory = (requestedCategory, apiCategories) => {
   const match = apiCategories.find(
     (item) => safeString(item?.label).toLowerCase() === normalized,
   );
-  return match ? { name: match.label, apiLabel: match.label, tag: match.tag, what: "", titleTerms: [] } : null;
+  return match
+    ? {
+        name: match.label,
+        apiLabel: match.label,
+        tag: match.tag,
+        what: "",
+        titleTerms: [],
+      }
+    : null;
 };
 
 const matchesApiCategory = (job, category) => {
   const actualLabel = safeString(job?.category?.label).toLowerCase();
-  if (actualLabel && actualLabel !== category.apiLabel.toLowerCase()) return false;
+  if (actualLabel && actualLabel !== category.apiLabel.toLowerCase())
+    return false;
 
   if (!category.titleTerms?.length) return true;
 
@@ -231,14 +456,19 @@ const matchesApiCategory = (job, category) => {
 const inferITCategory = (title) => {
   const normalizedTitle = safeString(title).toLowerCase();
   const specializedCategories = CATEGORY_SPECS.slice(5).reverse();
-  return specializedCategories.find(({ titleTerms = [] }) =>
-    titleTerms.some((term) => normalizedTitle.includes(term)),
-  )?.name || "IT Technology";
+  return (
+    specializedCategories.find(({ titleTerms = [] }) =>
+      titleTerms.some((term) => normalizedTitle.includes(term)),
+    )?.name || "IT Technology"
+  );
 };
 
 export const getCategoryCounts = async ({ countryCode = "" } = {}) => {
   const country = (countryCode || DEFAULT_COUNTRY).toLowerCase();
-  if (categoryCountsCache?.country === country && Date.now() - categoryCountsCacheTimestamp < CATEGORY_CACHE_DURATION) {
+  if (
+    categoryCountsCache?.country === country &&
+    Date.now() - categoryCountsCacheTimestamp < CATEGORY_CACHE_DURATION
+  ) {
     return categoryCountsCache.items;
   }
   if (categoryCountsRequest?.country === country) {
@@ -276,14 +506,22 @@ export const getCategoryCounts = async ({ countryCode = "" } = {}) => {
   try {
     return await promise;
   } finally {
-    if (categoryCountsRequest?.promise === promise) categoryCountsRequest = null;
+    if (categoryCountsRequest?.promise === promise)
+      categoryCountsRequest = null;
   }
 };
 
-export const getTopCompanies = async ({ countryCode = "", forceRefresh = false } = {}) => {
+export const getTopCompanies = async ({
+  countryCode = "",
+  forceRefresh = false,
+} = {}) => {
   const country = (countryCode || DEFAULT_COUNTRY).toLowerCase();
   const cached = topCompaniesCache.get(country);
-  if (!forceRefresh && cached && Date.now() - cached.timestamp < CATEGORY_CACHE_DURATION) {
+  if (
+    !forceRefresh &&
+    cached &&
+    Date.now() - cached.timestamp < CATEGORY_CACHE_DURATION
+  ) {
     return cached.items;
   }
   if (!forceRefresh && topCompaniesRequests.has(country)) {
@@ -291,7 +529,9 @@ export const getTopCompanies = async ({ countryCode = "", forceRefresh = false }
   }
 
   const request = apiGet(`/jobs/${country}/top_companies`).then((response) => {
-    const items = Array.isArray(response?.leaderboard) ? response.leaderboard : [];
+    const items = Array.isArray(response?.leaderboard)
+      ? response.leaderboard
+      : [];
     topCompaniesCache.set(country, { items, timestamp: Date.now() });
     return items;
   });
@@ -299,7 +539,8 @@ export const getTopCompanies = async ({ countryCode = "", forceRefresh = false }
   try {
     return await request;
   } finally {
-    if (topCompaniesRequests.get(country) === request) topCompaniesRequests.delete(country);
+    if (topCompaniesRequests.get(country) === request)
+      topCompaniesRequests.delete(country);
   }
 };
 
@@ -374,12 +615,9 @@ const formatPostedDate = (value) => {
   }
 
   const now = new Date();
-  const difference =
-    now.getTime() - date.getTime();
+  const difference = now.getTime() - date.getTime();
 
-  const days = Math.floor(
-    difference / (1000 * 60 * 60 * 24),
-  );
+  const days = Math.floor(difference / (1000 * 60 * 60 * 24));
 
   if (days <= 0) {
     return "Today";
@@ -396,16 +634,12 @@ const formatPostedDate = (value) => {
   const weeks = Math.floor(days / 7);
 
   if (days < 30) {
-    return weeks === 1
-      ? "1 week ago"
-      : `${weeks} weeks ago`;
+    return weeks === 1 ? "1 week ago" : `${weeks} weeks ago`;
   }
 
   const months = Math.floor(days / 30);
 
-  return months === 1
-    ? "1 month ago"
-    : `${months} months ago`;
+  return months === 1 ? "1 month ago" : `${months} months ago`;
 };
 
 // =========================================================
@@ -421,9 +655,7 @@ const normalizeJobType = (value) => {
 
   return type
     .replace(/_/g, " ")
-    .replace(/\b\w/g, (letter) =>
-      letter.toUpperCase(),
-    );
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
 };
 
 const getExperienceLevel = (job) => {
@@ -431,21 +663,40 @@ const getExperienceLevel = (job) => {
   const title = safeString(job?.job_title || job?.title).toLowerCase();
   const titleText = `${seniority} ${title}`;
 
-  if (/\b(senior|sr\.?|lead|principal|staff|director|vp|head of)\b/.test(titleText)) return "Senior Level";
-  if (/\b(entry[- ]level|junior|jr\.?|intern(ship)?|trainee|graduate|new grad|early career)\b/.test(titleText)) return "Entry Level";
+  if (
+    /\b(senior|sr\.?|lead|principal|staff|director|vp|head of)\b/.test(
+      titleText,
+    )
+  )
+    return "Senior Level";
+  if (
+    /\b(entry[- ]level|junior|jr\.?|intern(ship)?|trainee|graduate|new grad|early career)\b/.test(
+      titleText,
+    )
+  )
+    return "Entry Level";
   if (/\b(mid[- ]level|intermediate)\b/.test(titleText)) return "Mid Level";
 
-  const description = safeString(job?.job_summary || job?.description).toLowerCase();
-  const years = [...description.matchAll(/(\d+)\s*\+?\s*(?:years|yrs)/g)].map((match) => Number(match[1]));
+  const description = safeString(
+    job?.job_summary || job?.description,
+  ).toLowerCase();
+  const years = [...description.matchAll(/(\d+)\s*\+?\s*(?:years|yrs)/g)].map(
+    (match) => Number(match[1]),
+  );
   if (years.some((year) => year >= 7)) return "Senior Level";
   if (years.some((year) => year <= 2)) return "Entry Level";
   return "Mid Level";
 };
 
 const getRemoteStatus = (job) => {
-  const workplace = safeString(job?.workplace_type || job?.remote_type).toLowerCase();
-  const details = `${safeString(job?.job_title || job?.title)} ${safeString(job?.job_summary || job?.description)} ${safeString(job?.job_location || job?.location?.display_name)}`.toLowerCase();
-  return /\b(remote|remotely|work\s*[- ]?from\s*[- ]?home|fully distributed|telecommut(?:e|ing)|home[- ]based|work from anywhere)\b/.test(`${workplace} ${details}`);
+  const workplace = safeString(
+    job?.workplace_type || job?.remote_type,
+  ).toLowerCase();
+  const details =
+    `${safeString(job?.job_title || job?.title)} ${safeString(job?.job_summary || job?.description)} ${safeString(job?.job_location || job?.location?.display_name)}`.toLowerCase();
+  return /\b(remote|remotely|work\s*[- ]?from\s*[- ]?home|fully distributed|telecommut(?:e|ing)|home[- ]based|work from anywhere)\b/.test(
+    `${workplace} ${details}`,
+  );
 };
 
 const getSalaryValue = (value) => {
@@ -454,14 +705,26 @@ const getSalaryValue = (value) => {
   return Number.isFinite(number) ? number : null;
 };
 
-const matchesJobFilters = (job, { jobType, experienceLevel, salaryMin, salaryMax }) => {
+const matchesJobFilters = (
+  job,
+  { jobType, experienceLevel, salaryMin, salaryMax },
+) => {
   const type = safeString(job.type).toLowerCase();
   const titleAndDescription = `${job.title} ${job.description}`.toLowerCase();
 
-  if (jobType === "Full Time" && !/(full[ -]?time|permanent)/.test(type)) return false;
+  if (jobType === "Full Time" && !/(full[ -]?time|permanent)/.test(type))
+    return false;
   if (jobType === "Part Time" && !/part[ -]?time/.test(type)) return false;
-  if (jobType === "Contract" && !/(contract|temporary|fixed[ -]?term)/.test(type)) return false;
-  if (jobType === "Internship" && !(/intern(ship)?/.test(`${type} ${titleAndDescription}`))) return false;
+  if (
+    jobType === "Contract" &&
+    !/(contract|temporary|fixed[ -]?term)/.test(type)
+  )
+    return false;
+  if (
+    jobType === "Internship" &&
+    !/intern(ship)?/.test(`${type} ${titleAndDescription}`)
+  )
+    return false;
   if (jobType === "Remote" && !job.isRemote) return false;
   if (experienceLevel && job.experienceLevel !== experienceLevel) return false;
 
@@ -469,8 +732,10 @@ const matchesJobFilters = (job, { jobType, experienceLevel, salaryMin, salaryMax
   const maximum = getSalaryValue(salaryMax);
   const jobMinimum = job.salaryMinValue ?? job.salaryMaxValue;
   const jobMaximum = job.salaryMaxValue ?? job.salaryMinValue;
-  if (minimum !== null && (jobMaximum === null || jobMaximum < minimum)) return false;
-  if (maximum !== null && (jobMinimum === null || jobMinimum > maximum)) return false;
+  if (minimum !== null && (jobMaximum === null || jobMaximum < minimum))
+    return false;
+  if (maximum !== null && (jobMinimum === null || jobMinimum > maximum))
+    return false;
 
   return true;
 };
@@ -484,35 +749,52 @@ const matchesJobFilters = (job, { jobType, experienceLevel, salaryMin, salaryMax
 
 const normalizeJob = (job) => {
   const industries = normalizeList(
-    job?.job_industries ||
-      job?.industries ||
-      job?.category?.label,
+    job?.job_industries || job?.industries || job?.category?.label,
   );
 
-  const description = cleanDescription(job?.job_summary || job?.description);
-  const skills = extractSkills(description, job?.skills || job?.job_skills || job?.required_skills || job?.job_required_skills);
-  const requirements = extractRequirements(description, job?.requirements || job?.job_requirements || job?.qualifications || job?.job_qualifications || job?.key_requirements);
+  const description = cleanDescription(
+    job?.job_description ||
+      job?.job_summary ||
+      job?.description ||
+      job?.details,
+  );
+  const skills = extractSkills(
+    description,
+    job?.skills ||
+      job?.job_skills ||
+      job?.required_skills ||
+      job?.job_required_skills,
+  );
+  const requirements = extractRequirements(
+    description,
+    job?.requirements ||
+      job?.job_requirements ||
+      job?.qualifications ||
+      job?.job_qualifications ||
+      job?.key_requirements,
+  );
 
   const company =
     safeString(job?.company_name) ||
     safeString(job?.company?.display_name) ||
     "Company not specified";
 
-  const companyWebsite =
-    getCompanyWebsite(job);
+  const companyWebsite = getCompanyWebsite(job);
   const apiCategory = safeString(job?.category?.label);
   const mappedCategory = CATEGORY_SPECS.find(
     (item) => item.apiLabel.toLowerCase() === apiCategory.toLowerCase(),
   )?.name;
-  const inferredITCategory = apiCategory.toLowerCase() === "it jobs"
-    ? inferITCategory(job?.job_title || job?.title)
-    : "";
+  const inferredITCategory =
+    apiCategory.toLowerCase() === "it jobs"
+      ? inferITCategory(job?.job_title || job?.title)
+      : "";
   const experienceLevel = getExperienceLevel(job);
 
   return {
     id:
-      (job?.id !== undefined ? `${job?.__country || DEFAULT_COUNTRY}-${job.id}` : "") ||
-      safeString(job?.url),
+      (job?.id !== undefined
+        ? `${job?.__country || DEFAULT_COUNTRY}-${job.id}`
+        : "") || safeString(job?.url),
 
     title:
       safeString(job?.job_title) ||
@@ -535,9 +817,15 @@ const normalizeJob = (job) => {
       safeString(job?.country_code) || safeString(job?.__country).toUpperCase(),
 
     category:
-      safeString(job?.__categoryLabel) || inferredITCategory || mappedCategory || industries[0] || "IT Jobs",
+      safeString(job?.__categoryLabel) ||
+      inferredITCategory ||
+      mappedCategory ||
+      industries[0] ||
+      "IT Jobs",
 
-    categories: [...new Set([...industries, ...(job?.__categoryAliases || [])])],
+    categories: [
+      ...new Set([...industries, ...(job?.__categoryAliases || [])]),
+    ],
 
     type: normalizeJobType(
       [job?.job_employment_type, job?.contract_time, job?.contract_type]
@@ -545,15 +833,10 @@ const normalizeJob = (job) => {
         .join(" "),
     ),
 
-    experience:
-      experienceLevel,
+    experience: experienceLevel,
     experienceLevel,
 
-    salary:
-      safeString(job?.job_base_pay_range) ||
-      (job?.salary_min || job?.salary_max
-        ? `${job?.salary_min || ""}${job?.salary_min && job?.salary_max ? " - " : ""}${job?.salary_max || ""}`
-        : "Salary not specified"),
+    salary: normalizeSalary(job),
     salaryMinValue: getSalaryValue(job?.salary_min),
     salaryMaxValue: getSalaryValue(job?.salary_max),
     isRemote: getRemoteStatus(job),
@@ -562,16 +845,34 @@ const normalizeJob = (job) => {
 
     skills,
     requirements,
-
-    certifications:
-      normalizeList(job?.certifications),
-
-    posted: formatPostedDate(
-      job?.job_posted_date || job?.created,
+    responsibilities: extractResponsibilities(
+      description,
+      job?.responsibilities ||
+        job?.job_responsibilities ||
+        job?.duties ||
+        job?.job_duties,
+      safeString(job?.job_title || job?.title) || "this role",
     ),
 
-    postedDate:
-      safeString(job?.job_posted_date || job?.created),
+    companyDetails: {
+      name: company,
+      website: companyWebsite,
+      logo: getCompanyLogo(job),
+      location:
+        safeString(job?.company?.location) ||
+        safeString(job?.job_location) ||
+        "Location not specified",
+      industry:
+        safeString(job?.company?.industry) ||
+        safeString(job?.category?.label) ||
+        "Technology",
+    },
+
+    certifications: normalizeList(job?.certifications),
+
+    posted: formatPostedDate(job?.job_posted_date || job?.created),
+
+    postedDate: safeString(job?.job_posted_date || job?.created),
 
     url: safeString(job?.url) || safeString(job?.redirect_url),
 
@@ -580,18 +881,14 @@ const normalizeJob = (job) => {
       safeString(job?.redirect_url) ||
       safeString(job?.url),
 
-    competitivenessScore:
-      job?.competitiveness_score ?? null,
+    competitivenessScore: job?.competitiveness_score ?? null,
 
-    ingestionDate:
-      safeString(job?.ingestion_date),
+    ingestionDate: safeString(job?.ingestion_date),
 
-    validatedOn:
-      safeString(job?.validated_on),
+    validatedOn: safeString(job?.validated_on),
 
     listingClosed:
-      job?.listing_closed === true ||
-      job?.listing_closed === "true",
+      job?.listing_closed === true || job?.listing_closed === "true",
 
     // Keep original response for future features.
     raw: job,
@@ -625,26 +922,52 @@ export const getJobs = async ({
   const normalizedSalaryMax = safeString(salaryMax);
   const salaryMinValue = getSalaryValue(normalizedSalaryMin);
   const salaryMaxValue = getSalaryValue(normalizedSalaryMax);
-  if ((normalizedSalaryMin && salaryMinValue === null) || (normalizedSalaryMax && salaryMaxValue === null)) return [];
-  if (salaryMinValue !== null && salaryMaxValue !== null && salaryMinValue > salaryMaxValue) return [];
+  if (
+    (normalizedSalaryMin && salaryMinValue === null) ||
+    (normalizedSalaryMax && salaryMaxValue === null)
+  )
+    return [];
+  if (
+    salaryMinValue !== null &&
+    salaryMaxValue !== null &&
+    salaryMinValue > salaryMaxValue
+  )
+    return [];
   const cacheKey = `${country}:${normalizedCategory.toLowerCase()}:${normalizedSearch.toLowerCase()}:${normalizedLocation.toLowerCase()}:${normalizedJobType.toLowerCase()}:${normalizedExperienceLevel.toLowerCase()}:${normalizedSalaryMin}:${normalizedSalaryMax}`;
   const cached = jobsCache.get(cacheKey);
-  if (!forceRefresh && cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+  if (
+    !forceRefresh &&
+    cached &&
+    Date.now() - cached.timestamp < CACHE_DURATION
+  ) {
     return cached.jobs.slice(0, resultLimit);
   }
   if (!forceRefresh && jobsRequests.has(cacheKey)) {
-    return jobsRequests.get(cacheKey).then((items) => items.slice(0, resultLimit));
+    return jobsRequests
+      .get(cacheKey)
+      .then((items) => items.slice(0, resultLimit));
   }
 
   const promise = (async () => {
     const apiCategories = await getAdzunaCategories(country);
-    const requestedCategorySpec = resolveCategory(normalizedCategory, apiCategories);
+    const requestedCategorySpec = resolveCategory(
+      normalizedCategory,
+      apiCategories,
+    );
 
-    if (normalizedCategory && normalizedCategory.toLowerCase() !== "all" && !requestedCategorySpec) {
+    if (
+      normalizedCategory &&
+      normalizedCategory.toLowerCase() !== "all" &&
+      !requestedCategorySpec
+    ) {
       return [];
     }
 
-    const fetchCategoryJobs = async (category, requestLimit, { includeSpecializedIT = false } = {}) => {
+    const fetchCategoryJobs = async (
+      category,
+      requestLimit,
+      { includeSpecializedIT = false } = {},
+    ) => {
       const params = { results_per_page: requestLimit, sort_by: "date" };
       if (category?.tag) params.category = category.tag;
       const whatTerms = [category?.what, normalizedSearch];
@@ -664,14 +987,17 @@ export const getJobs = async ({
         .filter((job) => !category || matchesApiCategory(job, category))
         .map((job) => {
           const title = job?.job_title || job?.title;
-          const categoryName = category?.name === "IT Technology"
-            ? inferITCategory(title)
-            : category?.name || "";
+          const categoryName =
+            category?.name === "IT Technology"
+              ? inferITCategory(title)
+              : category?.name || "";
           return {
             ...job,
             __country: country,
             __categoryLabel: categoryName,
-            __categoryAliases: CATEGORY_SPECS.find((item) => item.name === categoryName)?.aliases || [],
+            __categoryAliases:
+              CATEGORY_SPECS.find((item) => item.name === categoryName)
+                ?.aliases || [],
           };
         });
 
@@ -688,15 +1014,24 @@ export const getJobs = async ({
       const categoryResults = await Promise.allSettled(
         PRIMARY_FEED_CATEGORIES.map((spec) => {
           const category = resolveCategory(spec.name, apiCategories);
-          return fetchCategoryJobs(category, perCategoryLimit, { includeSpecializedIT: true });
+          return fetchCategoryJobs(category, perCategoryLimit, {
+            includeSpecializedIT: true,
+          });
         }),
       );
-      const successfulResults = categoryResults.filter((result) => result.status === "fulfilled");
+      const successfulResults = categoryResults.filter(
+        (result) => result.status === "fulfilled",
+      );
       if (successfulResults.length === 0) {
-        throw categoryResults.find((result) => result.status === "rejected")?.reason || new Error("No job categories could be loaded.");
+        throw (
+          categoryResults.find((result) => result.status === "rejected")
+            ?.reason || new Error("No job categories could be loaded.")
+        );
       }
       if (successfulResults.length < PRIMARY_FEED_CATEGORIES.length) {
-        console.warn(`Adzuna loaded ${successfulResults.length}/${PRIMARY_FEED_CATEGORIES.length} job categories; failed categories will be retried on the next refresh.`);
+        console.warn(
+          `Adzuna loaded ${successfulResults.length}/${PRIMARY_FEED_CATEGORIES.length} job categories; failed categories will be retried on the next refresh.`,
+        );
       }
       rawJobs = successfulResults.flatMap((result) => result.value);
     }
@@ -705,16 +1040,26 @@ export const getJobs = async ({
       .map(normalizeJob)
       .filter((job) => !job.listingClosed)
       .filter((job) => job.id)
-      .filter((job) => matchesJobFilters(job, {
-        jobType: normalizedJobType === "All" ? "" : normalizedJobType,
-        experienceLevel: normalizedExperienceLevel === "All" ? "" : normalizedExperienceLevel,
-        salaryMin: normalizedSalaryMin,
-        salaryMax: normalizedSalaryMax,
-      }));
+      .filter((job) =>
+        matchesJobFilters(job, {
+          jobType: normalizedJobType === "All" ? "" : normalizedJobType,
+          experienceLevel:
+            normalizedExperienceLevel === "All"
+              ? ""
+              : normalizedExperienceLevel,
+          salaryMin: normalizedSalaryMin,
+          salaryMax: normalizedSalaryMax,
+        }),
+      );
 
-    const uniqueJobs = Array.from(new Map(normalizedJobs.map((job) => [job.id, job])).values());
-    const jobs = uniqueJobs
-      .sort((first, second) => (Date.parse(second.postedDate) || 0) - (Date.parse(first.postedDate) || 0))
+    const uniqueJobs = Array.from(
+      new Map(normalizedJobs.map((job) => [job.id, job])).values(),
+    );
+    const jobs = uniqueJobs.sort(
+      (first, second) =>
+        (Date.parse(second.postedDate) || 0) -
+        (Date.parse(first.postedDate) || 0),
+    );
 
     jobsCache.set(cacheKey, { jobs, timestamp: Date.now() });
     cacheJobsForDetails(jobs);
@@ -758,11 +1103,7 @@ export const getJobById = async (id) => {
   // Direct URL access may not have cache yet.
   const jobs = await getJobs();
 
-  return (
-    jobs.find(
-      (job) => job.id === requestedId,
-    ) || null
-  );
+  return jobs.find((job) => job.id === requestedId) || null;
 };
 
 // =========================================================
@@ -771,24 +1112,15 @@ export const getJobById = async (id) => {
 
 export const searchJobs = (
   jobs,
-  {
-    search = "",
-    location = "",
-    category = "",
-    jobType = "",
-  } = {},
+  { search = "", location = "", category = "", jobType = "" } = {},
 ) => {
-  const normalizedSearch =
-    safeString(search).toLowerCase();
+  const normalizedSearch = safeString(search).toLowerCase();
 
-  const normalizedLocation =
-    safeString(location).toLowerCase();
+  const normalizedLocation = safeString(location).toLowerCase();
 
-  const normalizedCategory =
-    safeString(category).toLowerCase();
+  const normalizedCategory = safeString(category).toLowerCase();
 
-  const normalizedJobType =
-    safeString(jobType).toLowerCase();
+  const normalizedJobType = safeString(jobType).toLowerCase();
 
   return jobs.filter((job) => {
     const searchableText = [
@@ -804,40 +1136,23 @@ export const searchJobs = (
       .toLowerCase();
 
     const matchesSearch =
-      !normalizedSearch ||
-      searchableText.includes(
-        normalizedSearch,
-      );
+      !normalizedSearch || searchableText.includes(normalizedSearch);
 
     const matchesLocation =
       !normalizedLocation ||
-      job.location
-        .toLowerCase()
-        .includes(normalizedLocation);
+      job.location.toLowerCase().includes(normalizedLocation);
 
     const matchesCategory =
       !normalizedCategory ||
-      job.category
-        .toLowerCase()
-        .includes(normalizedCategory) ||
+      job.category.toLowerCase().includes(normalizedCategory) ||
       job.categories.some((item) =>
-        item
-          .toLowerCase()
-          .includes(normalizedCategory),
+        item.toLowerCase().includes(normalizedCategory),
       );
 
     const matchesType =
-      !normalizedJobType ||
-      job.type
-        .toLowerCase()
-        .includes(normalizedJobType);
+      !normalizedJobType || job.type.toLowerCase().includes(normalizedJobType);
 
-    return (
-      matchesSearch &&
-      matchesLocation &&
-      matchesCategory &&
-      matchesType
-    );
+    return matchesSearch && matchesLocation && matchesCategory && matchesType;
   });
 };
 
@@ -854,9 +1169,9 @@ export const getCompanies = async ({
 } = {}) => {
   const [jobs, topEmployers] = await Promise.all([
     getJobs({
-    limit: DEFAULT_LIMIT,
-    countryCode,
-    forceRefresh,
+      limit: DEFAULT_LIMIT,
+      countryCode,
+      forceRefresh,
     }),
     getTopCompanies({ countryCode, forceRefresh }).catch(() => []),
   ]);
@@ -871,10 +1186,7 @@ export const getCompanies = async ({
   const companyMap = new Map();
 
   jobs.forEach((job) => {
-    const key =
-      job.companyName
-        .trim()
-        .toLowerCase();
+    const key = job.companyName.trim().toLowerCase();
 
     if (!key) {
       return;
@@ -882,63 +1194,45 @@ export const getCompanies = async ({
 
     if (!companyMap.has(key)) {
       companyMap.set(key, {
-        id: encodeURIComponent(
-          key,
-        ),
+        id: encodeURIComponent(key),
 
         name: job.companyName,
 
-        industry:
-          job.category ||
-          "Technology",
+        industry: job.category || "Technology",
 
-        location:
-          job.location ||
-          "Not specified",
+        location: job.location || "Not specified",
 
-        companyLogo:
-          job.companyLogo,
+        companyLogo: job.companyLogo,
 
-        website:
-          job.companyWebsite,
+        website: job.companyWebsite,
 
         openJobs: 0,
 
         jobs: [],
         adzunaOpenJobs: Number(topEmployerByName.get(key)?.count) || null,
-        averageSalary: Number(topEmployerByName.get(key)?.average_salary) || null,
+        averageSalary:
+          Number(topEmployerByName.get(key)?.average_salary) || null,
       });
     }
 
-    const company =
-      companyMap.get(key);
+    const company = companyMap.get(key);
 
     company.openJobs += 1;
 
     company.jobs.push(job);
 
     // Prefer a logo if a later job contains one.
-    if (
-      !company.companyLogo &&
-      job.companyLogo
-    ) {
-      company.companyLogo =
-        job.companyLogo;
+    if (!company.companyLogo && job.companyLogo) {
+      company.companyLogo = job.companyLogo;
     }
 
     // Prefer a website if available.
-    if (
-      !company.website &&
-      job.companyWebsite
-    ) {
-      company.website =
-        job.companyWebsite;
+    if (!company.website && job.companyWebsite) {
+      company.website = job.companyWebsite;
     }
   });
 
-  return Array.from(
-    companyMap.values(),
-  ).sort(
+  return Array.from(companyMap.values()).sort(
     (first, second) =>
       (second.adzunaOpenJobs || second.openJobs) -
       (first.adzunaOpenJobs || first.openJobs),
@@ -949,11 +1243,8 @@ export const getCompanies = async ({
 // Single company
 // =========================================================
 
-export const getCompanyById = async (
-  id,
-) => {
-  const companies =
-    await getCompanies();
+export const getCompanyById = async (id) => {
+  const companies = await getCompanies();
 
   let normalizedId = safeString(id);
   try {
@@ -965,7 +1256,8 @@ export const getCompanyById = async (
   return (
     companies.find(
       (company) =>
-        company.id === id || company.name.trim().toLowerCase() === normalizedId.trim().toLowerCase(),
+        company.id === id ||
+        company.name.trim().toLowerCase() === normalizedId.trim().toLowerCase(),
     ) || null
   );
 };

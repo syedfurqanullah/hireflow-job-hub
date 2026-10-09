@@ -11,6 +11,7 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import BrandLogo from "../components/common/BrandLogo";
 import { startDemoSession } from "../services/auth";
+import { useToast } from "../context/ToastContext";
 
 // =========================================================
 // HireFlow - Login Page
@@ -24,6 +25,7 @@ import { startDemoSession } from "../services/auth";
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { showToast } = useToast();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -101,9 +103,17 @@ const Login = () => {
 
       try {
         startDemoSession(user, rememberMe);
+        showToast({
+          type: "success",
+          message: `Welcome back, ${user.name}! Glad to have you here.`,
+        });
         navigate(location.state?.from || "/dashboard", { replace: true });
       } catch (sessionError) {
-        setError(sessionError.message);
+        setError("Unable to log you in right now. Please try again.");
+        showToast({
+          type: "error",
+          message: "Unable to log you in right now. Please try again.",
+        });
       } finally {
         setLoading(false);
       }
@@ -206,7 +216,8 @@ const Login = () => {
 
             {/* Error */}
             <p className="mt-5 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm leading-6 text-blue-800">
-              Frontend demo: this sign-in creates a local browser session; it does not verify an account with a server.
+              Frontend demo: this sign-in creates a local browser session; it
+              does not verify an account with a server.
             </p>
 
             {error && (
@@ -219,11 +230,7 @@ const Login = () => {
             )}
 
             {/* Form */}
-            <form
-              onSubmit={handleSubmit}
-              noValidate
-              className="mt-7 space-y-5"
-            >
+            <form onSubmit={handleSubmit} noValidate className="mt-7 space-y-5">
               {/* Email */}
               <div>
                 <label
@@ -266,9 +273,11 @@ const Login = () => {
                     type="button"
                     className="text-xs font-semibold text-blue-600 transition-colors hover:text-blue-700"
                     onClick={() =>
-                      setError(
-                        "Password reset will be connected with authentication API later."
-                      )
+                      showToast({
+                        type: "info",
+                        message:
+                          "If an account exists with this email, you’ll receive password reset instructions.",
+                      })
                     }
                   >
                     Forgot Password?
@@ -300,11 +309,7 @@ const Login = () => {
                     onClick={() => setShowPassword((current) => !current)}
                     className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
                   >
-                    {showPassword ? (
-                      <EyeOff size={18} />
-                    ) : (
-                      <Eye size={18} />
-                    )}
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
               </div>
@@ -314,15 +319,11 @@ const Login = () => {
                 <input
                   type="checkbox"
                   checked={rememberMe}
-                  onChange={(event) =>
-                    setRememberMe(event.target.checked)
-                  }
+                  onChange={(event) => setRememberMe(event.target.checked)}
                   className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
                 />
 
-                <span className="text-sm text-slate-600">
-                  Remember me
-                </span>
+                <span className="text-sm text-slate-600">Remember me</span>
               </label>
 
               {/* Submit */}

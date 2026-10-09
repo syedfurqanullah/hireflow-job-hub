@@ -22,8 +22,7 @@ const Button = ({
 
   // Visual styles for different button variants.
   const variants = {
-    primary:
-      "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-100",
+    primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-100",
 
     secondary:
       "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 focus:ring-slate-100",
@@ -31,8 +30,7 @@ const Button = ({
     outline:
       "border border-blue-600 bg-transparent text-blue-600 hover:bg-blue-50 focus:ring-blue-100",
 
-    danger:
-      "bg-red-600 text-white hover:bg-red-700 focus:ring-red-100",
+    danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-100",
 
     ghost:
       "bg-transparent text-slate-600 hover:bg-slate-100 focus:ring-slate-100",

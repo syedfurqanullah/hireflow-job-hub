@@ -66,8 +66,8 @@ const About = () => {
 
             <p className="mt-4 leading-7 text-slate-600">
               To create a modern career platform where talented people can
-              discover opportunities and companies can find the people they
-              need to grow.
+              discover opportunities and companies can find the people they need
+              to grow.
             </p>
           </div>
         </div>
@@ -134,8 +134,8 @@ const About = () => {
               </h3>
 
               <p className="mt-3 text-sm leading-6 text-slate-600">
-                Create meaningful connections between talented professionals
-                and employers.
+                Create meaningful connections between talented professionals and
+                employers.
               </p>
             </div>
 
@@ -182,9 +182,7 @@ const About = () => {
               <CheckCircle2 className="mt-1 shrink-0 text-blue-600" />
 
               <div>
-                <h3 className="font-bold text-slate-900">
-                  Candidate First
-                </h3>
+                <h3 className="font-bold text-slate-900">Candidate First</h3>
 
                 <p className="mt-1 text-sm leading-6 text-slate-600">
                   We focus on creating a straightforward experience for people
@@ -235,8 +233,8 @@ const About = () => {
           </h2>
 
           <p className="mx-auto mt-4 max-w-2xl leading-7 text-blue-100">
-            Explore jobs and discover companies that can help you take the
-            next step in your career.
+            Explore jobs and discover companies that can help you take the next
+            step in your career.
           </p>
 
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">

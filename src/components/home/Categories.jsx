@@ -88,11 +88,7 @@ const CategoryCard = ({ category }) => {
       <div
         className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl ${category.iconBg}`}
       >
-        <Icon
-          size={24}
-          strokeWidth={2}
-          className={category.iconColor}
-        />
+        <Icon size={24} strokeWidth={2} className={category.iconColor} />
       </div>
 
       {/* Category Name */}
@@ -102,7 +98,11 @@ const CategoryCard = ({ category }) => {
 
       {/* Job Count */}
       <p className="mt-1 text-sm font-medium text-slate-500">
-        {category.jobs === null ? "Loading jobs…" : category.jobs === undefined ? "Unavailable" : `${category.jobs.toLocaleString()} jobs`}
+        {category.jobs === null
+          ? "Loading jobs…"
+          : category.jobs === undefined
+            ? "Unavailable"
+            : `${category.jobs.toLocaleString()} jobs`}
       </p>
     </Link>
   );
@@ -122,24 +122,35 @@ const Categories = () => {
     getCategoryCounts()
       .then((results) => {
         if (!active) return;
-        setCategories((current) => current.map((item) => {
-          const result = results.find((entry) => entry.name === item.query || entry.name === item.name);
-          return result ? { ...item, jobs: result.count } : { ...item, jobs: undefined };
-        }));
+        setCategories((current) =>
+          current.map((item) => {
+            const result = results.find(
+              (entry) => entry.name === item.query || entry.name === item.name,
+            );
+            return result
+              ? { ...item, jobs: result.count }
+              : { ...item, jobs: undefined };
+          }),
+        );
       })
       .catch((error) => {
         if (active) {
-          setLoadError(error?.message || "Could not load live category counts.");
-          setCategories((current) => current.map((item) => ({ ...item, jobs: undefined })));
+          setLoadError(
+            error?.message || "Could not load live category counts.",
+          );
+          setCategories((current) =>
+            current.map((item) => ({ ...item, jobs: undefined })),
+          );
         }
       });
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, [retryCount]);
 
   return (
     <section className="bg-slate-50 py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
         {/* =================================================
             Section Header
         ================================================== */}
@@ -180,14 +191,14 @@ const Categories = () => {
 
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 lg:gap-5">
           {categories.map((category) => (
-            <CategoryCard
-              key={category.id}
-              category={category}
-            />
+            <CategoryCard key={category.id} category={category} />
           ))}
         </div>
         {loadError && (
-          <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-rose-600" role="alert">
+          <div
+            className="mt-5 flex flex-wrap items-center gap-3 text-sm text-rose-600"
+            role="alert"
+          >
             <span>{loadError}</span>
             <button
               type="button"

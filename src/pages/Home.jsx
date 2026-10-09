@@ -1,4 +1,4 @@
-import Hero from "../components/home/Hero"
+import Hero from "../components/home/Hero";
 import Categories from "../components/home/Categories";
 import FeaturedJobs from "../components/home/FeaturedJobs";
 import TopCompanies from "../components/home/TopCompanies";
@@ -24,20 +24,16 @@ const Home = () => {
           - CareerCTA
       */}
 
-       {/* Popular Job Categories */}
+      {/* Popular Job Categories */}
       <Categories />
       {/* Featured Jobs */}
       <FeaturedJobs />
       {/* Top Companies */}
       <TopCompanies />
       {/* Career CTA */}
-     <CareerCTA />
-
+      <CareerCTA />
     </main>
+  );
+};
 
-  )
-}
-
-
-
-export default Home
+export default Home;
