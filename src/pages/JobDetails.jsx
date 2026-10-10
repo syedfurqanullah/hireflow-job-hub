@@ -151,7 +151,6 @@ const JobDetails = () => {
   const handleToggleSaved = () => {
     try {
       const next = toggleSavedJob(job);
-      setSaved(next.some((item) => item.id === job.id));
       const isSaved = next.some((item) => item.id === job.id);
       setSaved(isSaved);
       showToast({

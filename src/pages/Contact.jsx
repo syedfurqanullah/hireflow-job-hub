@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { CheckCircle2, Mail, MapPin, MessageSquare, Send } from "lucide-react";
+import { Link } from "react-router-dom";
+
+const CONTACT_EMAIL = "syedfurqanullahh@gmail.com";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -27,6 +30,15 @@ const Contact = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    const subject = formData.subject.trim() || "HireFlow contact request";
+    const body = [
+      `Name: ${formData.name.trim()}`,
+      `Email: ${formData.email.trim()}`,
+      "",
+      formData.message.trim(),
+    ].join("\n");
+
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setSubmitted(true);
 
     setFormData({
@@ -83,10 +95,10 @@ const Contact = () => {
                 <div>
                   <p className="text-sm text-slate-400">Email</p>
                   <a
-                    href="mailto:syedfurqanullahh@gmail.com"
+                    href={`mailto:${CONTACT_EMAIL}`}
                     className="mt-1 block font-medium text-white transition hover:text-blue-400"
                   >
-                    syedfurqanullahh@gmail.com
+                    {CONTACT_EMAIL}
                   </a>
                 </div>
               </div>
@@ -166,11 +178,11 @@ const Contact = () => {
                 <CheckCircle2 className="mt-0.5 shrink-0" size={20} />
 
                 <div>
-                  <p className="font-semibold">Message sent successfully!</p>
+                  <p className="font-semibold">Your email draft is ready.</p>
 
                   <p className="mt-1 text-sm">
-                    Thank you for contacting HireFlow. We&apos;ll get back to
-                    you soon.
+                    Your default email app has been opened with the message
+                    details filled in. Send the email to contact HireFlow.
                   </p>
                 </div>
               </div>
@@ -266,6 +278,11 @@ const Contact = () => {
                 <Send size={18} />
                 Send Message
               </button>
+
+              <p className="text-sm text-slate-500">
+                This opens your default email app so you can review and send
+                the message.
+              </p>
             </form>
           </div>
         </div>
@@ -282,12 +299,12 @@ const Contact = () => {
             career goals.
           </p>
 
-          <a
-            href="/jobs"
+          <Link
+            to="/jobs"
             className="mt-7 inline-flex rounded-xl bg-slate-900 px-6 py-3 font-semibold text-white transition hover:bg-slate-800"
           >
             Explore Jobs
-          </a>
+          </Link>
         </div>
       </section>
     </main>

@@ -51,7 +51,7 @@ HireFlow Job Hub is a modern, fully responsive job discovery web application bui
 
 HireFlow Job Hub is a frontend-focused project built to strengthen my skills in React, API integration, responsive UI development, state management, and interactive user experiences.
 
-**Note:** User accounts, saved jobs, applications, and preferences are stored locally in the browser. The project does not currently use a backend database or server-side authentication.
+User accounts, saved jobs, applications, and preferences are stored locally in the browser. The project does not currently use a backend database or server-side authentication.
 
 ## Author
 

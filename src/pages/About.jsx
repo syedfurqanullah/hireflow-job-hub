@@ -6,6 +6,7 @@ import {
   Target,
   Users,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const About = () => {
   return (
@@ -225,19 +226,19 @@ const About = () => {
           </p>
 
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-            <a
-              href="/jobs"
+            <Link
+              to="/jobs"
               className="rounded-xl bg-white px-6 py-3 font-semibold text-blue-600 transition hover:bg-blue-50"
             >
               Explore Jobs
-            </a>
+            </Link>
 
-            <a
-              href="/companies"
+            <Link
+              to="/companies"
               className="rounded-xl border border-white/30 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
             >
               Explore Companies
-            </a>
+            </Link>
           </div>
         </div>
       </section>

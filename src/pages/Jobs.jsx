@@ -135,7 +135,7 @@ const Jobs = () => {
       setApiError(
         "Minimum salary must be less than or equal to maximum salary.",
       );
-      return;
+      return false;
     }
     setApiError("");
     setLoading(true);
@@ -154,6 +154,7 @@ const Jobs = () => {
     if (salaryMinInput.trim()) params.set("salaryMin", salaryMinInput.trim());
     if (salaryMaxInput.trim()) params.set("salaryMax", salaryMaxInput.trim());
     setSearchParams(params);
+    return true;
   };
 
   const handleSearchKeyDown = (event) => {
@@ -503,8 +504,7 @@ const Jobs = () => {
             <button
               type="button"
               onClick={() => {
-                handleSearch();
-                setShowFilters(false);
+                if (handleSearch()) setShowFilters(false);
               }}
               className="flex-1 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
             >
