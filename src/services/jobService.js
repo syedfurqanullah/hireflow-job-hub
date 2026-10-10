@@ -633,7 +633,7 @@ const getExperienceLevel = (job) => {
   const titleText = `${seniority} ${title}`;
 
   if (
-    /\b(senior|sr\.?|lead|principal|staff|director|vp|head of)\b/.test(
+    /\b(senior|sr\.?|lead|principal|director|vp|head of)\b/.test(
       titleText,
     )
   )
@@ -654,7 +654,7 @@ const getExperienceLevel = (job) => {
   );
   if (years.some((year) => year >= 7)) return "Senior Level";
   if (years.some((year) => year <= 2)) return "Entry Level";
-  return "Mid Level";
+  return "Not specified";
 };
 
 const getRemoteStatus = (job) => {

@@ -4,7 +4,7 @@ import { Moon, Sun } from "lucide-react";
 import BrandLogo from "../common/BrandLogo";
 import { endDemoSession, isAuthenticated } from "../../services/auth";
 import { useTheme } from "../../context/useTheme";
-import { useToast } from "../../context/ToastContext";
+import useToast from "../../context/useToast";
 
 const navigationLinks = [
   { name: "Home", path: "/" },
@@ -56,8 +56,8 @@ const Navbar = () => {
           end={link.path === "/"}
           onClick={mobile ? closeMobileMenu : undefined}
           className={({ isActive }) => mobile
-            ? `rounded-lg px-3 py-3 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500 ${isActive ? "bg-blue-50 text-blue-600" : "text-slate-600 hover:bg-slate-50 hover:text-blue-600"}`
-            : `relative text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500 ${isActive ? "text-blue-600" : "text-slate-600 hover:text-blue-600"}`}
+            ? `relative rounded-lg px-3 py-3 text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${isActive ? "bg-blue-50 text-blue-600" : "text-slate-600 hover:text-blue-600"}`
+            : `relative text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-4 after:absolute after:-bottom-2 after:left-0 after:h-0.5 after:w-full after:origin-left after:scale-x-0 after:bg-blue-600 after:transition-transform after:duration-200 hover:text-blue-600 hover:after:scale-x-100 ${isActive ? "text-blue-600 after:scale-x-100" : "text-slate-600"}`}
         >
           {link.name}
         </NavLink>

@@ -11,7 +11,7 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import BrandLogo from "../components/common/BrandLogo";
 import { startDemoSession } from "../services/auth";
-import { useToast } from "../context/ToastContext";
+import useToast from "../context/useToast";
 
 // =========================================================
 // HireFlow - Login Page
@@ -108,7 +108,7 @@ const Login = () => {
           message: `Welcome back, ${user.name}! Glad to have you here.`,
         });
         navigate(location.state?.from || "/dashboard", { replace: true });
-      } catch (sessionError) {
+      } catch {
         setError("Unable to log you in right now. Please try again.");
         showToast({
           type: "error",

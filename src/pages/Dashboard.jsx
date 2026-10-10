@@ -9,7 +9,7 @@ import {
 import { Link } from "react-router-dom";
 import { getJobs } from "../services/jobService";
 import { getSavedJobs, toggleSavedJob } from "../services/savedJobs";
-import { useToast } from "../context/ToastContext";
+import useToast from "../context/useToast";
 import CompanyLogo from "../components/common/CompanyLogo";
 import DashboardStats from "../components/dashboard/DashboardStats";
 import SavedJobCard from "../components/dashboard/SavedJobCard";

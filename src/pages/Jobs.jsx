@@ -13,7 +13,7 @@ import JobCard from "../components/jobs/JobCard";
 import Loader from "../components/common/Loader";
 import Pagination from "../components/common/Pagination";
 import Modal from "../components/common/Modal";
-import { useToast } from "../context/ToastContext";
+import useToast from "../context/useToast";
 
 /* =========================================================
    JOB CARD
@@ -130,6 +130,7 @@ const Jobs = () => {
     experienceLevel,
     salaryMin,
     salaryMax,
+    showToast,
   ]);
 
   const changeCategory = (nextCategory) => {
@@ -338,8 +339,8 @@ const Jobs = () => {
             </h1>
 
             <p className="mt-4 text-sm leading-6 text-slate-400 sm:text-base">
-              Explore the latest technology, software and digital opportunities
-              from growing companies.
+              Explore opportunities from companies across industries and career
+              fields.
             </p>
           </div>
 

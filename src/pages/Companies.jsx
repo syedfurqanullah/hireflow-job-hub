@@ -81,7 +81,7 @@ const Companies = () => {
           </h1>
 
           <p className="mt-5 max-w-2xl text-lg text-slate-300">
-            Discover companies hiring for real IT opportunities.
+            Discover companies hiring across industries
           </p>
         </div>
       </section>

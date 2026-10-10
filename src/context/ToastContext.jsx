@@ -1,42 +1,17 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
+import { X } from "lucide-react";
+import ToastContext from "./toast-context";
 import {
-  AlertCircle,
-  CheckCircle2,
-  Info,
-  TriangleAlert,
-  X,
-} from "lucide-react";
-
-const ToastContext = createContext(null);
-
-const TOAST_DURATIONS = {
-  success: 4000,
-  error: 6000,
-  warning: 5000,
-  info: 4000,
-};
-
-const TOAST_ICONS = {
-  success: CheckCircle2,
-  error: AlertCircle,
-  warning: TriangleAlert,
-  info: Info,
-};
-
-const TOAST_STYLES = {
-  success: "border-emerald-200 bg-emerald-50 text-emerald-900",
-  error: "border-red-200 bg-red-50 text-red-900",
-  warning: "border-amber-200 bg-amber-50 text-amber-900",
-  info: "border-blue-200 bg-blue-50 text-blue-900",
-};
+  TOAST_DURATIONS,
+  TOAST_ICONS,
+  TOAST_STYLES,
+} from "./toastConstants";
 
 export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
@@ -130,10 +105,4 @@ export const ToastProvider = ({ children }) => {
       </div>
     </ToastContext.Provider>
   );
-};
-
-export const useToast = () => {
-  const context = useContext(ToastContext);
-  if (!context) throw new Error("useToast must be used within ToastProvider.");
-  return context;
 };

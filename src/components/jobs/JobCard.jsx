@@ -3,7 +3,7 @@ import { BriefcaseBusiness, Bookmark, Clock3, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import CompanyLogo from "../common/CompanyLogo";
 import { isJobSaved, toggleSavedJob } from "../../services/savedJobs";
-import { useToast } from "../../context/ToastContext";
+import useToast from "../../context/useToast";
 
 const JobCard = ({ job }) => {
   const [saved, setSaved] = useState(() => isJobSaved(job.id));

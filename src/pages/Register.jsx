@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import BrandLogo from "../components/common/BrandLogo";
 import { startDemoSession } from "../services/auth";
-import { useToast } from "../context/ToastContext";
+import useToast from "../context/useToast";
 
 /* =========================================================
    HireFlow Register Page
@@ -119,7 +119,7 @@ const Register = () => {
           message: `Welcome to HireFlow, ${user.name}! Your account has been created successfully.`,
         });
         navigate(location.state?.from || "/dashboard", { replace: true });
-      } catch (sessionError) {
+      } catch {
         setError("We couldn’t create your account. Please try again.");
         showToast({
           type: "error",

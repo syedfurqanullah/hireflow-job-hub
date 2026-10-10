@@ -16,7 +16,7 @@ import { Link, useParams } from "react-router-dom";
 import { getJobById, getJobs } from "../services/jobService";
 import CompanyLogo from "../components/common/CompanyLogo";
 import { isJobSaved, toggleSavedJob } from "../services/savedJobs";
-import { useToast } from "../context/ToastContext";
+import useToast from "../context/useToast";
 
 // =========================================================
 // HireFlow - Job Details
@@ -71,7 +71,7 @@ const JobDetails = () => {
     return () => {
       active = false;
     };
-  }, [id]);
+  }, [id, showToast]);
 
   const loadJob = () => {
     setLoading(true);

@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { getJobById } from "../services/jobService";
 import { getCurrentUser } from "../services/auth";
 import CompanyLogo from "../components/common/CompanyLogo";
-import { useToast } from "../context/ToastContext";
+import useToast from "../context/useToast";
 
 // HireFlow - Job Application Page
 // Includes responsive form, resume validation and frontend feedback.
@@ -51,7 +51,7 @@ const ApplyJob = () => {
     return () => {
       active = false;
     };
-  }, [id]);
+  }, [id, showToast]);
 
   // Update the input values.
   const handleChange = (event) => {
