@@ -10,7 +10,6 @@ import {
 const About = () => {
   return (
     <main className="bg-slate-50">
-      {/* Hero section */}
       <section className="bg-slate-900">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
           <div className="max-w-3xl">
@@ -30,7 +29,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* Mission section */}
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <div>
@@ -54,7 +52,6 @@ const About = () => {
             </p>
           </div>
 
-          {/* Mission highlight card */}
           <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
               <Target size={28} />
@@ -73,7 +70,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* What we offer */}
       <section className="border-y border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
           <div className="mx-auto max-w-2xl text-center">
@@ -92,7 +88,6 @@ const About = () => {
           </div>
 
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {/* Feature 1 */}
             <div className="rounded-3xl border border-slate-200 p-6 transition hover:-translate-y-1 hover:shadow-lg">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                 <Search size={24} />
@@ -108,7 +103,6 @@ const About = () => {
               </p>
             </div>
 
-            {/* Feature 2 */}
             <div className="rounded-3xl border border-slate-200 p-6 transition hover:-translate-y-1 hover:shadow-lg">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                 <BriefcaseBusiness size={24} />
@@ -123,7 +117,6 @@ const About = () => {
               </p>
             </div>
 
-            {/* Feature 3 */}
             <div className="rounded-3xl border border-slate-200 p-6 transition hover:-translate-y-1 hover:shadow-lg">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                 <Users size={24} />
@@ -139,7 +132,6 @@ const About = () => {
               </p>
             </div>
 
-            {/* Feature 4 */}
             <div className="rounded-3xl border border-slate-200 p-6 transition hover:-translate-y-1 hover:shadow-lg">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                 <ShieldCheck size={24} />
@@ -158,7 +150,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* Values section */}
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
           <div>
@@ -177,7 +168,6 @@ const About = () => {
           </div>
 
           <div className="space-y-5">
-            {/* Value 1 */}
             <div className="flex gap-4 rounded-2xl bg-white p-5 shadow-sm">
               <CheckCircle2 className="mt-1 shrink-0 text-blue-600" />
 
@@ -191,7 +181,6 @@ const About = () => {
               </div>
             </div>
 
-            {/* Value 2 */}
             <div className="flex gap-4 rounded-2xl bg-white p-5 shadow-sm">
               <CheckCircle2 className="mt-1 shrink-0 text-blue-600" />
 
@@ -206,7 +195,6 @@ const About = () => {
               </div>
             </div>
 
-            {/* Value 3 */}
             <div className="flex gap-4 rounded-2xl bg-white p-5 shadow-sm">
               <CheckCircle2 className="mt-1 shrink-0 text-blue-600" />
 
@@ -225,7 +213,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* Final CTA */}
       <section className="bg-blue-600">
         <div className="mx-auto max-w-7xl px-4 py-14 text-center sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-white sm:text-4xl">

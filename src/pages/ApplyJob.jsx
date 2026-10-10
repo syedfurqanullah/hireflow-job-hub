@@ -2,12 +2,9 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getJobById } from "../services/jobService";
 import { getCurrentUser } from "../services/auth";
+import { hasApplied, saveApplication } from "../services/applications";
 import CompanyLogo from "../components/common/CompanyLogo";
-import useToast from "../context/useToast";
-
-// HireFlow - Job Application Page
-// Includes responsive form, resume validation and frontend feedback.
-// Real application submission requires a backend API.
+import useToast from "../context/toast/useToast";
 
 const ApplyJob = () => {
   const { id } = useParams();
@@ -28,13 +25,19 @@ const ApplyJob = () => {
   const [resume, setResume] = useState(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [existingApplication, setExistingApplication] = useState(false);
   const { showToast } = useToast();
 
   useEffect(() => {
     let active = true;
     getJobById(id)
       .then((item) => {
-        if (active) setJob(item);
+        if (active) {
+          setJob(item);
+          setExistingApplication(
+            hasApplied(item?.id || id, getCurrentUser()?.email),
+          );
+        }
       })
       .catch(() => {
         if (active) {
@@ -53,7 +56,6 @@ const ApplyJob = () => {
     };
   }, [id, showToast]);
 
-  // Update the input values.
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -65,7 +67,6 @@ const ApplyJob = () => {
     setError("");
   };
 
-  // Validate the resume file type and size.
   const handleResumeChange = (event) => {
     const file = event.target.files?.[0];
 
@@ -95,7 +96,6 @@ const ApplyJob = () => {
     setError("");
   };
 
-  // Validate required information before showing confirmation.
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -149,17 +149,36 @@ const ApplyJob = () => {
     }
 
     setError("");
+    if (existingApplication) {
+      showToast({
+        type: "info",
+        message: "You have already applied for this job.",
+      });
+      return;
+    }
+
+    try {
+      saveApplication({
+        job,
+        applicant: getCurrentUser(),
+        resumeName: resume.name,
+      });
+    } catch (applicationError) {
+      setError(applicationError.message);
+      showToast({ type: "error", message: applicationError.message });
+      return;
+    }
+
     setSuccess(true);
     showToast({
       type: "success",
-      message: "Application details validated successfully.",
+      message: "Application saved to your dashboard.",
     });
   };
 
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-10 sm:px-6 lg:py-14">
       <div className="mx-auto max-w-4xl">
-        {/* Return to the selected job */}
         <Link
           to={id ? `/jobs/${id}` : "/jobs"}
           className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800"
@@ -168,7 +187,6 @@ const ApplyJob = () => {
           Back to Jobs
         </Link>
 
-        {/* Page heading */}
         <header className="mb-8">
           <p className="text-sm font-bold uppercase tracking-wider text-blue-600">
             HireFlow Job Hub
@@ -184,7 +202,6 @@ const ApplyJob = () => {
           </p>
         </header>
 
-        {/* Selected job reference */}
         <section className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-bold text-slate-900">Selected Job</h2>
           {jobLoading ? (
@@ -213,7 +230,6 @@ const ApplyJob = () => {
           )}
         </section>
 
-        {/* Application form */}
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
           {success ? (
             <div className="py-8 text-center" role="status">
@@ -222,13 +238,13 @@ const ApplyJob = () => {
               </div>
 
               <h2 className="mt-4 text-2xl font-bold text-slate-900">
-                Form validated successfully
+                Application saved successfully
               </h2>
 
               <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-slate-500">
-                This is a frontend confirmation only. Your application has not
-                been sent to an employer because backend submission is not
-                connected yet.
+                Your application is saved in this browser and now appears in
+                your dashboard. Submit it through the employer listing when you
+                are ready.
               </p>
 
               <button
@@ -250,7 +266,6 @@ const ApplyJob = () => {
               </p>
 
               <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
-                {/* Full name */}
                 <div>
                   <label
                     htmlFor="fullName"
@@ -272,7 +287,6 @@ const ApplyJob = () => {
                   />
                 </div>
 
-                {/* Email address */}
                 <div>
                   <label
                     htmlFor="email"
@@ -294,7 +308,6 @@ const ApplyJob = () => {
                   />
                 </div>
 
-                {/* Phone number */}
                 <div>
                   <label
                     htmlFor="phone"
@@ -316,7 +329,6 @@ const ApplyJob = () => {
                   />
                 </div>
 
-                {/* Optional portfolio */}
                 <div>
                   <label
                     htmlFor="portfolio"
@@ -340,7 +352,6 @@ const ApplyJob = () => {
                 </div>
               </div>
 
-              {/* Resume upload */}
               <div className="mt-8 border-t border-slate-100 pt-7">
                 <label
                   htmlFor="resume"
@@ -370,7 +381,6 @@ const ApplyJob = () => {
                 )}
               </div>
 
-              {/* Optional cover letter */}
               <div className="mt-7">
                 <label
                   htmlFor="coverLetter"
@@ -390,7 +400,6 @@ const ApplyJob = () => {
                 />
               </div>
 
-              {/* Validation feedback */}
               {error && (
                 <p
                   role="alert"
@@ -400,7 +409,6 @@ const ApplyJob = () => {
                 </p>
               )}
 
-              {/* Form actions */}
               <div className="mt-8 flex flex-col-reverse gap-3 border-t border-slate-100 pt-6 sm:flex-row sm:justify-between">
                 <Link
                   to={id ? `/jobs/${id}` : "/jobs"}
@@ -413,7 +421,7 @@ const ApplyJob = () => {
                   type="submit"
                   className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-100"
                 >
-                  Validate Application
+                  Save Application
                 </button>
               </div>
             </form>

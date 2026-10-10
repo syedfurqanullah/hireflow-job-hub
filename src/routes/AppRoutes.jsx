@@ -15,49 +15,56 @@ import NotFound from "../pages/NotFound";
 import TermsAndConditions from "../pages/TermsAndConditions";
 import PrivacyPolicy from "../pages/PrivacyPolicy";
 import RequireAuth from "./RequireAuth";
+import RouteMeta from "../components/common/RouteMeta";
 
 function AppRoutes() {
   return (
-    <Routes>
-      <Route element={<MainLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/jobs" element={<JobsRoute />} />
-        <Route
-          path="/jobs/:id/apply"
-          element={
-            <RequireAuth>
-              <ApplyJob />
-            </RequireAuth>
-          }
-        />
-        <Route path="/jobs/:id" element={<JobDetails />} />
-        <Route path="/companies" element={<Companies />} />
-        <Route path="/companies/:id" element={<CompanyDetails />} />
-        <Route
-          path="/dashboard"
-          element={
-            <RequireAuth>
-              <Dashboard />
-            </RequireAuth>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <RequireAuth>
-              <Dashboard />
-            </RequireAuth>
-          }
-        />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-      </Route>
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <>
+      <RouteMeta />
+      <Routes>
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/jobs" element={<JobsRoute />} />
+          <Route
+            path="/jobs/:id/apply"
+            element={
+              <RequireAuth>
+                <ApplyJob />
+              </RequireAuth>
+            }
+          />
+          <Route path="/jobs/:id" element={<JobDetails />} />
+          <Route path="/companies" element={<Companies />} />
+          <Route path="/companies/:id" element={<CompanyDetails />} />
+          <Route
+            path="/dashboard"
+            element={
+              <RequireAuth>
+                <Dashboard />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <RequireAuth>
+                <Dashboard />
+              </RequireAuth>
+            }
+          />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/terms-and-conditions"
+            element={<TermsAndConditions />}
+          />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
 }
 

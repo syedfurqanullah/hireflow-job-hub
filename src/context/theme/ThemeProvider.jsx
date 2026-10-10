@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ThemeContext } from "./theme-context";
+import { ThemeContext } from "./ThemeContext";
 
 const STORAGE_KEY = "hireflow-theme";
 const getSystemTheme = () =>
@@ -26,7 +26,7 @@ const ThemeProvider = ({ children }) => {
     document.documentElement.style.colorScheme = theme;
 
     const themeColor = document.querySelector('meta[name="theme-color"]');
-      themeColor?.setAttribute("content", isDark ? "#0b1220" : "#f4f7fb");
+    themeColor?.setAttribute("content", isDark ? "#0b1220" : "#f4f7fb");
   }, [theme]);
 
   useEffect(() => {

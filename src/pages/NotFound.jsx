@@ -1,22 +1,15 @@
 import { Link } from "react-router-dom";
 
-// =====================================================
-// HireFlow Job Hub - 404 Not Found Page
-// Shown whenever a requested route does not exist.
-// =====================================================
-
 const NotFound = () => {
   return (
     <main className="flex min-h-[70vh] items-center justify-center bg-slate-50 px-4 py-16 sm:px-6">
       <section className="w-full max-w-xl text-center">
-        {/* Error code */}
         <div className="mx-auto flex h-28 w-28 items-center justify-center rounded-3xl bg-blue-50 sm:h-36 sm:w-36">
           <span className="text-5xl font-extrabold tracking-tight text-blue-600 sm:text-6xl">
             404
           </span>
         </div>
 
-        {/* Error message */}
         <p className="mt-8 text-sm font-bold uppercase tracking-[0.2em] text-blue-600">
           Page Not Found
         </p>
@@ -30,7 +23,6 @@ const NotFound = () => {
           might be incorrect.
         </p>
 
-        {/* Navigation actions */}
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <Link
             to="/"
@@ -47,7 +39,6 @@ const NotFound = () => {
           </Link>
         </div>
 
-        {/* Helpful footer text */}
         <p className="mt-10 text-xs text-slate-400">
           HireFlow Job Hub · Find your next opportunity
         </p>

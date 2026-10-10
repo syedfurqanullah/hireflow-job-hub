@@ -1,11 +1,6 @@
 import { useEffect, useId, useRef } from "react";
 import { X } from "lucide-react";
 
-// =====================================================
-// HireFlow Job Hub - Reusable Modal Component
-// Supports title, content, close button, and custom footer.
-// =====================================================
-
 const Modal = ({ isOpen, onClose, title, children, footer, size = "md" }) => {
   const closeButtonRef = useRef(null);
   const dialogRef = useRef(null);
@@ -52,7 +47,6 @@ const Modal = ({ isOpen, onClose, title, children, footer, size = "md" }) => {
 
   if (!isOpen) return null;
 
-  // Modal width options.
   const sizes = {
     sm: "max-w-sm",
     md: "max-w-lg",
@@ -64,7 +58,7 @@ const Modal = ({ isOpen, onClose, title, children, footer, size = "md" }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 sm:p-6"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
           onClose?.();
@@ -78,11 +72,10 @@ const Modal = ({ isOpen, onClose, title, children, footer, size = "md" }) => {
         aria-label={title ? undefined : "Dialog"}
         ref={dialogRef}
         className={[
-          "w-full overflow-hidden rounded-2xl bg-white shadow-2xl",
+          "flex h-[calc(100dvh-2rem)] max-h-[calc(100dvh-2rem)] w-full flex-col overflow-hidden rounded-2xl bg-white shadow-2xl sm:h-auto sm:max-h-[calc(100dvh-3rem)]",
           modalSize,
         ].join(" ")}
       >
-        {/* Modal header */}
         <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
           {title && (
             <h2 id={titleId} className="text-lg font-semibold text-slate-900">
@@ -101,10 +94,10 @@ const Modal = ({ isOpen, onClose, title, children, footer, size = "md" }) => {
           </button>
         </div>
 
-        {/* Modal content */}
-        <div className="max-h-[70vh] overflow-y-auto p-5">{children}</div>
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-5 pb-8 sm:pb-5">
+          {children}
+        </div>
 
-        {/* Optional footer actions */}
         {footer && (
           <div className="flex justify-end gap-3 border-t border-slate-200 px-5 py-4">
             {footer}

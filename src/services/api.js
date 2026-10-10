@@ -81,5 +81,3 @@ export const apiGet = async (endpoint, params = {}) => {
     return apiGetOnce(endpoint, params);
   }
 };
-
-export const API_URL = API_BASE_URL;

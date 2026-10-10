@@ -9,7 +9,9 @@ import {
 import { Link } from "react-router-dom";
 import { getJobs } from "../services/jobService";
 import { getSavedJobs, toggleSavedJob } from "../services/savedJobs";
-import useToast from "../context/useToast";
+import { getApplications } from "../services/applications";
+import { getCurrentUser } from "../services/auth";
+import useToast from "../context/toast/useToast";
 import CompanyLogo from "../components/common/CompanyLogo";
 import DashboardStats from "../components/dashboard/DashboardStats";
 import SavedJobCard from "../components/dashboard/SavedJobCard";
@@ -19,6 +21,9 @@ import Sidebar from "../components/dashboard/Sidebar";
 const Dashboard = () => {
   const [jobs, setJobs] = useState([]);
   const [savedJobs, setSavedJobs] = useState(getSavedJobs);
+  const [applications, setApplications] = useState(() =>
+    getApplications(getCurrentUser()?.email),
+  );
   const { showToast } = useToast();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -37,10 +42,14 @@ const Dashboard = () => {
         if (active) setLoading(false);
       });
     const syncSaved = () => setSavedJobs(getSavedJobs());
+    const syncApplications = () =>
+      setApplications(getApplications(getCurrentUser()?.email));
     window.addEventListener("storage", syncSaved);
+    window.addEventListener("storage", syncApplications);
     return () => {
       active = false;
       window.removeEventListener("storage", syncSaved);
+      window.removeEventListener("storage", syncApplications);
     };
   }, []);
 
@@ -50,6 +59,11 @@ const Dashboard = () => {
     { label: "Live jobs loaded", value: jobs.length, Icon: BriefcaseBusiness },
     { label: "Companies in feed", value: companies, Icon: Building2 },
     { label: "Saved jobs", value: savedJobs.length, Icon: Bookmark },
+    {
+      label: "Applications",
+      value: applications.length,
+      Icon: BriefcaseBusiness,
+    },
     {
       label: "Job categories",
       value: new Set(jobs.map((job) => job.category)).size,
@@ -241,7 +255,7 @@ const Dashboard = () => {
               )}
             </section>
 
-            <ApplicationCard />
+            <ApplicationCard applications={applications} />
           </div>
         </div>
       </div>

@@ -1,14 +1,7 @@
 import { useState } from "react";
-import {
-  CheckCircle2,
-  Mail,
-  MapPin,
-  MessageSquare,
-  Send,
-} from "lucide-react";
+import { CheckCircle2, Mail, MapPin, MessageSquare, Send } from "lucide-react";
 
 const Contact = () => {
-  // Form state keeps all input values in one place.
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -16,10 +9,8 @@ const Contact = () => {
     message: "",
   });
 
-  // Controls the success message after form submission.
   const [submitted, setSubmitted] = useState(false);
 
-  // Update the corresponding form field.
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -28,14 +19,11 @@ const Contact = () => {
       [name]: value,
     }));
 
-    // Hide success message when the user starts editing again.
     if (submitted) {
       setSubmitted(false);
     }
   };
 
-  // Temporary submit handler.
-  // Later this can be replaced with an API POST request.
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -51,7 +39,6 @@ const Contact = () => {
 
   return (
     <main className="bg-slate-50">
-      {/* Page hero */}
       <section className="bg-slate-900">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
           <div className="max-w-3xl">
@@ -71,10 +58,8 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* Main contact section */}
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <div className="grid gap-8 lg:grid-cols-[360px_1fr]">
-          {/* Contact information */}
           <aside className="h-fit rounded-3xl bg-slate-900 p-7 text-white sm:p-8">
             <p className="text-sm font-semibold uppercase tracking-wider text-blue-400">
               Contact Information
@@ -90,7 +75,6 @@ const Contact = () => {
             </p>
 
             <div className="mt-8 space-y-6">
-              {/* Email */}
               <div className="flex gap-4">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10">
                   <Mail size={20} className="text-blue-400" />
@@ -107,10 +91,14 @@ const Contact = () => {
                 </div>
               </div>
 
-              {/* LinkedIn */}
               <div className="flex gap-4">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10">
-                  <span className="text-base font-bold text-blue-400" aria-hidden="true">in</span>
+                  <span
+                    className="text-base font-bold text-blue-400"
+                    aria-hidden="true"
+                  >
+                    in
+                  </span>
                 </div>
 
                 <div>
@@ -126,7 +114,6 @@ const Contact = () => {
                 </div>
               </div>
 
-              {/* Location */}
               <div className="flex gap-4">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10">
                   <MapPin size={20} className="text-blue-400" />
@@ -141,7 +128,6 @@ const Contact = () => {
               </div>
             </div>
 
-            {/* Response information */}
             <div className="mt-10 rounded-2xl border border-white/10 bg-white/5 p-5">
               <div className="flex gap-3">
                 <MessageSquare
@@ -160,7 +146,6 @@ const Contact = () => {
             </div>
           </aside>
 
-          {/* Contact form */}
           <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8 lg:p-10">
             <div>
               <p className="text-sm font-semibold uppercase tracking-wider text-blue-600">
@@ -176,7 +161,6 @@ const Contact = () => {
               </p>
             </div>
 
-            {/* Success message */}
             {submitted && (
               <div className="mt-6 flex gap-3 rounded-2xl border border-green-200 bg-green-50 p-4 text-green-800">
                 <CheckCircle2 className="mt-0.5 shrink-0" size={20} />
@@ -193,7 +177,6 @@ const Contact = () => {
             )}
 
             <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-              {/* Name + Email */}
               <div className="grid gap-6 sm:grid-cols-2">
                 <div>
                   <label
@@ -236,7 +219,6 @@ const Contact = () => {
                 </div>
               </div>
 
-              {/* Subject */}
               <div>
                 <label
                   htmlFor="subject"
@@ -257,7 +239,6 @@ const Contact = () => {
                 />
               </div>
 
-              {/* Message */}
               <div>
                 <label
                   htmlFor="message"
@@ -278,7 +259,6 @@ const Contact = () => {
                 />
               </div>
 
-              {/* Submit button */}
               <button
                 type="submit"
                 className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3.5 font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700 sm:w-auto"
@@ -291,7 +271,6 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* Bottom CTA */}
       <section className="border-t border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-4 py-14 text-center sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-slate-900">

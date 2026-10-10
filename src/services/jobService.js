@@ -1230,23 +1230,3 @@ export const getCompanyById = async (id) => {
     ) || null
   );
 };
-
-// =========================================================
-// Cache utilities
-// =========================================================
-
-export const clearJobsCache = () => {
-  jobsCache.clear();
-  jobsRequests.clear();
-  topCompaniesCache.clear();
-  topCompaniesRequests.clear();
-  categoryCache = null;
-  categoryCountsCache = null;
-  categoryCountsRequest = null;
-  categoriesRequest = null;
-};
-
-export const getCachedJobs = () => {
-  const entries = Array.from(jobsCache.values());
-  return entries.at(-1)?.jobs || [];
-};

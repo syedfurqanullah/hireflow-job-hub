@@ -2,28 +2,14 @@ import { ArrowLeft, ArrowRight, Eye, EyeOff, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import BrandLogo from "../components/common/BrandLogo";
-import { startDemoSession } from "../services/auth";
-import useToast from "../context/useToast";
-
-/* =========================================================
-   HireFlow Register Page
-   Purpose:
-   - New user registration UI
-   - Job Seeker / Employer account selection
-   - Frontend-only demo registration
-   - Temporary user data localStorage mein save
-   - Successful registration ke baad Dashboard redirect
-
-   NOTE:
-   Real API/database authentication baad mein connect hogi.
-========================================================= */
+import { registerLocalAccount } from "../services/auth";
+import useToast from "../context/toast/useToast";
 
 const Register = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { showToast } = useToast();
 
-  // Registration form state
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -32,15 +18,11 @@ const Register = () => {
     role: "job-seeker",
   });
 
-  // UI states
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  /* =========================================================
-     Handle input changes
-  ========================================================= */
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -49,15 +31,11 @@ const Register = () => {
       [name]: value,
     }));
 
-    // Input change hone par previous error remove
     if (error) {
       setError("");
     }
   };
 
-  /* =========================================================
-     Handle registration submit
-  ========================================================= */
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -65,7 +43,6 @@ const Register = () => {
 
     const { fullName, email, password, confirmPassword, role } = formData;
 
-    // Required fields validation
     if (
       !fullName.trim() ||
       !email.trim() ||
@@ -81,13 +58,11 @@ const Register = () => {
       return;
     }
 
-    // Minimum password length
     if (password.length < 6) {
       setError("Password must be at least 6 characters.");
       return;
     }
 
-    // Password confirmation
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
@@ -95,32 +70,26 @@ const Register = () => {
 
     setIsLoading(true);
 
-    /*
-      Temporary frontend-only registration.
-
-      Real backend/API aane par yahan:
-      - API request
-      - database account creation
-      - authentication token/session
-      use hoga.
-    */
-    setTimeout(() => {
+    // The local auth service stores a salted password hash, never plaintext.
+    setTimeout(async () => {
       const user = {
         name: fullName.trim(),
         email: email.trim().toLowerCase(),
         role,
       };
 
-      // Temporary local session
       try {
-        startDemoSession(user);
+        await registerLocalAccount(user, password);
         showToast({
           type: "success",
           message: `Welcome to HireFlow, ${user.name}! Your account has been created successfully.`,
         });
         navigate(location.state?.from || "/dashboard", { replace: true });
-      } catch {
-        setError("We couldn’t create your account. Please try again.");
+      } catch (registrationError) {
+        setError(
+          registrationError.message ||
+            "We couldn’t create your account. Please try again.",
+        );
         showToast({
           type: "error",
           message: "We couldn’t create your account. Please try again.",
@@ -186,9 +155,6 @@ const Register = () => {
 
         <section className="flex items-center justify-center px-4 py-10 sm:px-6 sm:py-14 lg:px-10 xl:px-16">
           <div className="w-full max-w-md">
-            {/* =================================================
-            Register Card
-        ================================================= */}
             <div className="w-full">
               {/* Brand / Heading */}
               <div className="mb-8">
@@ -208,16 +174,12 @@ const Register = () => {
                 </p>
               </div>
 
-              {/* =================================================
-              Form Card
-          ================================================= */}
               <div>
                 <p className="mb-5 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm leading-6 text-blue-800">
-                  Frontend demo: your profile is saved in this browser only. No
-                  server account is created.
+                  Your profile is stored in this browser and ready to use on
+                  this device. No server account is required to get started.
                 </p>
 
-                {/* Error Message */}
                 {error && (
                   <div
                     role="alert"
@@ -228,7 +190,6 @@ const Register = () => {
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-5">
-                  {/* Full Name */}
                   <div>
                     <label
                       htmlFor="fullName"
@@ -249,7 +210,6 @@ const Register = () => {
                     />
                   </div>
 
-                  {/* Email */}
                   <div>
                     <label
                       htmlFor="email"
@@ -270,16 +230,12 @@ const Register = () => {
                     />
                   </div>
 
-                  {/* =================================================
-                  Account Type
-              ================================================= */}
                   <div>
                     <label className="mb-3 block text-sm font-semibold text-slate-700">
                       I want to
                     </label>
 
                     <div className="grid gap-3 sm:grid-cols-2">
-                      {/* Job Seeker */}
                       <label
                         className={`cursor-pointer rounded-xl border p-4 transition ${
                           formData.role === "job-seeker"
@@ -304,7 +260,6 @@ const Register = () => {
                                 : "bg-slate-100 text-slate-600"
                             }`}
                           >
-                            {/* Briefcase icon */}
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
@@ -333,7 +288,6 @@ const Register = () => {
                         </div>
                       </label>
 
-                      {/* Employer */}
                       <label
                         className={`cursor-pointer rounded-xl border p-4 transition ${
                           formData.role === "employer"
@@ -358,7 +312,6 @@ const Register = () => {
                                 : "bg-slate-100 text-slate-600"
                             }`}
                           >
-                            {/* Building icon */}
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
@@ -389,7 +342,6 @@ const Register = () => {
                     </div>
                   </div>
 
-                  {/* Password */}
                   <div>
                     <label
                       htmlFor="password"
@@ -428,7 +380,6 @@ const Register = () => {
                     </p>
                   </div>
 
-                  {/* Confirm Password */}
                   <div>
                     <label
                       htmlFor="confirmPassword"
@@ -465,7 +416,6 @@ const Register = () => {
                     </div>
                   </div>
 
-                  {/* Terms */}
                   <div className="flex items-start gap-3">
                     <input
                       id="terms"
@@ -497,7 +447,6 @@ const Register = () => {
                     </label>
                   </div>
 
-                  {/* Register Button */}
                   <button
                     type="submit"
                     disabled={isLoading}
@@ -517,9 +466,6 @@ const Register = () => {
                   </button>
                 </form>
 
-                {/* =================================================
-                Login Link
-            ================================================= */}
                 <div className="mt-6 border-t border-slate-100 pt-6 text-center">
                   <p className="text-sm text-slate-500">
                     Already have an account?{" "}
@@ -534,7 +480,6 @@ const Register = () => {
                 </div>
               </div>
 
-              {/* Back to Home */}
               <div className="mt-6 text-center">
                 <Link
                   to="/"

@@ -10,17 +10,8 @@ import {
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import BrandLogo from "../components/common/BrandLogo";
-import { startDemoSession } from "../services/auth";
-import useToast from "../context/useToast";
-
-// =========================================================
-// HireFlow - Login Page
-// Purpose:
-// - Existing users ke liye login interface
-// - Frontend-only authentication for now
-// - Successful login ke baad Dashboard
-// - Real authentication/API later connect hogi
-// =========================================================
+import { resetLocalPassword, signInLocalAccount } from "../services/auth";
+import useToast from "../context/toast/useToast";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -36,10 +27,11 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [forgotError, setForgotError] = useState("");
 
-  // =======================================================
-  // Handle input changes
-  // =======================================================
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -53,9 +45,35 @@ const Login = () => {
     }
   };
 
-  // =======================================================
-  // Frontend validation
-  // =======================================================
+  const handlePasswordReset = async (event) => {
+    event.preventDefault();
+    setForgotError("");
+
+    if (
+      !forgotEmail.trim() ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(forgotEmail.trim())
+    ) {
+      setForgotError("Enter the email address used for your account.");
+      return;
+    }
+    if (newPassword.length < 6) {
+      setForgotError("Your new password must be at least 6 characters.");
+      return;
+    }
+
+    try {
+      await resetLocalPassword(forgotEmail, newPassword);
+      setShowForgotPassword(false);
+      setNewPassword("");
+      showToast({
+        type: "success",
+        message: "Password updated. You can sign in now.",
+      });
+    } catch (resetError) {
+      setForgotError(resetError.message);
+    }
+  };
+
   const validateForm = () => {
     if (!formData.email.trim()) {
       setError("Please enter your email address.");
@@ -80,11 +98,6 @@ const Login = () => {
     return true;
   };
 
-  // =======================================================
-  // Login submit
-  // Temporary frontend-only authentication.
-  // Real API authentication will be connected later.
-  // =======================================================
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -94,22 +107,20 @@ const Login = () => {
 
     setLoading(true);
 
-    setTimeout(() => {
-      const user = {
-        name: formData.email.split("@")[0],
-        email: formData.email.trim().toLowerCase(),
-        role: "job-seeker",
-      };
-
+    setTimeout(async () => {
       try {
-        startDemoSession(user, rememberMe);
+        await signInLocalAccount(formData.email, formData.password, rememberMe);
+        const userName = formData.email.split("@")[0];
         showToast({
           type: "success",
-          message: `Welcome back, ${user.name}! Glad to have you here.`,
+          message: `Welcome back, ${userName}! Glad to have you here.`,
         });
         navigate(location.state?.from || "/dashboard", { replace: true });
-      } catch {
-        setError("Unable to log you in right now. Please try again.");
+      } catch (loginError) {
+        setError(
+          loginError.message ||
+            "Unable to log you in right now. Please try again.",
+        );
         showToast({
           type: "error",
           message: "Unable to log you in right now. Please try again.",
@@ -123,12 +134,7 @@ const Login = () => {
   return (
     <main className="min-h-[calc(100vh-80px)] bg-slate-50">
       <div className="mx-auto grid min-h-[calc(100vh-80px)] max-w-7xl lg:grid-cols-2">
-        {/* =================================================
-            Left Branding Panel
-            Desktop only
-            ================================================= */}
         <section className="relative hidden overflow-hidden bg-slate-950 lg:flex lg:flex-col lg:justify-between">
-          {/* Background decoration */}
           <div
             aria-hidden="true"
             className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-blue-600/20 blur-3xl"
@@ -140,7 +146,6 @@ const Login = () => {
           />
 
           <div className="relative p-10 xl:p-14">
-            {/* Brand */}
             <BrandLogo dark />
 
             <div className="mt-24 max-w-xl xl:mt-32">
@@ -159,7 +164,6 @@ const Login = () => {
                 interviews, and discover opportunities made for your career.
               </p>
 
-              {/* Benefits */}
               <div className="mt-8 space-y-4">
                 {[
                   "Track your job applications",
@@ -181,7 +185,6 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Bottom text */}
           <div className="relative border-t border-white/5 px-10 py-6 xl:px-14">
             <p className="text-xs text-slate-500">
               © {new Date().getFullYear()} HireFlow Job Hub
@@ -189,17 +192,12 @@ const Login = () => {
           </div>
         </section>
 
-        {/* =================================================
-            Login Panel
-            ================================================= */}
         <section className="flex items-center justify-center px-4 py-10 sm:px-6 sm:py-14 lg:px-10 xl:px-16">
           <div className="w-full max-w-md">
-            {/* Mobile brand */}
             <div className="mb-8 text-center lg:hidden">
               <BrandLogo />
             </div>
 
-            {/* Heading */}
             <div>
               <p className="text-sm font-bold uppercase tracking-[0.18em] text-blue-600">
                 Welcome Back
@@ -214,10 +212,9 @@ const Login = () => {
               </p>
             </div>
 
-            {/* Error */}
             <p className="mt-5 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm leading-6 text-blue-800">
-              Frontend demo: this sign-in creates a local browser session; it
-              does not verify an account with a server.
+              Your account is stored securely in this browser for this version
+              of HireFlow. No server account is required to get started.
             </p>
 
             {error && (
@@ -229,9 +226,7 @@ const Login = () => {
               </div>
             )}
 
-            {/* Form */}
             <form onSubmit={handleSubmit} noValidate className="mt-7 space-y-5">
-              {/* Email */}
               <div>
                 <label
                   htmlFor="login-email"
@@ -259,7 +254,6 @@ const Login = () => {
                 </div>
               </div>
 
-              {/* Password */}
               <div>
                 <div className="mb-2 flex items-center justify-between gap-4">
                   <label
@@ -272,15 +266,15 @@ const Login = () => {
                   <button
                     type="button"
                     className="text-xs font-semibold text-blue-600 transition-colors hover:text-blue-700"
-                    onClick={() =>
-                      showToast({
-                        type: "info",
-                        message:
-                          "If an account exists with this email, you’ll receive password reset instructions.",
-                      })
-                    }
+                    onClick={() => {
+                      setForgotEmail(formData.email);
+                      setForgotError("");
+                      setShowForgotPassword((current) => !current);
+                    }}
                   >
-                    Forgot Password?
+                    {showForgotPassword
+                      ? "Back to Sign In"
+                      : "Forgot Password?"}
                   </button>
                 </div>
 
@@ -314,7 +308,51 @@ const Login = () => {
                 </div>
               </div>
 
-              {/* Remember me */}
+              {showForgotPassword && (
+                <div
+                  role="group"
+                  className="mt-5 rounded-2xl border border-blue-100 bg-blue-50 p-4"
+                >
+                  <h3 className="font-semibold text-slate-900">
+                    Reset your password
+                  </h3>
+                  <p className="mt-1 text-xs leading-5 text-slate-600">
+                    Enter your local HireFlow account email and choose a new
+                    password.
+                  </p>
+                  <input
+                    type="email"
+                    value={forgotEmail}
+                    onChange={(event) => setForgotEmail(event.target.value)}
+                    placeholder="you@example.com"
+                    className="mt-4 w-full rounded-xl border border-blue-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                  />
+                  <input
+                    type="password"
+                    value={newPassword}
+                    onChange={(event) => setNewPassword(event.target.value)}
+                    placeholder="New password"
+                    autoComplete="new-password"
+                    className="mt-3 w-full rounded-xl border border-blue-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                  />
+                  {forgotError && (
+                    <p
+                      role="alert"
+                      className="mt-3 text-sm font-medium text-red-700"
+                    >
+                      {forgotError}
+                    </p>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handlePasswordReset}
+                    className="mt-4 w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+                  >
+                    Update Password
+                  </button>
+                </div>
+              )}
+
               <label className="flex cursor-pointer items-center gap-3">
                 <input
                   type="checkbox"
@@ -326,7 +364,6 @@ const Login = () => {
                 <span className="text-sm text-slate-600">Remember me</span>
               </label>
 
-              {/* Submit */}
               <button
                 type="submit"
                 disabled={loading}
@@ -349,7 +386,6 @@ const Login = () => {
               </button>
             </form>
 
-            {/* Register */}
             <div className="mt-7 text-center text-sm text-slate-500">
               Don't have an account?{" "}
               <Link
@@ -361,7 +397,6 @@ const Login = () => {
               </Link>
             </div>
 
-            {/* Back home */}
             <Link
               to="/"
               className="mx-auto mt-6 inline-flex items-center justify-center gap-2 text-xs font-semibold text-slate-400 transition-colors hover:text-slate-700"

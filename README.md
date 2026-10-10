@@ -1,46 +1,72 @@
 # HireFlow Job Hub
 
-HireFlow is a frontend-only job discovery demo built with React, Vite, React Router, and Tailwind CSS. It uses the Adzuna jobs API to browse listings and stores saved jobs and demo sessions in the current browser.
+HireFlow Job Hub is a responsive React application for discovering jobs, exploring companies, saving opportunities, and preparing applications. It uses Vite, React Router, Tailwind CSS, and the Adzuna Jobs API. User accounts, saved jobs, applications, and theme preferences are stored locally in the current browser.
 
-## Run locally
+## Features
 
-1. Install Node.js LTS and npm.
-2. Copy `.env.example` to `.env` and add your Adzuna credentials.
-3. Run `npm install` and `npm run dev`.
+- Search and filter live job listings by keyword, location, category, type, experience, and salary.
+- Browse companies and view related opportunities derived from the live job feed.
+- Save jobs and review them from the protected dashboard.
+- Create a local account with role-aware client-side access checks.
+- Prepare an application, validate its fields, and track saved applications on the dashboard.
+- Switch between light and dark themes with responsive layouts for mobile, tablet, and desktop.
 
-Available commands: `npm run dev`, `npm run build`, `npm run preview`, and `npm run lint`.
+## Tech stack
+
+- React 19 and React Router
+- Vite
+- Tailwind CSS 4
+- Adzuna Jobs API
+- Lucide React icons
+
+## Getting started
+
+Requirements: Node.js LTS and npm.
+
+```bash
+npm install
+npm run dev
+```
+
+Open the local Vite URL shown in the terminal. For a production build:
+
+```bash
+npm run lint
+npm run build
+npm run preview
+```
 
 ## Environment variables
 
+Create an ignored local `.env` file for development, or configure these variables in Vercel Project Settings → Environment Variables before deploying:
+
 ```env
-VITE_ADZUNA_APP_ID=
-VITE_ADZUNA_APP_KEY=
+VITE_ADZUNA_APP_ID=your_app_id
+VITE_ADZUNA_APP_KEY=your_app_key
 VITE_ADZUNA_COUNTRY=us
-VITE_LOGO_DEV_TOKEN=
 ```
 
-The `.env` file is ignored by Git. Vite variables prefixed with `VITE_` are included in browser code, so API tokens are visible to visitors. Use provider-side restrictions and quotas; a production app that needs secret credentials requires a server-side proxy.
-
-## Frontend demo limitations
-
-- Sign up and sign in create a local browser demo session; they do not authenticate against a server.
-- Dashboard access checks that local demo session. This is UI behavior, not a security boundary.
-- Saved jobs stay in browser storage and are not synced between devices.
-- The application form validates input locally. It does not upload a resume, send an application, or track employer status.
-- Job descriptions and fields depend on the listings returned by Adzuna. Skills and requirements may be absent when the source listing does not provide them separately.
-- Hero job and company figures reflect the current API feed. The API does not provide HireFlow user totals or ratings, so those are shown as unavailable.
+Redeploy after changing Vercel variables. Because Vite exposes `VITE_` variables in the browser bundle, Adzuna credentials are visible to visitors. Restrict the provider credentials and quotas where possible. A production system that must keep credentials private should use a server-side proxy.
 
 ## Project structure
 
 ```text
 src/
-  components/  Shared and feature UI
-  layouts/     Shared page layouts
-  pages/       Route screens
-  routes/      Route definitions and frontend access checks
-  services/    Adzuna API, local demo auth, and saved jobs
+  components/  Reusable UI grouped by feature
+  context/     Theme and toast providers/hooks
+  layouts/     Shared application shells
+  pages/       Route-level screens
+  routes/      Route definitions and access guards
+  services/    API, jobs, authentication, saved jobs, and applications
+  assets/      Optimized visual assets
 ```
 
-## Verification
+## Storage and application behavior
 
-Run `npm run lint` and `npm run build` before sharing changes. The project does not yet include automated browser or component tests; check the main flows at phone, tablet, desktop, and wide-screen widths before release.
+This repository is a frontend application, not a backend service. Local accounts use salted PBKDF2 password hashes, but browser storage is not a security boundary. Saved jobs, applications, theme preferences, and sessions do not sync between devices. Application forms are validated and recorded locally; submissions and employer status updates still happen through the original job listing.
+
+## Deployment
+
+The included `vercel.json` rewrites routes to `index.html`, allowing React Router pages to load on direct refresh. Connect the repository to Vercel, configure the environment variables for the required environments, and deploy the project with the default Vite build settings.
+
+Before sharing a deployment, run lint and build locally, verify the main routes at multiple viewport sizes, and confirm that the configured Adzuna environment variables are available to the deployment.

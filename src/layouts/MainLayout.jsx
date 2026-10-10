@@ -4,16 +4,6 @@ import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import { Building2, BriefcaseBusiness, House, UserRound } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import RouteMeta from "../components/common/RouteMeta";
-
-/* =========================================================
-   Main Layout
-   Purpose:
-   - Public pages ka common layout
-   - Navbar top par
-   - Outlet ke andar current page
-   - Footer bottom par
-========================================================= */
 
 const MainLayout = () => {
   const location = useLocation();
@@ -24,18 +14,14 @@ const MainLayout = () => {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <RouteMeta />
-      {/* Website Navbar */}
       <Navbar />
 
-      {/* Current Route Page */}
       <div className="flex-1 overflow-hidden pb-16 md:pb-0">
         <div key={location.pathname} className="route-transition">
           <Outlet />
         </div>
       </div>
 
-      {/* Website Footer */}
       <Footer />
 
       <nav

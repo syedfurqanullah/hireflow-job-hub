@@ -16,11 +16,7 @@ import { Link, useParams } from "react-router-dom";
 import { getJobById, getJobs } from "../services/jobService";
 import CompanyLogo from "../components/common/CompanyLogo";
 import { isJobSaved, toggleSavedJob } from "../services/savedJobs";
-import useToast from "../context/useToast";
-
-// =========================================================
-// HireFlow - Job Details
-// =========================================================
+import useToast from "../context/toast/useToast";
 
 const JobDetails = () => {
   const { id } = useParams();
@@ -94,9 +90,6 @@ const JobDetails = () => {
       .finally(() => setLoading(false));
   };
 
-  // -------------------------------------------------------
-  // Loading state
-  // -------------------------------------------------------
 
   if (loading) {
     return (
@@ -114,9 +107,6 @@ const JobDetails = () => {
     );
   }
 
-  // -------------------------------------------------------
-  // Error state
-  // -------------------------------------------------------
 
   if (error || !job) {
     return (
@@ -277,7 +267,6 @@ const JobDetails = () => {
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[1fr_350px]">
           <div className="space-y-6">
-            {/* Description */}
             <section
               id="overview"
               className="scroll-mt-36 rounded-3xl bg-white p-6 shadow-sm sm:p-8"
@@ -412,7 +401,6 @@ const JobDetails = () => {
             </section>
           </div>
 
-          {/* Sidebar */}
           <aside className="h-fit space-y-5 lg:sticky lg:top-36">
             <div className="rounded-3xl bg-white p-6 shadow-sm">
               <h2 className="text-xl font-bold">Job Overview</h2>

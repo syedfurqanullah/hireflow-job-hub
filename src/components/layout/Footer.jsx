@@ -48,10 +48,8 @@ const Footer = () => {
               ================================================= */}
 
           <div className="max-w-sm">
-            {/* Logo */}
             <BrandLogo />
 
-            {/* Description */}
             <p className="mt-5 text-sm leading-7 text-slate-500">
               Find your dream job, connect with top companies, and build the
               career you deserve with HireFlow Job Hub.
@@ -124,7 +122,6 @@ const Footer = () => {
             </h3>
 
             <div className="mt-5 space-y-4">
-              {/* Email */}
               <a
                 href="mailto:syedfurqanullahh@gmail.com"
                 className="group flex items-start gap-3"
@@ -138,7 +135,6 @@ const Footer = () => {
                 </span>
               </a>
 
-              {/* LinkedIn */}
               <a
                 href="https://www.linkedin.com/in/syed-furqan-ullah/"
                 target="_blank"
@@ -146,7 +142,9 @@ const Footer = () => {
                 className="group flex items-start gap-3"
               >
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-colors duration-200 group-hover:bg-blue-600 group-hover:text-white">
-                  <span className="text-sm font-bold" aria-hidden="true">in</span>
+                  <span className="text-sm font-bold" aria-hidden="true">
+                    in
+                  </span>
                 </span>
 
                 <span className="pt-1 text-sm text-slate-500 transition-colors duration-200 group-hover:text-blue-600">
@@ -154,7 +152,6 @@ const Footer = () => {
                 </span>
               </a>
 
-              {/* Location */}
               <div className="flex items-start gap-3">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
                   <MapPin size={16} />
@@ -175,12 +172,10 @@ const Footer = () => {
 
       <div className="border-t border-slate-200 bg-slate-50">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
-          {/* Copyright */}
           <p className="text-center text-xs text-slate-500 md:text-left">
             © {new Date().getFullYear()} HireFlow Job Hub. All rights reserved.
           </p>
 
-          {/* Legal Links */}
           <div className="flex items-center justify-center gap-5 text-xs text-slate-500 md:justify-end">
             <Link
               to="/privacy-policy"

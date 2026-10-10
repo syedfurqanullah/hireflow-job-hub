@@ -1,8 +1,3 @@
-// =====================================================
-// HireFlow Job Hub - Reusable Button Component
-// Supports different variants, sizes, and button types.
-// =====================================================
-
 const Button = ({
   children,
   type = "button",
@@ -16,11 +11,9 @@ const Button = ({
   loadingText = "Please wait...",
   ...props
 }) => {
-  // Shared styles applied to every button.
   const baseStyles =
     "inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition duration-200 focus:outline-none focus:ring-4 disabled:cursor-not-allowed disabled:opacity-50";
 
-  // Visual styles for different button variants.
   const variants = {
     primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-100",
 
@@ -36,14 +29,12 @@ const Button = ({
       "bg-transparent text-slate-600 hover:bg-slate-100 focus:ring-slate-100",
   };
 
-  // Consistent button sizes across the application.
   const sizes = {
     sm: "px-3 py-2 text-xs",
     md: "px-5 py-3 text-sm",
     lg: "px-7 py-3.5 text-base",
   };
 
-  // Prevent invalid variant or size values from breaking styling.
   const variantStyles = variants[variant] || variants.primary;
   const sizeStyles = sizes[size] || sizes.md;
 

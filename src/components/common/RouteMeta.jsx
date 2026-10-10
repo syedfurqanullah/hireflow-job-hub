@@ -62,6 +62,18 @@ const routeMeta = [
     title: "Contact",
     description: "Contact the HireFlow Job Hub team.",
   },
+  {
+    match: /^\/terms-and-conditions\/?$/,
+    title: "Terms and Conditions",
+    description:
+      "Review the terms for using HireFlow Job Hub and its job discovery features.",
+  },
+  {
+    match: /^\/privacy-policy\/?$/,
+    title: "Privacy Policy",
+    description:
+      "Learn how HireFlow Job Hub handles information in its browser-based demo.",
+  },
 ];
 
 const setMetaContent = (selector, content) => {

@@ -5,12 +5,6 @@ import { getCompanies } from "../services/jobService";
 import CompanySearch from "../components/companies/CompanySearch";
 import CompanyCard from "../components/companies/CompanyCard";
 
-// =========================================================
-// HireFlow - Companies
-// ---------------------------------------------------------
-// Companies are derived from real IT jobs returned by API.
-// =========================================================
-
 const Companies = () => {
   const [companies, setCompanies] = useState([]);
 
@@ -69,7 +63,6 @@ const Companies = () => {
 
   return (
     <main className="min-h-screen bg-slate-50">
-      {/* Hero */}
       <section className="bg-slate-900">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <p className="text-sm font-semibold uppercase tracking-wider text-blue-400">
@@ -86,12 +79,10 @@ const Companies = () => {
         </div>
       </section>
 
-      {/* Search */}
       <section className="-mt-7 px-4 sm:px-6 lg:px-8">
         <CompanySearch value={search} onChange={setSearch} />
       </section>
 
-      {/* Content */}
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="mb-7">
           <h2 className="text-2xl font-bold text-slate-900">
@@ -105,7 +96,6 @@ const Companies = () => {
           )}
         </div>
 
-        {/* Loading */}
         {loading && (
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {[1, 2, 3, 4, 5, 6].map((item) => (
@@ -122,7 +112,6 @@ const Companies = () => {
           </div>
         )}
 
-        {/* Error */}
         {!loading && error && (
           <div className="rounded-3xl bg-white p-12 text-center">
             <AlertCircle className="mx-auto text-red-500" size={36} />
@@ -141,7 +130,6 @@ const Companies = () => {
           </div>
         )}
 
-        {/* Company cards */}
         {!loading && !error && filteredCompanies.length > 0 && (
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {filteredCompanies.map((company) => (

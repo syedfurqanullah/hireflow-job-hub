@@ -6,26 +6,14 @@ import {
   ArrowUpDown,
 } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
-import { getJobs, JOB_CATEGORIES } from "../services/jobService";
+import { getJobs, JOB_CATEGORIES, searchJobs } from "../services/jobService";
 import JobSearch from "../components/jobs/JobSearch";
 import JobFilters from "../components/jobs/JobFilters";
 import JobCard from "../components/jobs/JobCard";
 import Loader from "../components/common/Loader";
 import Pagination from "../components/common/Pagination";
 import Modal from "../components/common/Modal";
-import useToast from "../context/useToast";
-
-/* =========================================================
-   JOB CARD
-
-   Purpose:
-   - Reusable card for each job.
-   - Responsive layout for mobile, tablet and desktop.
-========================================================= */
-
-/* =========================================================
-   JOBS PAGE
-========================================================= */
+import useToast from "../context/toast/useToast";
 
 const Jobs = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -33,14 +21,6 @@ const Jobs = () => {
   const [jobs, setJobs] = useState([]);
   const [apiError, setApiError] = useState("");
   const { showToast } = useToast();
-
-  /* =======================================================
-     SEARCH INPUT STATES
-
-     Search button ke baad actual filters apply honge.
-     Isse API connect karne par bhi unnecessary requests
-     nahi jayengi.
-  ======================================================= */
 
   const [searchInput, setSearchInput] = useState(
     searchParams.get("search") || "",
@@ -51,10 +31,6 @@ const Jobs = () => {
 
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [location, setLocation] = useState(searchParams.get("location") || "");
-
-  /* =======================================================
-     FILTER STATES
-  ======================================================= */
 
   const [category, setCategory] = useState(requestedCategory);
   const [jobType, setJobType] = useState(searchParams.get("jobType") || "All");
@@ -77,11 +53,9 @@ const Jobs = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 10;
 
-  /* Mobile filter drawer */
   const [showFilters, setShowFilters] = useState(false);
   const closeFilterModal = useCallback(() => setShowFilters(false), []);
 
-  /* Loading state */
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -152,10 +126,6 @@ const Jobs = () => {
     setExperienceLevel(nextExperienceLevel);
   };
 
-  /* =======================================================
-     SEARCH HANDLER
-  ======================================================= */
-
   const handleSearch = () => {
     if (
       salaryMinInput &&
@@ -186,19 +156,11 @@ const Jobs = () => {
     setSearchParams(params);
   };
 
-  /* =======================================================
-     ENTER KEY SEARCH
-  ======================================================= */
-
   const handleSearchKeyDown = (event) => {
     if (event.key === "Enter") {
       handleSearch();
     }
   };
-
-  /* =======================================================
-     FILTER OPTIONS
-  ======================================================= */
 
   const categoryOptions = useMemo(() => {
     const categories = jobs.map((job) => job.category).filter(Boolean);
@@ -215,51 +177,12 @@ const Jobs = () => {
     ];
   }, [jobs, category]);
 
-  /* =======================================================
-     FILTER + SEARCH + SORT
-  ======================================================= */
-
   const filteredJobs = useMemo(() => {
-    const normalizedSearch = search.toLowerCase();
-    const normalizedLocation = location.toLowerCase();
-
-    const result = jobs.filter((job) => {
-      /* Search across title/company/category */
-      const searchableText = [
-        job.title,
-        job.company,
-        job.category,
-        job.description,
-      ]
-        .join(" ")
-        .toLowerCase();
-
-      const searchMatch =
-        !normalizedSearch || searchableText.includes(normalizedSearch);
-
-      /* Location filter */
-      const locationMatch =
-        !normalizedLocation ||
-        job.location.toLowerCase().includes(normalizedLocation);
-
-      /* Category filter */
-      const categoryMatch =
-        category === "All" ||
-        job.category.toLowerCase() === category.toLowerCase() ||
-        job.categories.some(
-          (item) => item.toLowerCase() === category.toLowerCase(),
-        ) ||
-        (["it", "it technology", "technology"].includes(
-          category.toLowerCase(),
-        ) &&
-          ["it technology", "technology"].includes(job.category.toLowerCase()));
-
-      return searchMatch && locationMatch && categoryMatch;
+    const result = searchJobs(jobs, {
+      search,
+      location,
+      category: category === "All" ? "" : category,
     });
-
-    /* =====================================================
-       SORTING
-    ===================================================== */
 
     if (sortBy === "Company") {
       return [...result].sort((a, b) => a.company.localeCompare(b.company));
@@ -269,16 +192,8 @@ const Jobs = () => {
       return [...result].sort((a, b) => a.title.localeCompare(b.title));
     }
 
-    /*
-     * Default Latest:
-     * API listings are sorted by their published date.
-     */
     return result;
   }, [search, jobs, location, category, sortBy]);
-
-  /* =======================================================
-     RESET FILTERS
-  ======================================================= */
 
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
   const visibleJobs = filteredJobs.slice(
@@ -307,10 +222,6 @@ const Jobs = () => {
     showToast({ type: "info", message: "Filters have been cleared." });
   };
 
-  /* =======================================================
-     PAGE UI
-  ======================================================= */
-
   return (
     <main className="min-h-screen bg-slate-50">
       {apiError && (
@@ -321,10 +232,6 @@ const Jobs = () => {
           Live job feed unavailable. {apiError}
         </p>
       )}
-
-      {/* =====================================================
-          HERO / PAGE HEADER
-      ===================================================== */}
 
       <section className="bg-slate-950 px-4 py-14 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
@@ -344,10 +251,6 @@ const Jobs = () => {
             </p>
           </div>
 
-          {/* =================================================
-              SEARCH PANEL
-          ================================================= */}
-
           <JobSearch
             searchInput={searchInput}
             setSearchInput={setSearchInput}
@@ -359,10 +262,6 @@ const Jobs = () => {
           />
         </div>
       </section>
-
-      {/* =====================================================
-          MAIN CONTENT
-      ===================================================== */}
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         {/* Mobile toolbar */}
@@ -383,10 +282,6 @@ const Jobs = () => {
 
         {/* Main grid */}
         <div className="grid gap-8 lg:grid-cols-[260px_minmax(0,1fr)]">
-          {/* =================================================
-              DESKTOP FILTER SIDEBAR
-          ================================================= */}
-
           <aside className="hidden h-fit rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:block">
             <div className="flex items-center justify-between">
               <h2 className="font-bold text-slate-900">Filters</h2>
@@ -480,10 +375,6 @@ const Jobs = () => {
             )}
           </aside>
 
-          {/* =================================================
-              JOB RESULTS
-          ================================================= */}
-
           <div className="min-w-0">
             {/* Results header */}
             <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -524,10 +415,6 @@ const Jobs = () => {
                 />
               </div>
             </div>
-
-            {/* =================================================
-                RESULTS
-            ================================================= */}
 
             <div className="space-y-4">
               {/* Loading skeleton */}
@@ -582,10 +469,6 @@ const Jobs = () => {
         </div>
       </section>
 
-      {/* =====================================================
-          MOBILE FILTER DRAWER
-      ===================================================== */}
-
       <Modal
         isOpen={showFilters}
         onClose={closeFilterModal}
@@ -609,7 +492,7 @@ const Jobs = () => {
             locationInput={locationInput}
             setLocationInput={setLocationInput}
           />
-          <div className="mt-6 flex gap-3 border-t border-slate-100 pt-5">
+          <div className="sticky bottom-0 z-10 -mx-5 mt-6 flex gap-3 border-t border-slate-100 bg-white px-5 pb-[env(safe-area-inset-bottom)] pt-5 dark:border-slate-700 dark:bg-slate-900">
             <button
               type="button"
               onClick={resetFilters}

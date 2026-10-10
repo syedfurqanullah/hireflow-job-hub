@@ -1,15 +1,9 @@
-// =====================================================
-// HireFlow Job Hub - Reusable Loader Component
-// Supports different sizes and optional loading text.
-// =====================================================
-
 const Loader = ({
   size = "md",
   text = "",
   fullScreen = false,
   className = "",
 }) => {
-  // Loader sizes.
   const sizes = {
     sm: "h-5 w-5 border-2",
     md: "h-8 w-8 border-[3px]",
@@ -31,7 +25,6 @@ const Loader = ({
         .filter(Boolean)
         .join(" ")}
     >
-      {/* Animated loading spinner */}
       <div
         aria-hidden="true"
         className={[
@@ -40,7 +33,6 @@ const Loader = ({
         ].join(" ")}
       />
 
-      {/* Optional loading message */}
       {text && <p className="text-sm font-medium text-slate-500">{text}</p>}
 
       {!text && <span className="sr-only">Loading...</span>}

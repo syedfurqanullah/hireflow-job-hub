@@ -1,17 +1,7 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { X } from "lucide-react";
-import ToastContext from "./toast-context";
-import {
-  TOAST_DURATIONS,
-  TOAST_ICONS,
-  TOAST_STYLES,
-} from "./toastConstants";
+import ToastContext from "./ToastContext";
+import { TOAST_DURATIONS, TOAST_ICONS, TOAST_STYLES } from "./toastConstants";
 
 export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
@@ -95,7 +85,7 @@ export const ToastProvider = ({ children }) => {
                 type="button"
                 onClick={() => dismissToast(toast.id)}
                 aria-label="Dismiss notification"
-                className="rounded-md p-1 opacity-70 transition hover:bg-black/5 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-current"
+                className="rounded-md p-1 opacity-70 transition hover:bg-black/5 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-current dark:hover:bg-white/10"
               >
                 <X size={16} aria-hidden="true" />
               </button>
