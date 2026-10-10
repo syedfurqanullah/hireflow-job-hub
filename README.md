@@ -6,6 +6,24 @@ HireFlow Job Hub is a modern, fully responsive job discovery web application bui
 
 [View HireFlow Job Hub](https://hireflow-job-hub.vercel.app)
 
+## 📸 Screenshots
+
+### Home Page
+
+![HireFlow Home](./src/assets/screenshots/home.png)
+
+### Job Filter & Listing
+
+![HireFlow Job Listing](./src/assets/screenshots/job%20listing.png)
+
+### Dashboard UI
+
+![HireFlow Dashboard](./src/assets/screenshots/dashboard.png)
+
+### Responsive Design
+
+![HireFlow Responsive](./src/assets/screenshots/responsive.png)
+
 ## Features
 
 - Fully responsive job portal UI for desktop, tablet, and mobile
