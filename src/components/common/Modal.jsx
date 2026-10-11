@@ -58,7 +58,7 @@ const Modal = ({ isOpen, onClose, title, children, footer, size = "md" }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-900/50 p-4 sm:items-center sm:p-6"
+      className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-slate-900/60 p-3 sm:p-6"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
           onClose?.();
@@ -72,7 +72,7 @@ const Modal = ({ isOpen, onClose, title, children, footer, size = "md" }) => {
         aria-label={title ? undefined : "Dialog"}
         ref={dialogRef}
         className={[
-          "flex max-h-[calc(100dvh-2rem)] min-h-0 w-full flex-col overflow-hidden rounded-2xl bg-white shadow-2xl sm:max-h-[calc(100dvh-3rem)]",
+          "flex max-h-[calc(100dvh-1.5rem)] min-h-0 w-full flex-col overflow-hidden rounded-2xl bg-white shadow-2xl sm:max-h-[calc(100dvh-3rem)]",
           modalSize,
         ].join(" ")}
       >
