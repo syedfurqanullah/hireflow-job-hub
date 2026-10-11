@@ -56,18 +56,16 @@ const apiGetThroughProxy = async (endpoint, params = {}) => {
   }
 };
 
-const apiGetOnce = (endpoint, params = {}) => apiGetThroughProxy(endpoint, params);
-
 export const apiGet = async (endpoint, params = {}) => {
   try {
-    return await apiGetOnce(endpoint, params);
+    return await apiGetThroughProxy(endpoint, params);
   } catch (error) {
-    const isTemporaryNetworkError = /timed out|could not load adzuna/i.test(
+    const isTemporaryNetworkError = /timed out|could not reach the adzuna service/i.test(
       error?.message || "",
     );
     if (!isTemporaryNetworkError) throw error;
 
     await new Promise((resolve) => window.setTimeout(resolve, 800));
-    return apiGetOnce(endpoint, params);
+    return apiGetThroughProxy(endpoint, params);
   }
 };
