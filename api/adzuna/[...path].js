@@ -12,8 +12,8 @@ export default async function handler(request, response) {
   }
 
   const serverEnv = globalThis.process?.env || {};
-  const appId = serverEnv.ADZUNA_APP_ID;
-  const appKey = serverEnv.ADZUNA_APP_KEY;
+  const appId = serverEnv.ADZUNA_APP_ID || serverEnv.VITE_ADZUNA_APP_ID;
+  const appKey = serverEnv.ADZUNA_APP_KEY || serverEnv.VITE_ADZUNA_APP_KEY;
   const path = getPathSegments(request.query?.path);
 
   if (!appId || !appKey) {

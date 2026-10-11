@@ -27,6 +27,7 @@ HireFlow Job Hub is a modern, fully responsive job discovery web application bui
 ## Features
 
 - Fully responsive job portal UI for desktop, tablet, and mobile
+- User Authentication UI with Login and Sign Up
 - Live job search with keyword and location filters
 - Job filtering by category, job type, experience level, and salary
 - Company discovery and browsing
@@ -39,13 +40,62 @@ HireFlow Job Hub is a modern, fully responsive job discovery web application bui
 
 ## Tech Stack
 
-- React 19
+- React
 - React Router
 - Vite
-- Tailwind CSS 4
+- Tailwind CSS
 - Adzuna Jobs API
-- Lucide React
 - LocalStorage
+
+Project Structure
+
+hireflow-job-hub/
+├── api/
+│   └── adzuna/
+│       └── [...path].js
+├── public/
+├── src/
+│   ├── assets/
+│   │   └── screenshots/
+│   ├── components/
+│   │   ├── common/
+│   │   ├── companies/
+│   │   ├── dashboard/
+│   │   ├── home/
+│   │   ├── jobs/
+│   │   └── layout/
+│   ├── context/
+│   │   ├── theme/
+│   │   └── toast/
+│   ├── layouts/
+│   ├── pages/
+│   ├── routes/
+│   ├── services/
+│   ├── App.jsx
+│   ├── index.css
+│   └── main.jsx
+├── index.html
+├── package.json
+├── vite.config.js
+├── vercel.json
+└── README.md
+
+Local Development
+
+1. Clone the repository:
+
+git clone https://github.com/syedfurqanullah/hireflow-job-hub.git
+cd hireflow-job-hub
+
+2. Install dependencies:
+
+npm install
+
+3. Start the development server:
+
+npm run dev
+
+4. Open the local URL shown in your terminal.
 
 ## Notes
 
