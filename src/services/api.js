@@ -31,18 +31,16 @@ const writeApiCache = (cache) => {
   }
 };
 
-const getErrorMessage = (status, payload) => {
-  const upstreamMessage = payload?.display || payload?.exception || payload?.error;
-
-  if (status === 401 || status === 403) {
-    return "Adzuna credentials are invalid or missing from the server configuration.";
-  }
-
+const getErrorMessage = (status) => {
   if (status === 429) {
-    return "Adzuna request limit reached. Please wait a moment and try again.";
+    return "The job feed is busy right now. Please try again in a moment.";
   }
 
-  return upstreamMessage || `Adzuna request failed with status ${status}.`;
+  if (status >= 500 || status === 401 || status === 403) {
+    return "Live job listings are temporarily unavailable. Please try again shortly.";
+  }
+
+  return "We couldn't load job listings. Please try again.";
 };
 
 const apiGetThroughProxy = async (endpoint, params = {}) => {
@@ -63,7 +61,11 @@ const apiGetThroughProxy = async (endpoint, params = {}) => {
     const payload = await response.json().catch(() => null);
 
     if (!response.ok) {
-      const error = new Error(getErrorMessage(response.status, payload));
+      console.error("Adzuna request failed:", {
+        status: response.status,
+        payload,
+      });
+      const error = new Error(getErrorMessage(response.status));
       error.status = response.status;
       throw error;
     }

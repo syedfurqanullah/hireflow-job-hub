@@ -90,7 +90,7 @@ const Jobs = () => {
             message: isNetworkError
               ? "Connection lost. Please check your internet and try again."
               : isRateLimited
-                ? "The live job feed is temporarily rate-limited. Please try again shortly."
+                ? "There are too many job requests right now. Please try again shortly."
                 : "Something went wrong on our end. Please try again.",
           });
         }
@@ -235,7 +235,7 @@ const Jobs = () => {
           role="status"
           className="mx-auto max-w-7xl px-4 pt-4 text-sm text-amber-700"
         >
-          Live job feed unavailable. {apiError}
+          Live listings are temporarily unavailable. {apiError}
         </p>
       )}
 

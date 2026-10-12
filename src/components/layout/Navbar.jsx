@@ -77,7 +77,7 @@ const Navbar = () => {
       className={
         mobile
           ? "flex flex-col gap-1"
-          : "hidden items-center gap-4 lg:ml-auto lg:flex xl:gap-8"
+          : "hidden items-center gap-2 md:ml-auto md:flex lg:gap-4 xl:gap-8"
       }
     >
       {navigationLinks.map((link) => (
@@ -105,7 +105,7 @@ const Navbar = () => {
           <BrandLogo onClick={closeMobileMenu} />
           {renderNavigationLinks()}
 
-          <div className="hidden items-center gap-2 lg:ml-4 lg:flex xl:ml-8 xl:gap-3">
+          <div className="hidden items-center gap-1 md:ml-2 md:flex lg:ml-4 lg:gap-2 xl:ml-8 xl:gap-3">
             <button
               type="button"
               onClick={handleToggleTheme}
@@ -127,13 +127,13 @@ const Navbar = () => {
               <>
                 <Link
                   to="/login"
-                  className="rounded-lg px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  className="rounded-lg px-2 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 lg:px-4"
                 >
                   Sign In
                 </Link>
                 <Link
                   to="/register"
-                  className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 lg:px-4"
                 >
                   Sign Up
                 </Link>
@@ -149,7 +149,7 @@ const Navbar = () => {
             }
             aria-expanded={isMenuOpen}
             aria-controls="mobile-navigation"
-            className="rounded-lg p-2 text-slate-700 transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 lg:hidden"
+            className="rounded-lg p-2 text-slate-700 transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 md:hidden"
           >
             {isMenuOpen ? (
               <svg
@@ -190,7 +190,7 @@ const Navbar = () => {
         <div
           id="mobile-navigation"
           hidden={!isMenuOpen}
-          className={`${isMenuOpen ? "block" : "hidden"} border-t border-slate-100 py-4 lg:hidden`}
+          className={`${isMenuOpen ? "block" : "hidden"} border-t border-slate-100 py-4 md:hidden`}
         >
             {renderNavigationLinks(true)}
             <div className="mt-4 flex flex-col gap-2 border-t border-slate-100 pt-4">

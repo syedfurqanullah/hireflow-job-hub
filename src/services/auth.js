@@ -35,7 +35,9 @@ const getAccounts = () => {
 
 const hashPassword = async (password, salt) => {
   if (!globalThis.crypto?.subtle || typeof TextEncoder === "undefined") {
-    throw new Error("Secure password hashing is unavailable in this browser.");
+    throw new Error(
+      "Password sign-in isn’t supported in this browser. Please try a recent browser.",
+    );
   }
 
   const key = await globalThis.crypto.subtle.importKey(
@@ -79,7 +81,7 @@ export const registerLocalAccount = async (user, password) => {
 
   if (!storage)
     throw new Error(
-      "Browser storage is unavailable. Enable local storage and try again.",
+      "This browser can’t save your demo account right now. Check your privacy settings and try again.",
     );
   if (!email || !password) throw new Error("Email and password are required.");
 
@@ -102,7 +104,7 @@ export const registerLocalAccount = async (user, password) => {
     storage.setItem(ACCOUNTS_KEY, JSON.stringify([...accounts, account]));
   } catch {
     throw new Error(
-      "Browser storage is unavailable. Enable local storage and try again.",
+      "This browser can’t save your demo account right now. Check your privacy settings and try again.",
     );
   }
 
@@ -162,7 +164,7 @@ export const resetLocalPassword = async (email, password) => {
     storage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
   } catch {
     throw new Error(
-      "Browser storage is unavailable. Enable local storage and try again.",
+      "This browser can’t save your demo account right now. Check your privacy settings and try again.",
     );
   }
 };
@@ -191,7 +193,7 @@ const startLocalSession = (user, rememberMe = false) => {
 
   if (!storage) {
     throw new Error(
-      "Browser storage is unavailable. Enable local storage and try again.",
+      "This browser can’t save your demo account right now. Check your privacy settings and try again.",
     );
   }
 
@@ -207,7 +209,7 @@ const startLocalSession = (user, rememberMe = false) => {
     window.dispatchEvent(new Event(AUTH_CHANGE_EVENT));
   } catch {
     throw new Error(
-      "Browser storage is unavailable. Enable local storage and try again.",
+      "This browser can’t save your demo account right now. Check your privacy settings and try again.",
     );
   }
 };

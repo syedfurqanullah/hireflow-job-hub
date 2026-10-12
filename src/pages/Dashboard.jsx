@@ -57,7 +57,7 @@ const Dashboard = () => {
     .size;
   const stats = [
     { label: "Live jobs loaded", value: jobs.length, Icon: BriefcaseBusiness },
-    { label: "Companies in feed", value: companies, Icon: Building2 },
+    { label: "Companies hiring", value: companies, Icon: Building2 },
     { label: "Saved jobs", value: savedJobs.length, Icon: Bookmark },
     {
       label: "Applications",
@@ -104,7 +104,7 @@ const Dashboard = () => {
               Your job workspace
             </h1>
             <p className="mt-2 text-sm text-slate-500">
-              Live job listings and the jobs you save in this browser.
+              Browse current openings and manage the jobs you save.
             </p>
           </div>
           <Link
@@ -138,7 +138,7 @@ const Dashboard = () => {
                     Saved jobs
                   </h2>
                   <p className="mt-1 text-sm text-slate-500">
-                    Saved on this browser for quick access.
+                    Jobs you’ve saved for quick access.
                   </p>
                 </div>
                 <span className="text-sm text-slate-500">
@@ -177,10 +177,10 @@ const Dashboard = () => {
             <section id="recommended-jobs" className="scroll-mt-28">
               <div className="mb-5">
                 <h2 className="text-xl font-bold text-slate-900">
-                  Recommended from the live feed
+                  Recommended jobs
                 </h2>
                 <p className="mt-1 text-sm text-slate-500">
-                  Recent listings returned by Adzuna.
+                  Recent opportunities from current listings.
                 </p>
               </div>
               {loading ? (
@@ -208,11 +208,11 @@ const Dashboard = () => {
                         <div className="min-w-0">
                           <Link
                             to={`/jobs/${job.id}`}
-                            className="line-clamp-1 font-bold text-slate-900 hover:text-blue-600"
+                            className="break-words font-bold text-slate-900 hover:text-blue-600 [overflow-wrap:anywhere]"
                           >
                             {job.title}
                           </Link>
-                          <p className="mt-1 truncate text-sm text-slate-500">
+                          <p className="mt-1 break-words text-sm text-slate-500 [overflow-wrap:anywhere]">
                             {job.company}
                           </p>
                         </div>
@@ -222,7 +222,7 @@ const Dashboard = () => {
                         {job.location}
                       </p>
                       <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
-                        <span className="truncate text-sm font-semibold text-slate-700">
+                        <span className="break-words text-sm font-semibold text-slate-700 [overflow-wrap:anywhere]">
                           {job.salary}
                         </span>
                         <button

@@ -21,7 +21,9 @@ export const toggleSavedJob = (job) => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   } catch {
-    throw new Error("Could not save this job in browser storage.");
+    throw new Error(
+      "This browser couldn’t save the job. Check your privacy settings and try again.",
+    );
   }
   return next;
 };

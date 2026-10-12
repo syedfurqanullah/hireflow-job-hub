@@ -1,24 +1,12 @@
 import { apiGet } from "./api";
 
-// =========================================================
-// HireFlow - Job Service
-// ---------------------------------------------------------
-// Responsibilities:
-// - Adzuna se jobs fetch karna
-// - Multiple job categories fetch karke aik shared feed dena
-// - API response normalize karna
-// - Jobs cache karna
-// - Company data jobs se derive karna
-// - Company logo/source URL resolve karna
-// =========================================================
-
 const DEFAULT_COUNTRY = (
   import.meta.env.VITE_ADZUNA_COUNTRY || "us"
 ).toLowerCase();
 
 const DEFAULT_LIMIT = 50;
 
-// Public API ki limited quota ki wajah se short cache.
+// Cache category results briefly to limit external API requests.
 const CACHE_DURATION = 5 * 60 * 1000;
 const CATEGORY_CACHE_DURATION = 10 * 60 * 1000;
 
@@ -130,10 +118,7 @@ let categoryCache = null;
 let categoryCacheTimestamp = 0;
 let categoriesRequest = null;
 
-// =========================================================
-// Basic helpers
-// =========================================================
-
+// Normalize values and preserve job details between routes.
 const safeString = (value) => {
   if (value === undefined || value === null) {
     return "";
@@ -178,6 +163,7 @@ const getPersistedJob = (id) => {
   }
 };
 
+// Clean and extract the text fields used to describe each job.
 const normalizeList = (value) => {
   if (Array.isArray(value)) {
     return value
@@ -364,10 +350,7 @@ const normalizeSalary = (job) => {
     : "Salary not specified (USD)";
 };
 
-// =========================================================
-// API response extraction
-// =========================================================
-
+// Extract job records from the API's supported response shapes.
 const extractJobs = (response) => {
   if (Array.isArray(response)) {
     return response;
@@ -504,12 +487,7 @@ export const getCategoryCounts = async ({ countryCode = "" } = {}) => {
   }
 };
 
-// =========================================================
-// Company website / logo resolver
-// ---------------------------------------------------------
-// Adzuna listings usually provide a company name rather than a logo.
-// =========================================================
-
+// Resolve safe company website and logo URLs from listing data.
 const getSafeExternalUrl = (...candidates) => {
   for (const candidate of candidates) {
     const value = safeString(candidate);
@@ -542,10 +520,7 @@ const getCompanyLogo = (job) => {
   );
 };
 
-// =========================================================
-// Date formatting
-// =========================================================
-
+// Format API dates for display in job cards and details.
 const formatPostedDate = (value) => {
   const rawDate = safeString(value);
 
@@ -587,10 +562,7 @@ const formatPostedDate = (value) => {
   return months === 1 ? "1 month ago" : `${months} months ago`;
 };
 
-// =========================================================
-// Job type
-// =========================================================
-
+// Normalize job type, experience, and remote status values.
 const normalizeJobType = (value) => {
   const type = safeString(value);
 
@@ -685,13 +657,7 @@ const matchesJobFilters = (
   return true;
 };
 
-// =========================================================
-// Job normalization
-// ---------------------------------------------------------
-// Raw API response -> HireFlow job object.
-// UI components only consume this normalized structure.
-// =========================================================
-
+// Convert external job data into the shape used by the interface.
 const normalizeJob = (job) => {
   const industries = normalizeList(
     job?.job_industries || job?.industries || job?.category?.label,
@@ -833,15 +799,11 @@ const normalizeJob = (job) => {
     listingClosed:
       job?.listing_closed === true || job?.listing_closed === "true",
 
-    // Keep original response for future features.
     raw: job,
   };
 };
 
-// =========================================================
-// Get jobs from API
-// =========================================================
-
+// Load, filter, and cache jobs for the requested search.
 export const getJobs = async ({
   limit = DEFAULT_LIMIT,
   countryCode = "",
@@ -1080,10 +1042,7 @@ export const getJobs = async ({
   }
 };
 
-// =========================================================
-// Get a single job
-// =========================================================
-
+// Check cached listings before requesting a single job.
 export const getJobById = async (id) => {
   const requestedId = safeString(id);
 
@@ -1091,7 +1050,6 @@ export const getJobById = async (id) => {
     return null;
   }
 
-  // First search existing cache.
   if (jobsCache.size) {
     const cachedJob = Array.from(jobsCache.values())
       .flatMap((entry) => entry.jobs)
@@ -1111,10 +1069,7 @@ export const getJobById = async (id) => {
   return jobs.find((job) => job.id === requestedId) || null;
 };
 
-// =========================================================
-// Search / filter
-// =========================================================
-
+// Apply client-side search and category matching.
 export const searchJobs = (
   jobs,
   { search = "", location = "", category = "", jobType = "" } = {},
@@ -1161,13 +1116,7 @@ export const searchJobs = (
   });
 };
 
-// =========================================================
-// Company aggregation
-// ---------------------------------------------------------
-// There is no guaranteed separate company endpoint in the
-// current API contract, so companies are derived from jobs.
-// =========================================================
-
+// Build company profiles from the available job listings.
 export const getCompanies = async ({
   countryCode = "",
   forceRefresh = false,
@@ -1232,10 +1181,7 @@ export const getCompanies = async ({
   );
 };
 
-// =========================================================
-// Single company
-// =========================================================
-
+// Find a company by its ID or normalized name.
 export const getCompanyById = async (id) => {
   const companies = await getCompanies();
 

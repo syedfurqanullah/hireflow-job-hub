@@ -176,8 +176,8 @@ const Register = () => {
 
               <div>
                 <p className="mb-5 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm leading-6 text-blue-800">
-                  Your profile is stored in this browser and ready to use on
-                  this device. No server account is required to get started.
+                  Your demo profile is saved in this browser on this device. It
+                  isn’t connected to a server.
                 </p>
 
                 {error && (

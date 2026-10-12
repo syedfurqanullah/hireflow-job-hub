@@ -10,19 +10,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getCategoryCounts } from "../../services/jobService";
 
-/* =========================================================
-   HireFlow - Popular Job Categories
-   Purpose:
-   - Homepage par popular job categories show karna
-   - Real API counts ke saath job category cards
-   - Desktop par 5 cards ek row mein
-   - Mobile / tablet par responsive grid
-   - Live counts Adzuna search API se aate hain
-========================================================= */
-
-/* =========================================================
-   Category Data
-========================================================= */
+// The home page highlights these five popular job categories.
 
 const categoryCards = [
   {
@@ -72,10 +60,6 @@ const categoryCards = [
   },
 ];
 
-/* =========================================================
-   Category Card
-========================================================= */
-
 const CategoryCard = ({ category }) => {
   const Icon = category.icon;
 
@@ -105,15 +89,12 @@ const CategoryCard = ({ category }) => {
   );
 };
 
-/* =========================================================
-   Categories Section
-========================================================= */
-
 const Categories = () => {
   const [categories, setCategories] = useState(categoryCards);
   const [loadError, setLoadError] = useState("");
   const [retryCount, setRetryCount] = useState(0);
 
+  // Refresh each card with counts from the current job listings.
   useEffect(() => {
     let active = true;
     getCategoryCounts()
@@ -133,7 +114,7 @@ const Categories = () => {
       .catch((error) => {
         if (active) {
           setLoadError(
-            error?.message || "Could not load live category counts.",
+            error?.message || "Category counts are temporarily unavailable.",
           );
           setCategories((current) =>
             current.map((item) => ({ ...item, jobs: undefined })),
@@ -148,10 +129,6 @@ const Categories = () => {
   return (
     <section className="bg-slate-50 py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* =================================================
-            Section Header
-        ================================================== */}
-
         <div className="mb-8 flex items-end justify-between gap-4 sm:mb-10">
           <div>
             <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
@@ -172,16 +149,6 @@ const Categories = () => {
             />
           </Link>
         </div>
-
-        {/* =================================================
-            Categories Grid
-
-            Mobile  : 2 columns
-            Tablet  : 3 columns
-            Desktop : 5 columns
-
-            Requested popular categories fit in one desktop row.
-        ================================================== */}
 
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 lg:gap-5">
           {categories.map((category) => (

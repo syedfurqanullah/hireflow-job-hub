@@ -18,7 +18,7 @@ const About = () => {
               About HireFlow
             </p>
 
-            <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+            <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
               Connecting Talent With Opportunity
             </h1>
 

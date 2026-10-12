@@ -171,9 +171,7 @@ const JobDetails = () => {
 
   return (
     <main className="min-h-screen bg-slate-50">
-      {/* =================================================
-          Hero
-      ================================================= */}
+      {/* Job summary and primary actions. */}
 
       <section className="border-b bg-white">
         <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -259,9 +257,7 @@ const JobDetails = () => {
         </div>
       </nav>
 
-      {/* =================================================
-          Details
-      ================================================= */}
+      {/* Job description, overview, and related listings. */}
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_350px]">
@@ -482,10 +478,10 @@ const JobDetails = () => {
                         className="h-10 w-10 text-sm"
                       />
                       <span className="min-w-0">
-                        <span className="block line-clamp-1 text-sm font-semibold text-slate-800">
+                        <span className="block break-words text-sm font-semibold text-slate-800 [overflow-wrap:anywhere]">
                           {item.title}
                         </span>
-                        <span className="block truncate text-xs text-slate-500">
+                        <span className="block break-words text-xs text-slate-500 [overflow-wrap:anywhere]">
                           {item.company} · {item.location}
                         </span>
                       </span>

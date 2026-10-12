@@ -12,11 +12,11 @@ const SavedJobCard = ({ job, onRemove }) => (
     <div className="min-w-0 flex-1">
       <Link
         to={`/jobs/${job.id}`}
-        className="line-clamp-1 font-semibold text-slate-900 hover:text-blue-600"
+        className="break-words font-semibold text-slate-900 hover:text-blue-600 [overflow-wrap:anywhere]"
       >
         {job.title}
       </Link>
-      <p className="mt-1 truncate text-sm text-slate-500">
+      <p className="mt-1 break-words text-sm text-slate-500 [overflow-wrap:anywhere]">
         {job.company} · {job.location}
       </p>
     </div>

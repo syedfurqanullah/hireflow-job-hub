@@ -213,8 +213,8 @@ const Login = () => {
             </div>
 
             <p className="mt-5 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm leading-6 text-blue-800">
-              Your account is stored securely in this browser for this version
-              of HireFlow. No server account is required to get started.
+              This demo account is saved in your browser on this device. It
+              isn’t connected to a server.
             </p>
 
             {error && (
@@ -317,8 +317,8 @@ const Login = () => {
                     Reset your password
                   </h3>
                   <p className="mt-1 text-xs leading-5 text-slate-600">
-                    Enter your local HireFlow account email and choose a new
-                    password.
+                    Enter the email address for your HireFlow demo account and
+                    choose a new password.
                   </p>
                   <input
                     type="email"

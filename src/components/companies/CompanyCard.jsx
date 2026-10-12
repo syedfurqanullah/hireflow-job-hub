@@ -19,17 +19,17 @@ const CompanyCard = ({ company }) => {
           )}
         </div>
       </div>
-      <h3 className="mt-6 text-xl font-bold text-slate-900 group-hover:text-blue-600">
+      <h3 className="mt-6 break-words text-xl font-bold text-slate-900 group-hover:text-blue-600 [overflow-wrap:anywhere]">
         {company.name}
       </h3>
       <div className="mt-5 space-y-3 border-t pt-5">
-        <div className="flex items-center gap-3 text-sm text-slate-600">
+        <div className="flex min-w-0 items-start gap-3 break-words text-sm text-slate-600 [overflow-wrap:anywhere]">
           <MapPin size={17} />
-          {company.location}
+          <span className="min-w-0">{company.location}</span>
         </div>
-        <div className="flex items-center gap-3 text-sm text-slate-600">
+        <div className="flex min-w-0 items-start gap-3 break-words text-sm text-slate-600 [overflow-wrap:anywhere]">
           <BriefcaseBusiness size={17} />
-          {openJobs} open {Number(openJobs) === 1 ? "job" : "jobs"}
+          <span>{openJobs} open {Number(openJobs) === 1 ? "job" : "jobs"}</span>
         </div>
       </div>
       <Link

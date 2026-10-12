@@ -37,34 +37,34 @@ const JobCard = ({ job }) => {
             src={job.companyLogo}
             className="h-12 w-12 text-lg"
           />
-          <div className="min-w-0">
+          <div className="min-w-0 break-words [overflow-wrap:anywhere]">
             <Link
               to={`/jobs/${job.id}`}
-              className="block text-lg font-bold text-slate-900 transition hover:text-blue-600"
+              className="block break-words text-lg font-bold text-slate-900 transition hover:text-blue-600 [overflow-wrap:anywhere]"
             >
               {job.title}
             </Link>
-            <p className="mt-1 text-sm font-medium text-slate-600">
+            <p className="mt-1 break-words text-sm font-medium text-slate-600 [overflow-wrap:anywhere]">
               {job.company}
             </p>
             <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm text-slate-500">
-              <span className="inline-flex items-center gap-1.5">
+              <span className="inline-flex min-w-0 items-center gap-1.5 break-words [overflow-wrap:anywhere]">
                 <MapPin size={15} />
                 {job.location}
               </span>
-              <span className="inline-flex items-center gap-1.5">
+              <span className="inline-flex min-w-0 items-center gap-1.5 break-words [overflow-wrap:anywhere]">
                 <BriefcaseBusiness size={15} />
                 {job.type}
               </span>
-              <span className="inline-flex items-center gap-1.5">
+              <span className="inline-flex min-w-0 items-center gap-1.5 break-words [overflow-wrap:anywhere]">
                 <Clock3 size={15} />
                 {job.posted}
               </span>
             </div>
           </div>
         </div>
-        <div className="flex shrink-0 items-center gap-2">
-          <span className="w-fit rounded-full bg-emerald-50 px-3 py-1.5 text-sm font-semibold text-emerald-700">
+        <div className="flex min-w-0 shrink-0 flex-wrap items-center gap-2">
+          <span className="max-w-full break-words rounded-full bg-emerald-50 px-3 py-1.5 text-center text-sm font-semibold text-emerald-700 [overflow-wrap:anywhere]">
             {job.salary}
           </span>
           <button
@@ -82,7 +82,7 @@ const JobCard = ({ job }) => {
           </button>
         </div>
       </div>
-      <p className="mt-5 line-clamp-2 text-sm leading-6 text-slate-500">
+      <p className="mt-5 break-words text-sm leading-6 text-slate-500 [overflow-wrap:anywhere]">
         {job.description}
       </p>
       <div className="mt-5 flex flex-col gap-4 border-t border-slate-100 pt-5 sm:flex-row sm:items-center sm:justify-between">

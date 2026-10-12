@@ -58,7 +58,7 @@ const Contact = () => {
               Get In Touch
             </p>
 
-            <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">
+            <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
               We&apos;d Love to Hear From You
             </h1>
 
@@ -92,11 +92,11 @@ const Contact = () => {
                   <Mail size={20} className="text-blue-400" />
                 </div>
 
-                <div>
+                <div className="min-w-0">
                   <p className="text-sm text-slate-400">Email</p>
                   <a
                     href={`mailto:${CONTACT_EMAIL}`}
-                    className="mt-1 block font-medium text-white transition hover:text-blue-400"
+                    className="mt-1 block break-all font-medium text-white transition hover:text-blue-400"
                   >
                     {CONTACT_EMAIL}
                   </a>

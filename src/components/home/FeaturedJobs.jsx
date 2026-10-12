@@ -36,21 +36,21 @@ const FeaturedJobCard = ({ job }) => {
       </div>
       <Link
         to={`/jobs/${job.id}`}
-        className="mt-4 block line-clamp-2 min-h-12 font-bold text-slate-900 hover:text-blue-600"
+        className="mt-4 block min-h-12 break-words font-bold text-slate-900 hover:text-blue-600 [overflow-wrap:anywhere]"
       >
         {job.title}
       </Link>
-      <p className="mt-1 truncate text-sm text-slate-500">{job.company}</p>
+      <p className="mt-1 break-words text-sm text-slate-500 [overflow-wrap:anywhere]">{job.company}</p>
       <div className="mt-4 space-y-2 text-xs text-slate-500">
         <p className="flex items-center gap-2">
-          <MapPin size={14} /> <span className="truncate">{job.location}</span>
+          <MapPin size={14} className="shrink-0" /> <span className="break-words [overflow-wrap:anywhere]">{job.location}</span>
         </p>
         <p className="flex items-center gap-2">
           <BriefcaseBusiness size={14} /> {job.type}
         </p>
       </div>
       <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
-        <span className="max-w-[70%] truncate text-sm font-bold text-slate-900">
+        <span className="min-w-0 break-words text-sm font-bold text-slate-900 [overflow-wrap:anywhere]">
           {job.salary}
         </span>
         <Link
@@ -93,7 +93,7 @@ const FeaturedJobs = () => {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
               Featured Jobs
             </h2>
             <div className="mt-3 h-1 w-16 rounded-full bg-blue-600" />
@@ -120,7 +120,7 @@ const FeaturedJobs = () => {
             role="alert"
             className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-800"
           >
-            Live job feed unavailable: {error}
+            Live listings are temporarily unavailable: {error}
           </p>
         ) : jobs.length ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -130,7 +130,7 @@ const FeaturedJobs = () => {
           </div>
         ) : (
           <p className="rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500">
-            No jobs in the live feed right now.
+            No current job openings are available right now.
           </p>
         )}
       </div>

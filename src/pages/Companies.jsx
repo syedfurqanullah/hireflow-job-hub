@@ -69,7 +69,7 @@ const Companies = () => {
             Explore Companies
           </p>
 
-          <h1 className="mt-3 text-4xl font-bold text-white sm:text-5xl">
+          <h1 className="mt-3 text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
             Discover Great Companies
           </h1>
 

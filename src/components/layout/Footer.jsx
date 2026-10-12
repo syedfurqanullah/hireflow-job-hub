@@ -2,20 +2,8 @@ import { ArrowUpRight, Mail, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import BrandLogo from "../common/BrandLogo";
 
-// =========================================================
-// HireFlow - Footer
-// Purpose:
-// - Global website footer
-// - Light premium design
-// - Responsive across mobile, tablet and desktop
-// - Rendered globally through MainLayout
-// =========================================================
-
 const Footer = () => {
-  // =======================================================
-  // Quick Navigation
-  // =======================================================
-
+  // Footer navigation links are grouped by audience.
   const quickLinks = [
     { label: "Home", path: "/" },
     { label: "Jobs", path: "/jobs" },
@@ -23,10 +11,6 @@ const Footer = () => {
     { label: "About Us", path: "/about" },
     { label: "Contact", path: "/contact" },
   ];
-
-  // =======================================================
-  // Job Seeker Links
-  // =======================================================
 
   const jobSeekerLinks = [
     { label: "Browse Jobs", path: "/jobs" },
@@ -37,16 +21,9 @@ const Footer = () => {
 
   return (
     <footer className="mt-10 border-t border-slate-200 bg-white pb-16 text-slate-700 sm:mt-12 md:pb-0">
-      {/* ===================================================
-          Main Footer Content
-          =================================================== */}
-
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1.2fr] lg:gap-12">
-          {/* =================================================
-              Brand Section
-              ================================================= */}
-
+          {/* Brand and site introduction. */}
           <div className="max-w-sm">
             <BrandLogo />
 
@@ -56,10 +33,7 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* =================================================
-              Quick Links
-              ================================================= */}
-
+          {/* Primary site navigation. */}
           <div>
             <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">
               Quick Links
@@ -84,10 +58,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* =================================================
-              Job Seekers
-              ================================================= */}
-
+          {/* Job seeker shortcuts. */}
           <div>
             <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">
               Job Seekers
@@ -112,10 +83,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* =================================================
-              Contact
-              ================================================= */}
-
+          {/* Contact links and location. */}
           <div>
             <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">
               Get In Touch
@@ -166,10 +134,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* ===================================================
-          Bottom Bar
-          =================================================== */}
-
+      {/* Copyright and policy links. */}
       <div className="border-t border-slate-200 bg-slate-50">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
           <p className="text-center text-xs text-slate-500 md:text-left">

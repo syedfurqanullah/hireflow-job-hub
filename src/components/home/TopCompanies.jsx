@@ -80,15 +80,15 @@ const TopCompanies = () => {
                   />
                   <Building2 size={18} className="text-slate-400" />
                 </div>
-                <h3 className="mt-4 truncate font-bold text-slate-900">
+                <h3 className="mt-4 break-words font-bold text-slate-900 [overflow-wrap:anywhere]">
                   {company.name}
                 </h3>
                 <p className="mt-1 text-sm text-slate-500">
                   {company.industry}
                 </p>
                 <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-sm">
-                  <span className="flex min-w-0 items-center gap-1.5 truncate text-slate-500">
-                    <MapPin size={15} />
+                  <span className="flex min-w-0 items-center gap-1.5 break-words text-slate-500 [overflow-wrap:anywhere]">
+                    <MapPin size={15} className="shrink-0" />
                     {company.location}
                   </span>
                   <span className="shrink-0 font-semibold text-blue-700">
@@ -106,7 +106,7 @@ const TopCompanies = () => {
           </div>
         ) : (
           <p className="rounded-2xl border border-slate-200 p-6 text-sm text-slate-500">
-            No companies in the current job feed.
+            No companies with current openings were found.
           </p>
         )}
       </div>

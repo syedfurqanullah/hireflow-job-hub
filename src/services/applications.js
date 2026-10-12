@@ -66,7 +66,9 @@ export const saveApplication = ({ job, applicant, resumeName, details = {} }) =>
       JSON.stringify([application, ...applications].slice(0, 100)),
     );
   } catch {
-    throw new Error("Could not save this application in browser storage.");
+    throw new Error(
+      "We couldn’t save your application on this device. Check your browser’s privacy settings and try again.",
+    );
   }
 
   return application;

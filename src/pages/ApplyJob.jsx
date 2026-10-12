@@ -217,8 +217,8 @@ const ApplyJob = () => {
                 className="h-12 w-12"
               />
               <div className="min-w-0">
-                <p className="font-semibold text-slate-900">{job.title}</p>
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="break-words font-semibold text-slate-900 [overflow-wrap:anywhere]">{job.title}</p>
+                <p className="mt-1 break-words text-sm text-slate-500 [overflow-wrap:anywhere]">
                   {job.company} · {job.location}
                 </p>
               </div>

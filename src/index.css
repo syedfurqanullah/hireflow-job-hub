@@ -117,7 +117,9 @@ body {
 
 .dark .text-blue-600,
 .dark .text-blue-700,
-.dark .text-blue-800 {
+.dark .text-blue-800,
+.dark .text-blue-900,
+.dark .text-blue-950 {
   color: #7db4ff;
 }
 
@@ -190,6 +192,66 @@ body {
 .dark .text-red-700,
 .dark .text-red-600 {
   color: #fda4af;
+}
+
+.application-card-title {
+  color: #0f172a;
+}
+
+.application-card-body {
+  color: #475569;
+}
+
+.application-card-muted {
+  color: #64748b;
+}
+
+.application-card-count {
+  color: #1d4ed8;
+}
+
+#application-tracking .application-card-title {
+  color: #000000 !important;
+}
+
+#application-tracking .application-card-body {
+  color: #000000 !important;
+}
+
+#application-tracking {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+#application-tracking article {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+.dark #application-tracking .application-card-title {
+  color: #f1f5f9 !important;
+}
+
+.dark #application-tracking .application-card-body {
+  color: #cbd5e1 !important;
+}
+
+.dark #application-tracking {
+  background-color: #080e1a !important;
+  border-color: #2b3a50 !important;
+}
+
+.dark #application-tracking article {
+  background-color: #1b2940 !important;
+  border-color: #2b3a50 !important;
+}
+
+.dark .application-card-muted {
+  color: #94a3b8;
+}
+
+.dark .application-card-count {
+  color: #93c5fd;
 }
 
 .dark input,

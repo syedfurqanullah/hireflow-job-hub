@@ -12,7 +12,7 @@ const sections = [
   },
   {
     title: "Browser storage",
-    body: "This frontend demo stores authentication details, saved jobs, theme preferences, and selected job details in your browser. These values are not synced to a server and can be removed by clearing your browser storage.",
+    body: "This demo saves account details, saved jobs, theme preferences, and selected job details in your browser. This information is not synced to a server and can be removed by clearing this site’s data in your browser.",
   },
   {
     title: "Job and third-party services",
@@ -45,12 +45,12 @@ const PrivacyPolicy = () => (
         <p className="mt-10 text-sm font-bold uppercase tracking-[0.18em] text-blue-400">
           HireFlow Job Hub
         </p>
-        <h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">
+        <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
           Privacy Policy
         </h1>
         <p className="mt-5 max-w-2xl text-base leading-8 text-slate-400">
           How HireFlow handles information while you discover jobs and use this
-          browser-based demo.
+          demo.
         </p>
         <p className="mt-6 text-xs text-slate-500">
           Last updated: October 9, 2026

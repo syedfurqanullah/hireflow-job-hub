@@ -69,7 +69,7 @@ function Hero() {
     {
       label: "Active Jobs",
       value: liveStats?.jobs?.toLocaleString() ?? "—",
-      note: "Jobs in current API feed",
+      note: "Open roles from current listings",
       Icon: BriefcaseBusiness,
       boxClass: "bg-blue-500/15",
       iconClass: "text-blue-300",
@@ -77,7 +77,7 @@ function Hero() {
     {
       label: "Companies",
       value: liveStats?.companies?.toLocaleString() ?? "—",
-      note: "Companies in current feed",
+      note: "Companies with current openings",
       Icon: Building2,
       boxClass: "bg-cyan-500/15",
       iconClass: "text-cyan-300",
@@ -152,7 +152,7 @@ function Hero() {
               <span>Find your next opportunity</span>
             </div>
 
-            <h1 className="max-w-3xl text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl">
+            <h1 className="max-w-3xl text-3xl font-extrabold leading-[1.05] tracking-tight sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
               Find Your{" "}
               <span className="bg-gradient-to-r from-cyan-300 via-blue-300 to-sky-400 bg-clip-text text-transparent">
                 Dream Job
@@ -271,7 +271,7 @@ function Hero() {
                     <p className="mt-1 text-xs text-slate-300 sm:text-sm">
                       {label}
                     </p>
-                    <p className="mt-0.5 max-w-40 text-[10px] leading-4 text-slate-400">
+                    <p className="mt-0.5 max-w-40 text-xs leading-4 text-slate-400">
                       {note}
                     </p>
                   </div>

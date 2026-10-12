@@ -45,7 +45,7 @@ const TermsAndConditions = () => (
         <p className="mt-10 text-sm font-bold uppercase tracking-[0.18em] text-blue-400">
           HireFlow Job Hub
         </p>
-        <h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">
+        <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
           Terms and Conditions
         </h1>
         <p className="mt-5 max-w-2xl text-base leading-8 text-slate-400">

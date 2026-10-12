@@ -21,7 +21,7 @@ const CompanyDetails = () => {
       .then((item) => {
         if (!active) return;
         if (!item)
-          setError("This company is not present in the current live job feed.");
+          setError("This company doesn’t appear in the current job listings.");
         else setCompany(item);
       })
       .catch((requestError) => {
@@ -83,12 +83,12 @@ const CompanyDetails = () => {
               <p className="text-sm font-semibold text-blue-600">
                 {company.industry}
               </p>
-              <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+              <h1 className="mt-1 break-words text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl [overflow-wrap:anywhere]">
                 {company.name}
               </h1>
               <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-500">
-                <span className="inline-flex items-center gap-2">
-                  <MapPin size={16} />
+                <span className="inline-flex min-w-0 items-center gap-2 break-words [overflow-wrap:anywhere]">
+                  <MapPin size={16} className="shrink-0" />
                   {company.location}
                 </span>
                 <span className="inline-flex items-center gap-2">
@@ -118,7 +118,7 @@ const CompanyDetails = () => {
               Open positions
             </h2>
             <p className="mt-1 text-sm text-slate-500">
-              Current listings from the live job feed.
+              Current job openings at this company.
             </p>
           </div>
           <span className="text-sm font-semibold text-slate-500">
@@ -134,7 +134,7 @@ const CompanyDetails = () => {
               <div className="min-w-0 flex-1">
                 <Link
                   to={`/jobs/${job.id}`}
-                  className="font-bold text-slate-900 hover:text-blue-600"
+                  className="break-words font-bold text-slate-900 hover:text-blue-600 [overflow-wrap:anywhere]"
                 >
                   {job.title}
                 </Link>
@@ -144,8 +144,8 @@ const CompanyDetails = () => {
                   <span>{job.type}</span>
                 </div>
               </div>
-              <div className="flex items-center justify-between gap-4 sm:justify-end">
-                <span className="text-sm font-semibold text-slate-700">
+              <div className="flex flex-wrap items-center justify-between gap-4 sm:justify-end">
+                <span className="min-w-0 break-words text-sm font-semibold text-slate-700 [overflow-wrap:anywhere]">
                   {job.salary}
                 </span>
                 <Link
