@@ -39,7 +39,7 @@ const MainLayout = () => {
             to={to}
             end={end}
             className={({ isActive }) =>
-              `flex flex-col items-center gap-1 rounded-lg py-1 text-[11px] font-medium ${isActive ? "text-blue-600" : "text-slate-500"}`
+              `flex flex-col items-center gap-1 rounded-lg py-1 text-[11px] font-medium transition focus:outline-none focus-visible:bg-blue-50 focus-visible:text-blue-600 ${isActive ? "text-blue-600" : "text-slate-500"}`
             }
           >
             <Icon size={19} />

@@ -15,11 +15,15 @@ export const TOAST_ICONS = {
 };
 
 export const TOAST_STYLES = {
-  success:
-    "border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-700 dark:bg-emerald-950 dark:text-emerald-100",
-  error:
-    "border-red-200 bg-red-50 text-red-900 dark:border-red-700 dark:bg-red-950 dark:text-red-100",
-  warning:
-    "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-100",
-  info: "border-blue-200 bg-blue-50 text-blue-900 dark:border-blue-700 dark:bg-blue-950 dark:text-blue-100",
+  success: "border-slate-200 bg-white text-slate-900",
+  error: "border-slate-200 bg-white text-slate-900",
+  warning: "border-slate-200 bg-white text-slate-900",
+  info: "border-slate-200 bg-white text-slate-900",
+};
+
+export const TOAST_ICON_STYLES = {
+  success: "text-emerald-700",
+  error: "text-red-600",
+  warning: "text-amber-800",
+  info: "text-blue-700",
 };

@@ -162,6 +162,7 @@ const ApplyJob = () => {
         job,
         applicant: getCurrentUser(),
         resumeName: resume.name,
+        details: form,
       });
     } catch (applicationError) {
       setError(applicationError.message);
@@ -243,8 +244,9 @@ const ApplyJob = () => {
 
               <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-slate-500">
                 Your application is saved in this browser and now appears in
-                your dashboard. Submit it through the employer listing when you
-                are ready.
+                your dashboard. The resume file is not uploaded, and the
+                employer has not received this application. Submit it through
+                the employer listing when you are ready.
               </p>
 
               <button
@@ -371,7 +373,8 @@ const ApplyJob = () => {
                 />
 
                 <p className="mt-2 text-xs text-slate-500">
-                  Accepted formats: PDF, DOC, DOCX. Maximum size: 5 MB.
+                  Accepted formats: PDF, DOC, DOCX. Maximum size: 5 MB. The
+                  file stays on this device; it is not uploaded.
                 </p>
 
                 {resume && (

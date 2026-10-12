@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
 const Modal = ({ isOpen, onClose, title, children, footer, size = "md" }) => {
@@ -56,9 +57,9 @@ const Modal = ({ isOpen, onClose, title, children, footer, size = "md" }) => {
 
   const modalSize = sizes[size] || sizes.md;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-slate-900/60 p-3 sm:p-6"
+      className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-slate-900/60 px-3 pt-[max(0.5rem,env(safe-area-inset-top))] pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:p-6"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
           onClose?.();
@@ -72,11 +73,11 @@ const Modal = ({ isOpen, onClose, title, children, footer, size = "md" }) => {
         aria-label={title ? undefined : "Dialog"}
         ref={dialogRef}
         className={[
-          "flex max-h-[calc(100dvh-1.5rem)] min-h-0 w-full flex-col overflow-hidden rounded-2xl bg-white shadow-2xl sm:max-h-[calc(100dvh-3rem)]",
+          "flex max-h-[calc(100vh-1rem)] max-h-[calc(100dvh-1rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] min-h-0 w-full flex-col overflow-hidden rounded-2xl bg-white shadow-2xl sm:max-h-[calc(100vh-3rem)] sm:max-h-[calc(100dvh-3rem)]",
           modalSize,
         ].join(" ")}
       >
-        <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+        <div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-5 py-4">
           {title && (
             <h2 id={titleId} className="text-lg font-semibold text-slate-900">
               {title}
@@ -94,17 +95,18 @@ const Modal = ({ isOpen, onClose, title, children, footer, size = "md" }) => {
           </button>
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-5 pb-8 sm:pb-5">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-5">
           {children}
         </div>
 
         {footer && (
-          <div className="flex justify-end gap-3 border-t border-slate-200 px-5 py-4">
+          <div className="flex shrink-0 justify-end gap-3 border-t border-slate-200 px-5 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
             {footer}
           </div>
         )}
       </section>
-    </div>
+    </div>,
+    document.body,
   );
 };
 

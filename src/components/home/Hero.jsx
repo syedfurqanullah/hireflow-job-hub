@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 import heroImage from "../../assets/hireflow-hero.jpg";
-import { getJobs } from "../../services/jobService";
+import { getCategoryCounts, getJobs } from "../../services/jobService";
 
 function Hero() {
   const navigate = useNavigate();
@@ -20,6 +20,8 @@ function Hero() {
   const [searchTerm, setSearchTerm] = useState("");
   const [location, setLocation] = useState("");
   const [liveStats, setLiveStats] = useState(null);
+  const [popularCategories, setPopularCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
@@ -34,6 +36,28 @@ function Hero() {
       })
       .catch(() => {
         if (active) setLiveStats({ jobs: null, companies: null });
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    getCategoryCounts()
+      .then((categories) => {
+        if (active) {
+          setPopularCategories(
+            categories.filter((category) => Number(category.count) > 0),
+          );
+        }
+      })
+      .catch(() => {
+        if (active) setPopularCategories([]);
+      })
+      .finally(() => {
+        if (active) setCategoriesLoading(false);
       });
 
     return () => {
@@ -94,17 +118,13 @@ function Hero() {
     navigate(queryString ? `/jobs?${queryString}` : "/jobs");
   };
 
-  const handlePopularSearch = (value) => {
-    setSearchTerm(value);
-
+  const handlePopularCategory = (category) => {
+    setSearchTerm("");
     const params = new URLSearchParams();
-
-    params.set("search", value);
-
+    params.set("category", category);
     if (location.trim()) {
       params.set("location", location.trim());
     }
-
     navigate(`/jobs?${params.toString()}`);
   };
 
@@ -190,21 +210,26 @@ function Hero() {
                 Popular:
               </span>
 
-              {[
-                "React Developer",
-                "UI/UX Designer",
-                "Data Analyst",
-                "DevOps Engineer",
-              ].map((item) => (
+              {popularCategories.map(({ name, count }) => (
                 <button
-                  key={item}
+                  key={name}
                   type="button"
-                  onClick={() => handlePopularSearch(item)}
+                  onClick={() => handlePopularCategory(name)}
                   className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-medium text-slate-100 backdrop-blur-sm transition hover:border-blue-300/40 hover:bg-blue-500/20 hover:text-white sm:text-sm"
                 >
-                  {item}
+                  {name} ({Number(count).toLocaleString()})
                 </button>
               ))}
+              {categoriesLoading && popularCategories.length === 0 && (
+                <span className="text-xs text-slate-300 sm:text-sm">
+                  Loading live categories...
+                </span>
+              )}
+              {!categoriesLoading && popularCategories.length === 0 && (
+                <span className="text-xs text-slate-300 sm:text-sm">
+                  Live categories are currently unavailable.
+                </span>
+              )}
             </div>
 
             <div className="mt-7 flex flex-wrap gap-x-5 gap-y-3 text-xs text-slate-300 sm:text-sm">

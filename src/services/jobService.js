@@ -112,19 +112,23 @@ const CATEGORY_SPECS = [
 ];
 
 export const JOB_CATEGORIES = CATEGORY_SPECS.map(({ name }) => name);
+const IT_JOB_CATEGORY_NAMES = new Set(
+  [CATEGORY_SPECS[0], ...CATEGORY_SPECS.slice(5)].map(({ name }) =>
+    name.toLowerCase(),
+  ),
+);
 const PRIMARY_FEED_CATEGORIES = CATEGORY_SPECS.slice(0, 5);
 const POPULAR_CATEGORY_SPECS = CATEGORY_SPECS.slice(0, 5);
 
 const jobsCache = new Map();
 const jobsRequests = new Map();
-let categoryCache = null;
-let categoryCacheTimestamp = 0;
+const categoryTotalCounts = new Map();
 let categoryCountsCache = null;
 let categoryCountsCacheTimestamp = 0;
 let categoryCountsRequest = null;
+let categoryCache = null;
+let categoryCacheTimestamp = 0;
 let categoriesRequest = null;
-const topCompaniesCache = new Map();
-const topCompaniesRequests = new Map();
 
 // =========================================================
 // Basic helpers
@@ -151,6 +155,14 @@ const cacheJobsForDetails = (jobs) => {
     );
   } catch {
     // Browser storage can be disabled or full; in-memory job data still works.
+  }
+};
+
+const getPersistedJobs = () => {
+  try {
+    return JSON.parse(sessionStorage.getItem(DETAIL_CACHE_KEY) || "[]");
+  } catch {
+    return [];
   }
 };
 
@@ -378,15 +390,12 @@ const extractJobs = (response) => {
 
 const getAdzunaCategories = async (country) => {
   if (
-    categoryCache &&
-    categoryCache.country === country &&
+    categoryCache?.country === country &&
     Date.now() - categoryCacheTimestamp < CATEGORY_CACHE_DURATION
   ) {
     return categoryCache.items;
   }
-  if (categoriesRequest?.country === country) {
-    return categoriesRequest.promise;
-  }
+  if (categoriesRequest?.country === country) return categoriesRequest.promise;
 
   const promise = apiGet(`/jobs/${country}/categories`).then((response) => {
     const items = Array.isArray(response?.results) ? response.results : [];
@@ -395,7 +404,6 @@ const getAdzunaCategories = async (country) => {
     return items;
   });
   categoriesRequest = { country, promise };
-
   try {
     return await promise;
   } finally {
@@ -476,26 +484,11 @@ export const getCategoryCounts = async ({ countryCode = "" } = {}) => {
   }
 
   const promise = (async () => {
-    const apiCategories = await getAdzunaCategories(country);
-    const queryRequests = new Map();
-    const counts = await Promise.all(
-      POPULAR_CATEGORY_SPECS.map(async (spec) => {
-        const category = resolveCategory(spec.name, apiCategories);
-        const params = { results_per_page: 1 };
-        if (category?.tag) params.category = category.tag;
-        if (category?.what) params.what = category.what;
-        const requestKey = `${params.category || ""}:${params.what || ""}`;
-
-        if (!queryRequests.has(requestKey)) {
-          queryRequests.set(
-            requestKey,
-            apiGet(`/jobs/${country}/search/1`, params),
-          );
-        }
-        const result = await queryRequests.get(requestKey);
-        return { ...spec, count: Number(result?.count) || 0 };
-      }),
-    );
+    await getJobs({ countryCode: country, limit: 50 });
+    const counts = POPULAR_CATEGORY_SPECS.map((spec) => ({
+      ...spec,
+      count: categoryTotalCounts.get(`${country}:${spec.name}`),
+    }));
 
     categoryCountsCache = { country, items: counts };
     categoryCountsCacheTimestamp = Date.now();
@@ -511,52 +504,35 @@ export const getCategoryCounts = async ({ countryCode = "" } = {}) => {
   }
 };
 
-export const getTopCompanies = async ({
-  countryCode = "",
-  forceRefresh = false,
-} = {}) => {
-  const country = (countryCode || DEFAULT_COUNTRY).toLowerCase();
-  const cached = topCompaniesCache.get(country);
-  if (
-    !forceRefresh &&
-    cached &&
-    Date.now() - cached.timestamp < CATEGORY_CACHE_DURATION
-  ) {
-    return cached.items;
-  }
-  if (!forceRefresh && topCompaniesRequests.has(country)) {
-    return topCompaniesRequests.get(country);
-  }
-
-  const request = apiGet(`/jobs/${country}/top_companies`).then((response) => {
-    const items = Array.isArray(response?.leaderboard)
-      ? response.leaderboard
-      : [];
-    topCompaniesCache.set(country, { items, timestamp: Date.now() });
-    return items;
-  });
-  topCompaniesRequests.set(country, request);
-  try {
-    return await request;
-  } finally {
-    if (topCompaniesRequests.get(country) === request)
-      topCompaniesRequests.delete(country);
-  }
-};
-
 // =========================================================
 // Company website / logo resolver
 // ---------------------------------------------------------
 // Adzuna listings usually provide a company name rather than a logo.
 // =========================================================
 
-const getCompanyWebsite = (job) => {
-  return (
-    safeString(job?.company_website) ||
-    safeString(job?.company?.website) ||
-    safeString(job?.company?.url)
-  );
+const getSafeExternalUrl = (...candidates) => {
+  for (const candidate of candidates) {
+    const value = safeString(candidate);
+    if (!value) continue;
+
+    try {
+      const url = new URL(value);
+      if (url.protocol === "http:" || url.protocol === "https:")
+        return url.href;
+    } catch {
+      // Ignore malformed or non-HTTP external URLs.
+    }
+  }
+
+  return "";
 };
+
+const getCompanyWebsite = (job) =>
+  getSafeExternalUrl(
+    job?.company_website,
+    job?.company?.website,
+    job?.company?.url,
+  );
 
 const getCompanyLogo = (job) => {
   return (
@@ -846,9 +822,7 @@ const normalizeJob = (job) => {
     url: safeString(job?.url) || safeString(job?.redirect_url),
 
     applyUrl:
-      safeString(job?.apply_link) ||
-      safeString(job?.redirect_url) ||
-      safeString(job?.url),
+      getSafeExternalUrl(job?.apply_link, job?.redirect_url, job?.url),
 
     competitivenessScore: job?.competitiveness_score ?? null,
 
@@ -918,11 +892,17 @@ export const getJobs = async ({
   }
 
   const promise = (async () => {
-    const apiCategories = await getAdzunaCategories(country);
-    const requestedCategorySpec = resolveCategory(
-      normalizedCategory,
-      apiCategories,
-    );
+    let requestedCategorySpec = resolveCategory(normalizedCategory, []);
+    if (
+      normalizedCategory &&
+      normalizedCategory.toLowerCase() !== "all" &&
+      !requestedCategorySpec
+    ) {
+      requestedCategorySpec = resolveCategory(
+        normalizedCategory,
+        await getAdzunaCategories(country),
+      );
+    }
 
     if (
       normalizedCategory &&
@@ -952,6 +932,21 @@ export const getJobs = async ({
       if (normalizedLocation) params.where = normalizedLocation;
 
       const response = await apiGet(`/jobs/${country}/search/1`, params);
+      if (
+        category &&
+        !normalizedSearch &&
+        !normalizedLocation &&
+        normalizedJobType === "All" &&
+        salaryMinValue === null &&
+        salaryMaxValue === null &&
+        Number.isFinite(Number(response?.count))
+      ) {
+        categoryTotalCounts.set(
+          `${country}:${category.name}`,
+          Number(response.count),
+        );
+      }
+
       const jobs = extractJobs(response)
         .filter((job) => !category || matchesApiCategory(job, category))
         .map((job) => {
@@ -977,12 +972,15 @@ export const getJobs = async ({
 
     let rawJobs;
     if (requestedCategorySpec) {
-      rawJobs = await fetchCategoryJobs(requestedCategorySpec, 50);
+      rawJobs = await fetchCategoryJobs(requestedCategorySpec, 50, {
+        includeSpecializedIT:
+          requestedCategorySpec.name === "IT Technology",
+      });
     } else {
       const perCategoryLimit = 10;
       const categoryResults = await Promise.allSettled(
         PRIMARY_FEED_CATEGORIES.map((spec) => {
-          const category = resolveCategory(spec.name, apiCategories);
+          const category = resolveCategory(spec.name, []);
           return fetchCategoryJobs(category, perCategoryLimit, {
             includeSpecializedIT: true,
           });
@@ -1039,6 +1037,44 @@ export const getJobs = async ({
   try {
     const jobs = await promise;
     return jobs.slice(0, resultLimit);
+  } catch (error) {
+    if (
+      error?.status === 429 ||
+      [502, 503, 504].includes(error?.status) ||
+      /request limit reached|status 429|service unavailable/i.test(
+        error?.message || "",
+      )
+    ) {
+      // Preserve previously loaded jobs while the upstream API is unavailable.
+      const fallbackJobs = [
+        ...Array.from(jobsCache.values()).flatMap((entry) => entry.jobs),
+        ...getPersistedJobs(),
+      ];
+      const uniqueFallbackJobs = Array.from(
+        new Map(fallbackJobs.map((job) => [job.id, job])).values(),
+      );
+      const filteredFallbackJobs = searchJobs(uniqueFallbackJobs, {
+        search: normalizedSearch,
+        location: normalizedLocation,
+        category: normalizedCategory === "All" ? "" : normalizedCategory,
+      }).filter((job) =>
+        matchesJobFilters(job, {
+          jobType: normalizedJobType === "All" ? "" : normalizedJobType,
+          experienceLevel:
+            normalizedExperienceLevel === "All"
+              ? ""
+              : normalizedExperienceLevel,
+          salaryMin: normalizedSalaryMin,
+          salaryMax: normalizedSalaryMax,
+        }),
+      );
+
+      if (filteredFallbackJobs.length) {
+        return filteredFallbackJobs.slice(0, resultLimit);
+      }
+    }
+
+    throw error;
   } finally {
     if (jobsRequests.get(cacheKey) === promise) jobsRequests.delete(cacheKey);
   }
@@ -1136,20 +1172,13 @@ export const getCompanies = async ({
   countryCode = "",
   forceRefresh = false,
 } = {}) => {
-  const [jobs, topEmployers] = await Promise.all([
-    getJobs({
-      limit: DEFAULT_LIMIT,
-      countryCode,
-      forceRefresh,
-    }),
-    getTopCompanies({ countryCode, forceRefresh }).catch(() => []),
-  ]);
-
-  const topEmployerByName = new Map(
-    topEmployers.map((employer) => [
-      safeString(employer?.canonical_name).toLowerCase(),
-      employer,
-    ]),
+  const jobs = (await getJobs({
+    limit: DEFAULT_LIMIT,
+    category: "IT Technology",
+    countryCode,
+    forceRefresh,
+  })).filter((job) =>
+    IT_JOB_CATEGORY_NAMES.has(safeString(job.category).toLowerCase()),
   );
 
   const companyMap = new Map();
@@ -1167,7 +1196,7 @@ export const getCompanies = async ({
 
         name: job.companyName,
 
-        industry: job.category || "Technology",
+        industry: "Information Technology",
 
         location: job.location || "Not specified",
 
@@ -1178,9 +1207,6 @@ export const getCompanies = async ({
         openJobs: 0,
 
         jobs: [],
-        adzunaOpenJobs: Number(topEmployerByName.get(key)?.count) || null,
-        averageSalary:
-          Number(topEmployerByName.get(key)?.average_salary) || null,
       });
     }
 
@@ -1202,9 +1228,7 @@ export const getCompanies = async ({
   });
 
   return Array.from(companyMap.values()).sort(
-    (first, second) =>
-      (second.adzunaOpenJobs || second.openJobs) -
-      (first.adzunaOpenJobs || first.openJobs),
+    (first, second) => second.openJobs - first.openJobs,
   );
 };
 

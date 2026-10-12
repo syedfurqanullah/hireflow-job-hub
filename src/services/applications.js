@@ -23,7 +23,7 @@ export const getApplications = (email) => {
 export const hasApplied = (jobId, email) =>
   getApplications(email).some((application) => application.jobId === jobId);
 
-export const saveApplication = ({ job, applicant, resumeName }) => {
+export const saveApplication = ({ job, applicant, resumeName, details = {} }) => {
   const email = String(applicant?.email || "")
     .trim()
     .toLowerCase();
@@ -46,13 +46,17 @@ export const saveApplication = ({ job, applicant, resumeName }) => {
   const application = {
     id: `${email}:${jobId}:${Date.now()}`,
     email,
-    applicantName: String(applicant?.name || "").trim(),
+    applicantName: String(details.fullName || applicant?.name || "").trim(),
+    contactEmail: String(details.email || email).trim().toLowerCase(),
+    phone: String(details.phone || "").trim(),
+    portfolio: String(details.portfolio || "").trim(),
+    coverLetter: String(details.coverLetter || "").trim(),
     jobId,
     jobTitle: String(job?.title || "Untitled position"),
     company: String(job?.company || "Company not specified"),
     location: String(job?.location || "Location not specified"),
     resumeName: String(resumeName || "Resume uploaded"),
-    status: "Submitted",
+    status: "Prepared",
     appliedAt: new Date().toISOString(),
   };
 

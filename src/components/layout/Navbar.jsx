@@ -35,7 +35,30 @@ const Navbar = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isMenuOpen) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setIsMenuOpen(false);
+        document.querySelector('[aria-controls="mobile-navigation"]')?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isMenuOpen]);
+
   const closeMobileMenu = () => setIsMenuOpen(false);
+
+  const handleToggleTheme = () => {
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    toggleTheme();
+    showToast({
+      type: "info",
+      message: `Switched to ${nextTheme} theme.`,
+    });
+  };
 
   const handleLogout = () => {
     endDemoSession();
@@ -54,7 +77,7 @@ const Navbar = () => {
       className={
         mobile
           ? "flex flex-col gap-1"
-          : "hidden items-center gap-8 md:ml-auto md:flex"
+          : "hidden items-center gap-4 lg:ml-auto lg:flex xl:gap-8"
       }
     >
       {navigationLinks.map((link) => (
@@ -82,10 +105,10 @@ const Navbar = () => {
           <BrandLogo onClick={closeMobileMenu} />
           {renderNavigationLinks()}
 
-          <div className="hidden items-center gap-3 md:ml-8 md:flex">
+          <div className="hidden items-center gap-2 lg:ml-4 lg:flex xl:ml-8 xl:gap-3">
             <button
               type="button"
-              onClick={toggleTheme}
+              onClick={handleToggleTheme}
               aria-label={themeAction}
               title={themeAction}
               className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-600 transition hover:bg-slate-100 hover:text-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
@@ -126,7 +149,7 @@ const Navbar = () => {
             }
             aria-expanded={isMenuOpen}
             aria-controls="mobile-navigation"
-            className="rounded-lg p-2 text-slate-700 transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 md:hidden"
+            className="rounded-lg p-2 text-slate-700 transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 lg:hidden"
           >
             {isMenuOpen ? (
               <svg
@@ -164,11 +187,11 @@ const Navbar = () => {
           </button>
         </div>
 
-        {isMenuOpen && (
-          <div
-            id="mobile-navigation"
-            className="border-t border-slate-100 py-4 md:hidden"
-          >
+        <div
+          id="mobile-navigation"
+          hidden={!isMenuOpen}
+          className={`${isMenuOpen ? "block" : "hidden"} border-t border-slate-100 py-4 lg:hidden`}
+        >
             {renderNavigationLinks(true)}
             <div className="mt-4 flex flex-col gap-2 border-t border-slate-100 pt-4">
               {authenticated ? (
@@ -199,7 +222,7 @@ const Navbar = () => {
               )}
               <button
                 type="button"
-                onClick={toggleTheme}
+                onClick={handleToggleTheme}
                 aria-label={themeAction}
                 className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
               >
@@ -207,8 +230,7 @@ const Navbar = () => {
                 {theme === "dark" ? "Light theme" : "Dark theme"}
               </button>
             </div>
-          </div>
-        )}
+        </div>
       </div>
     </header>
   );

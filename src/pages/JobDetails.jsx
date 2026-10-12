@@ -264,15 +264,15 @@ const JobDetails = () => {
       ================================================= */}
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="grid gap-8 lg:grid-cols-[1fr_350px]">
-          <div className="space-y-6">
+        <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_350px]">
+          <div className="min-w-0 space-y-6">
             <section
               id="overview"
-              className="scroll-mt-36 rounded-3xl bg-white p-6 shadow-sm sm:p-8"
+              className="scroll-mt-36 min-w-0 rounded-3xl bg-white p-4 shadow-sm sm:p-8"
             >
               <h2 className="text-2xl font-bold">Description</h2>
 
-              <p className="mt-5 whitespace-pre-line leading-8 text-slate-600">
+              <p className="mt-5 whitespace-pre-line break-words leading-8 text-slate-600 [overflow-wrap:anywhere]">
                 {job.description}
               </p>
               <div className="mt-8 grid gap-8 border-t border-slate-100 pt-7 sm:grid-cols-2">
@@ -282,7 +282,7 @@ const JobDetails = () => {
                   </h3>
                   <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-600">
                     {responsibilities.map((item) => (
-                      <li key={item} className="flex gap-2">
+                      <li key={item} className="flex min-w-0 gap-2 break-words [overflow-wrap:anywhere]">
                         <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-600" />
                         {item}
                       </li>
@@ -296,7 +296,7 @@ const JobDetails = () => {
                   {requirements.length ? (
                     <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-600">
                       {requirements.map((item) => (
-                        <li key={item} className="flex gap-2">
+                        <li key={item} className="flex min-w-0 gap-2 break-words [overflow-wrap:anywhere]">
                           <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-600" />
                           {item}
                         </li>

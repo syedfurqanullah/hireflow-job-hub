@@ -13,9 +13,9 @@ export default defineConfig(({ mode }) => {
   configureServer(server) {
    server.middlewares.use(async (request, response, next) => {
     const requestUrl = new URL(request.url || '/', 'http://localhost')
-    const apiPrefix = '/api/adzuna/'
+    const apiPrefix = '/api/adzuna'
 
-    if (!requestUrl.pathname.startsWith(apiPrefix)) {
+    if (requestUrl.pathname !== apiPrefix && !requestUrl.pathname.startsWith(`${apiPrefix}/`)) {
      next()
      return
     }
@@ -34,7 +34,10 @@ export default defineConfig(({ mode }) => {
      return
     }
 
-    const endpoint = requestUrl.pathname.slice(apiPrefix.length)
+    // The app calls /api/adzuna?endpoint=jobs/gb/search/1. Also accept the
+    // path form for direct local checks: /api/adzuna/jobs/gb/search/1.
+    const endpoint = requestUrl.searchParams.get('endpoint') ||
+     requestUrl.pathname.slice(`${apiPrefix}/`.length)
     if (!endpoint.startsWith('jobs/')) {
      response.writeHead(400, { 'Content-Type': 'application/json' })
      response.end(JSON.stringify({ error: 'Invalid Adzuna endpoint.' }))
@@ -43,6 +46,7 @@ export default defineConfig(({ mode }) => {
 
     const upstreamUrl = new URL(`https://api.adzuna.com/v1/api/${endpoint}`)
     upstreamUrl.search = requestUrl.search
+    upstreamUrl.searchParams.delete('endpoint')
     upstreamUrl.searchParams.set('app_id', appId)
     upstreamUrl.searchParams.set('app_key', appKey)
 

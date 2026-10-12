@@ -82,11 +82,16 @@ const Jobs = () => {
             /timed out|could not load|network|connection/i.test(
               error?.message || "",
             );
+          const isRateLimited = /request limit reached|status 429/i.test(
+            error?.message || "",
+          );
           showToast({
             type: "error",
             message: isNetworkError
               ? "Connection lost. Please check your internet and try again."
-              : "Something went wrong on our end. Please try again.",
+              : isRateLimited
+                ? "The live job feed is temporarily rate-limited. Please try again shortly."
+                : "Something went wrong on our end. Please try again.",
           });
         }
       })
@@ -475,6 +480,26 @@ const Jobs = () => {
         onClose={closeFilterModal}
         title="Refine Results"
         size="sm"
+        footer={
+          <div className="flex w-full gap-3">
+            <button
+              type="button"
+              onClick={resetFilters}
+              className="flex-1 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+            >
+              Reset
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (handleSearch()) setShowFilters(false);
+              }}
+              className="flex-1 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
+            >
+              Apply filters
+            </button>
+          </div>
+        }
       >
         <div className="lg:hidden">
           <JobFilters
@@ -493,24 +518,6 @@ const Jobs = () => {
             locationInput={locationInput}
             setLocationInput={setLocationInput}
           />
-          <div className="sticky bottom-0 z-10 -mx-5 mt-6 flex gap-3 border-t border-slate-100 bg-white px-5 pb-[env(safe-area-inset-bottom)] pt-5 dark:border-slate-700 dark:bg-slate-900">
-            <button
-              type="button"
-              onClick={resetFilters}
-              className="flex-1 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-            >
-              Reset
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                if (handleSearch()) setShowFilters(false);
-              }}
-              className="flex-1 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
-            >
-              Apply filters
-            </button>
-          </div>
         </div>
       </Modal>
     </main>

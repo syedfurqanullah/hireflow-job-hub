@@ -1,7 +1,7 @@
 import { ArrowRight, Building2, MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getCompanies, getTopCompanies } from "../../services/jobService";
+import { getCompanies } from "../../services/jobService";
 import CompanyLogo from "../common/CompanyLogo";
 
 const TopCompanies = () => {
@@ -11,45 +11,10 @@ const TopCompanies = () => {
 
   useEffect(() => {
     let active = true;
-    Promise.all([getTopCompanies().catch(() => []), getCompanies()])
-      .then(([leaders, directory]) => {
+    getCompanies()
+      .then((directory) => {
         if (!active) return;
-        if (!leaders.length) {
-          setCompanies(directory.slice(0, 6));
-          return;
-        }
-        const detailsByName = new Map(
-          directory.map((company) => [
-            company.name.trim().toLowerCase(),
-            company,
-          ]),
-        );
-        const items = leaders
-          .map((leader) => {
-            const name = leader.canonical_name?.trim();
-            if (!name) return null;
-            const details = detailsByName.get(name.toLowerCase());
-            return details
-              ? {
-                  ...details,
-                  adzunaOpenJobs: Number(leader.count) || details.openJobs,
-                  averageSalary: Number(leader.average_salary) || null,
-                }
-              : {
-                  id: encodeURIComponent(name.toLowerCase()),
-                  name,
-                  industry: "Top employer",
-                  location: "Not specified",
-                  companyLogo: "",
-                  openJobs: Number(leader.count) || 0,
-                  adzunaOpenJobs: Number(leader.count) || 0,
-                  averageSalary: Number(leader.average_salary) || null,
-                  jobs: [],
-                  searchOnly: true,
-                };
-          })
-          .filter(Boolean);
-        setCompanies(items);
+        setCompanies(directory.slice(0, 6));
       })
       .catch((requestError) => {
         if (active)
@@ -131,11 +96,7 @@ const TopCompanies = () => {
                   </span>
                 </div>
                 <Link
-                  to={
-                    company.searchOnly
-                      ? `/jobs?search=${encodeURIComponent(company.name)}`
-                      : `/companies/${company.id}`
-                  }
+                  to={`/companies/${company.id}`}
                   className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-blue-600 hover:text-blue-700"
                 >
                   View company <ArrowRight size={15} />

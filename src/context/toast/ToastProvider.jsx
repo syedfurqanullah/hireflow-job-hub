@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { X } from "lucide-react";
 import ToastContext from "./ToastContext";
-import { TOAST_DURATIONS, TOAST_ICONS, TOAST_STYLES } from "./toastConstants";
+import {
+  TOAST_DURATIONS,
+  TOAST_ICONS,
+  TOAST_ICON_STYLES,
+  TOAST_STYLES,
+} from "./toastConstants";
 
 export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
@@ -77,7 +82,11 @@ export const ToastProvider = ({ children }) => {
               role={toast.type === "error" ? "alert" : "status"}
               className={`pointer-events-auto flex items-start gap-3 rounded-xl border px-4 py-3 shadow-lg ${TOAST_STYLES[toast.type]}`}
             >
-              <Icon size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
+              <Icon
+                size={18}
+                className={`mt-0.5 shrink-0 ${TOAST_ICON_STYLES[toast.type]}`}
+                aria-hidden="true"
+              />
               <p className="min-w-0 flex-1 text-sm font-medium leading-5">
                 {toast.message}
               </p>
