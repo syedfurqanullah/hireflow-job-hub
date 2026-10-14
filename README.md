@@ -47,16 +47,22 @@ HireFlow Job Hub is a modern, fully responsive job discovery web application bui
 - Adzuna Jobs API
 - LocalStorage
 
-Project Structure
+## Project Structure
 
+```text
 hireflow-job-hub/
 ├── api/
-│   └── adzuna/
-│       └── [...path].js
+│   ├── adzuna/
+│   │   └── [...path].js
+│   ├── adzuna.js
+│   └── adzunaProxy.js
 ├── public/
+│   └── favicon.svg
 ├── src/
 │   ├── assets/
-│   │   └── screenshots/
+│   │   ├── screenshots/
+│   │   ├── career-cta.jpg
+│   │   └── hireflow-hero.jpg
 │   ├── components/
 │   │   ├── common/
 │   │   ├── companies/
@@ -74,13 +80,14 @@ hireflow-job-hub/
 │   ├── App.jsx
 │   ├── index.css
 │   └── main.jsx
+├── eslint.config.js
 ├── index.html
 ├── package.json
 ├── vite.config.js
-├── vercel.json
-└── README.md
+└── vercel.json
+```
 
-Local Development
+## Local Development
 
 1. Clone the repository:
 
