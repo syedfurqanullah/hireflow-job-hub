@@ -46,18 +46,17 @@ HireFlow Job Hub is a modern, fully responsive job discovery web application bui
 - Tailwind CSS
 - Adzuna Jobs API
 - LocalStorage
+- 
+Project Structure
 
 hireflow-job-hub/
 ├── api/
 │   └── adzuna/
 │       └── [...path].js
-│
 ├── public/
-│
 ├── src/
 │   ├── assets/
 │   │   └── screenshots/
-│   │
 │   ├── components/
 │   │   ├── common/
 │   │   ├── companies/
@@ -65,28 +64,21 @@ hireflow-job-hub/
 │   │   ├── home/
 │   │   ├── jobs/
 │   │   └── layout/
-│   │
 │   ├── context/
 │   │   ├── theme/
 │   │   └── toast/
-│   │
 │   ├── layouts/
 │   ├── pages/
 │   ├── routes/
 │   ├── services/
-│   │
 │   ├── App.jsx
 │   ├── index.css
 │   └── main.jsx
-│
-├── .gitignore
-├── README.md
-├── eslint.config.js
 ├── index.html
-├── package-lock.json
 ├── package.json
+├── vite.config.js
 ├── vercel.json
-└── vite.config.js
+└── README.md
 
 Local Development
 
