@@ -112,6 +112,6 @@ User accounts, saved jobs, applications, and preferences are stored locally in t
 
 ## Author
 
-- **Portfolio:** [Syed Furqan Ullah](https://syed-furqan-ullah-portfolio.netlify.app/)
+- **Portfolio:** [Syed Furqan Ullah](https://syedfurqanullah.netlify.app/)
 - **GitHub:** [@syedfurqanullah](https://github.com/syedfurqanullah)
 - **LinkedIn:** [Syed Furqan Ullah](https://www.linkedin.com/in/syed-furqan-ullah/)
