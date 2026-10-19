@@ -1,6 +1,6 @@
 # HireFlow Job Hub
 
-HireFlow Job Hub is a modern, fully responsive **frontend job discovery web application** built with React, Tailwind CSS, and the Adzuna Jobs API. It provides an interactive user interface for exploring job opportunities, discovering companies, saving jobs, and tracking job applications.
+HireFlow Job Hub is a modern, fully responsive **Frontend job discovery web application** built with React, Tailwind CSS, and the Adzuna Jobs API. It provides an interactive user interface for exploring job opportunities, discovering companies, saving jobs, and tracking job applications.
 
 ## Live Demo
 
@@ -106,9 +106,9 @@ npm run dev
 
 ## Notes
 
-HireFlow Job Hub is a **frontend-focused React project** built to strengthen my skills in React, API integration, responsive UI development, state management, and interactive user experiences.
+HireFlow Job Hub is a **Frontend-focused React project** built to strengthen my skills in React, API integration, responsive UI development, state management, and interactive user experiences.
 
-This project focuses on the frontend only. User account screens are UI demonstrations; saved jobs, applications, and preferences are stored in the browser using LocalStorage. It does **not** include a backend database or real server-side authentication.
+This project focuses on the Frontend only. User account screens are UI demonstrations; saved jobs, applications, and preferences are stored in the browser using LocalStorage. It does **not** include a backend database or real server-side authentication.
 
 ## Author
 
